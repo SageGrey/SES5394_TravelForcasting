@@ -8,13 +8,20 @@ library(ggplot2)
 library(hrbrthemes)
 library(devtools)
 library(nationalparkcolors)
+library(ggthemes)
+library(RColorBrewer)
+
+## NEEDED: POPULATION DENSITY
+## NEEDED: EMPLOYMENT DENSITY
+## NEEDED: ACTIVITY (population + employment) density
+
 
 
 # Download longitudinal employer-household dynamic dataset
 lehd_blocks <- read_csv('https://lehd.ces.census.gov/data/lodes/LODES7/ok/wac/ok_wac_S000_JT00_2015.csv.gz', show_col_types=FALSE) %>%
   rename(total_emp = C000) %>%
   mutate(basic_emp = CNS01+CNS02+CNS03+CNS04+CNS05+CNS06+CNS08+CNS09) %>%
-  rename(retail_emp = CNS07) %>%
+  rename(retail_emp = CNS07) %>% 
   mutate(service_emp = total_emp - basic_emp - retail_emp) %>%
   select(w_geocode, total_emp, basic_emp, retail_emp, service_emp)
 
@@ -45,9 +52,11 @@ hh_vars = c(
             hh_3person = "B08201_019",
             hh_4person_plus = "B08201_025",
             
-            ## LifeCycle State
+            ## Children
             total_under6 = "B05009_002",
             total_6to17= "B05009_020",
+                # adults living with parents
+            total_18to34 = "B09021_012", 
             
             ## Income
             total_household_income = "B19001_001",
@@ -88,16 +97,24 @@ zones <- left_join(census, lehd_tracts) %>%
 
 
 
-### Chloropleths
 
-pal <- park_palette("MtRainier")
+### Chloropleths
+chlor_pal <- brewer.pal(5, "BrBG")
+chlor_pal_grey <- brewer.pal(5,"Greys" )
 
 hh_size_map <- ggplot(zones) +
-  geom_sf(aes(fill = total_hhsE), color=NA) + 
+  geom_sf(aes(fill = total_hhsE)) + 
+  scale_fill_gradientn(colors = chlor_pal, name = "# of Households")+
   ggtitle("Number of Households") +
+  #scale_fill_continuous_tableau(name = "Total Households")+
   theme_ipsum() +
-  theme(plot.title = element_text(size=12))
-hh_size_map
+  theme(plot.title = element_text(size=12)) +
+  geom_point(aes(x=-97.444191, y=35.205841),
+             color = 'black', size = 4, shape =18) +
+  # geom_label(aes(x=-97.444191, y=35.205841, label= "football stadium"))
+  geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black")
+hh_size_map + theme_solarized() + scale_colour_solarized()
+
 
 
 total_employment_map <- ggplot(zones) +
