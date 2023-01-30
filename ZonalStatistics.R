@@ -1,7 +1,13 @@
+
+#Load Libraries
+# uwu
+
 library(tidyverse)
 library(tidycensus)
 library(tigris)
 library(sf)
+library(ggplot)
+
 
 # Download longitudinal employer-household dynamica dataset
 lehd_blocks <- read_csv('https://lehd.ces.census.gov/data/lodes/LODES7/ok/wac/ok_wac_S000_JT00_2015.csv.gz', show_col_types=FALSE) %>%
