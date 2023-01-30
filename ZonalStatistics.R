@@ -7,7 +7,7 @@ library(sf)
 library(ggplot2)
 library(hrbrthemes)
 library(devtools)
-library(nationalparkcolors)
+# library(nationalparkcolors)
 library(ggthemes)
 library(RColorBrewer)
 
@@ -38,26 +38,26 @@ hh_vars = c(
             ## Number of Vehicles
             no_veh = "B08201_002",
             total_veh = "B08201_002",
-            one_veh = "B08201_003", 
-            two_veh = "	B08201_004",
-            three_veh = "	B08201_005",
+            one_veh = "B08201_003",
+            two_veh = "B08201_004",
+            three_veh = "B08201_005",
             fourplus_veh = "B08201_006",
-            
+
             ## Total Households
             total_hhs = "B08201_001",
-            
-            ## Household Structure 
+
+            ## Household Structure
             hh_1person = "B08201_007",
             hh_2person = "B08201_013",
             hh_3person = "B08201_019",
             hh_4person_plus = "B08201_025",
-            
+
             ## Children
             total_under6 = "B05009_002",
             total_6to17= "B05009_020",
                 # adults living with parents
-            total_18to34 = "B09021_012", 
-            
+            total_18to34 = "B09021_012",
+
             ## Income
             total_household_income = "B19001_001",
             inc_lt_10k = "B19001_002",
@@ -81,7 +81,7 @@ census <- get_acs(geography = "tract",
                   state = "OK",
                   county = c("Oklahoma", "Lincoln", "Logan", "Canadian", "Grady", "McClain", "Cleveland"),
                   variables = hh_vars,
-                  output = "wide", 
+                  output = "wide",
                   geometry = TRUE) %>%
   filter(!st_is_empty(geometry))
 
@@ -90,7 +90,7 @@ areas <- tracts(state = "OK",
   select(GEOID, ALAND) %>%
   st_drop_geometry()
 
-## Join Datasets 
+## Join Datasets
 zones <- left_join(census, lehd_tracts) %>%
   left_join(areas)
 
@@ -103,7 +103,7 @@ chlor_pal <- brewer.pal(5, "BrBG")
 chlor_pal_grey <- brewer.pal(5,"Greys" )
 
 hh_size_map <- ggplot(zones) +
-  geom_sf(aes(fill = total_hhsE)) + 
+  geom_sf(aes(fill = total_hhsE)) +
   scale_fill_gradientn(colors = chlor_pal, name = "# of Households")+
   ggtitle("Number of Households") +
   #scale_fill_continuous_tableau(name = "Total Households")+
@@ -118,7 +118,7 @@ hh_size_map + theme_solarized() + scale_colour_solarized()
 
 
 total_employment_map <- ggplot(zones) +
-  geom_sf(aes(fill = total_emp), color=NA) + 
+  geom_sf(aes(fill = total_emp), color=NA) +
   ggtitle("Total Employment") +
   theme_ipsum() +
   theme(plot.title = element_text(size=12))
