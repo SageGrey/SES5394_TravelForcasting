@@ -51,6 +51,12 @@ census <- get_acs(geography = "tract",
                   geometry = TRUE) %>%
   filter(!st_is_empty(geometry))
 
-zones <- left_join(census, lehd_tracts)
+areas <- tracts(state = "OK",
+                         county = c("Oklahoma", "Lincoln", "Logan", "Canadian", "Grady", "McClain", "Cleveland")) %>%
+  select(GEOID, ALAND) %>%
+  st_drop_geometry()
+
+zones <- left_join(census, lehd_tracts) %>%
+  left_join(areas)
 
 
