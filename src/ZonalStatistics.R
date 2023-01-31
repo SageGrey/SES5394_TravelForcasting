@@ -6,7 +6,6 @@ library(sf)
 library(ggplot2)
 library(hrbrthemes)
 library(devtools)
-library(viridis)
 library(ggthemes)
 library(RColorBrewer)
 library(treemapify)
@@ -142,33 +141,45 @@ zones <- left_join(census, lehd_tracts) %>%
   mutate(pop_density = 1e6 * total_pop / ALAND) %>% # calculate population density per km2
   mutate(act_density = emp_density + pop_density) # calculate activity density per km2
 
+## Export to a geojson
+st_write(zones, "okc_zone_data.geojson", append = FALSE)
 
 
 ### Chloropleths
 chlor_pal <- brewer.pal(5, "BrBG")
-chlor_pal_grey <- brewer.pal(5,"Greys" )
+chlor_pal_grey <- brewer.pal(5, "Greys")
 chlor_pal_greens <- brewer.pal(5, "BuGn")
 
 #Median Income Map
-  ## Data
-  median_income_map <- ggplot(zones) +
+## Data
+median_income_map <- ggplot(zones) +
   geom_sf(aes(fill = median_incomeE)) +
-  scale_fill_gradientn(colors = chlor_pal_greens, name = "Median Income")+
+  scale_fill_gradientn(colors = chlor_pal_greens, name = "Median Income") +
+  
+  ##Label Football Stadium
+  geom_point(
+    aes(x = -97.444191, y = 35.205841),
+    color = 'black',
+    size = 4,
+    shape = 18
+  ) +
+  geom_text(
+    aes(x = -97.20, y = 35.205841, label = "Football Stadium"),
+    size = 2,
+    color = "black"
+  ) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text("Median Income"),
+    title = element_blank()
+  )
 
-      ##Label Football Stadium
-      geom_point(aes(x=-97.444191, y=35.205841),
-                 color = 'black', size = 4, shape =18) +
-      geom_text(aes(x=-97.20, y=35.205841, label = "Football Stadium"), size =2, color ="black") +
-    theme(axis.text = element_blank(),
-          axis.ticks = element_blank(),
-          panel.background = element_blank(),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          legend.title = element_text("Median Income"),
-          title=element_blank())
- 
-    ## Plot Map
-    median_income_map 
+## Plot Map
+median_income_map
 
 # Number of Households
 hh_size_map <- ggplot(zones) +
@@ -187,15 +198,17 @@ hh_size_map <- ggplot(zones) +
     aes(x = -97.20, y = 35.205841, label = "Football Stadium"),
     size = 2,
     color = "black"
-  ) + 
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.title = element_text("Median Income"),
-        title=element_blank())
-  
+  ) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text("Median Income"),
+    title = element_blank()
+  )
+
 hh_size_map + scale_colour_solarized()
 
 
@@ -203,14 +216,16 @@ hh_size_map + scale_colour_solarized()
 total_employment_map <- ggplot(zones) +
   geom_sf(aes(fill = total_emp), color = NA) +
   ggtitle("Total Employment") +
-  theme(plot.title = element_text(size = 12))  + 
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.title = element_text("Median Income"),
-        title=element_blank())
+  theme(plot.title = element_text(size = 12))  +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text("Median Income"),
+    title = element_blank()
+  )
 total_employment_map
 
 
@@ -221,20 +236,30 @@ hh_size_map
 ## Data
 employment_density_map <- ggplot(zones) +
   geom_sf(aes(fill = emp_density)) +
-  scale_fill_gradientn(colors = chlor_pal_greens, name = "Employees per Tract")+
+  scale_fill_gradientn(colors = chlor_pal_greens, name = "Employees per Tract") +
   ggtitle("Employment Density") +
   
   ##Label Football Stadium
-  geom_point(aes(x=-97.444191, y=35.205841),
-             color = 'black', size = 4, shape =18) +
-  geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black") +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.title = element_text("Median Income"),
-        title=element_blank())
+  geom_point(
+    aes(x = -97.444191, y = 35.205841),
+    color = 'black',
+    size = 4,
+    shape = 18
+  ) +
+  geom_text(
+    aes(x = -97.20, y = 35.205841, label = "football stadium"),
+    size = 2,
+    color = "black"
+  ) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text("Median Income"),
+    title = element_blank()
+  )
 
 ## Plot Map
 employment_density_map
@@ -243,20 +268,30 @@ employment_density_map
 ## Data
 activity_density_map <- ggplot(zones) +
   geom_sf(aes(fill = act_density)) +
-  scale_fill_gradientn(colors = chlor_pal_greens, name = "Activity per tract")+
+  scale_fill_gradientn(colors = chlor_pal_greens, name = "Activity per tract") +
   ggtitle("Activity Density") +
   
   ##Label Football Stadium
-  geom_point(aes(x=-97.444191, y=35.205841),
-             color = 'black', size = 4, shape =18) +
-  geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black") +
-  theme(axis.text = element_blank(),
-        axis.ticks = element_blank(),
-        panel.background = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        legend.title = element_text("Median Income"),
-        title=element_blank())
+  geom_point(
+    aes(x = -97.444191, y = 35.205841),
+    color = 'black',
+    size = 4,
+    shape = 18
+  ) +
+  geom_text(
+    aes(x = -97.20, y = 35.205841, label = "football stadium"),
+    size = 2,
+    color = "black"
+  ) +
+  theme(
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    legend.title = element_text("Median Income"),
+    title = element_blank()
+  )
 
 ## Plot Map
 activity_density_map
@@ -293,7 +328,7 @@ Hist_NoVehAvail <- zones %>%
   ggtitle("Histogram of Number of Households with no cars") +
   xlab("# of households without cars") +
   ylab("# of Census Tracts") +
-
+  
   theme_ipsum() +
   theme(plot.title = element_text(size = 10))
 Hist_NoVehAvail
@@ -303,8 +338,10 @@ Hist_NoVehAvail
 
 #Income & Children Living at Home
 
-Living_At_Home_By_Income <- ggplot(zones, aes(x=total_18to34E, y=median_incomeE, color= pop_density)) + 
-  geom_point(size=3) +
+Living_At_Home_By_Income <-
+  ggplot(zones,
+         aes(x = total_18to34E, y = median_incomeE, color = pop_density)) +
+  geom_point(size = 3) +
   ggtitle("Census Tracts by Income, Household Structure, and Density ") +
   xlab("# of households where adults live with their parents") +
   ylab("Median income") +
@@ -315,102 +352,106 @@ Living_At_Home_By_Income
 
 # Dot Density Map
 ##Create Points
-no_veh_pct <- st_sample(zones, 
-                            size = ceiling(zones$no_vehE/100))
+no_veh_pct <- st_sample(zones,
+                        size = ceiling(zones$no_vehE / 100))
 
-one_veh_pts <- st_sample(zones, 
-                            size = ceiling(zones$one_vehE/100))
+one_veh_pts <- st_sample(zones,
+                         size = ceiling(zones$one_vehE / 100))
 
-two_veh_pts <- st_sample(census, 
-                            size = ceiling(zones$two_vehE/100))
+two_veh_pts <- st_sample(census,
+                         size = ceiling(zones$two_vehE / 100))
 
-three_veh_pts <- st_sample(census, 
-                            size = ceiling(zones$three_vehE/100))
-fourPlus_veh_pts <- st_sample(zones, 
-                              size = ceiling (zones$fourplus_vehE/100))
+three_veh_pts <- st_sample(census,
+                           size = ceiling(zones$three_vehE / 100))
+fourPlus_veh_pts <- st_sample(zones,
+                              size = ceiling (zones$fourplus_vehE / 100))
 
 ## Create Df of Dots
-no_veh_df <- tibble(vehOwn = rep("No Vehicles", 
-                                      length(no_veh_pct))) %>%
+no_veh_df <- tibble(vehOwn = rep("No Vehicles",
+                                 length(no_veh_pct))) %>%
   st_sf(geom = no_veh_pct)
 
-one_veh_df <- tibble(vehOwn = rep("One Vehicle", 
-                                      length(one_veh_pts))) %>%
+one_veh_df <- tibble(vehOwn = rep("One Vehicle",
+                                  length(one_veh_pts))) %>%
   st_sf(geom = one_veh_pts)
 
-two_veh_df <- tibble(vehOwn = rep("Two Vehicles", 
-                                      length(two_veh_pts))) %>%
+two_veh_df <- tibble(vehOwn = rep("Two Vehicles",
+                                  length(two_veh_pts))) %>%
   st_sf(geom = two_veh_pts)
 
-three_veh_df <- tibble(vehOwn = rep("Three Vehicles", 
-                                      length(three_veh_pts))) %>%
+three_veh_df <- tibble(vehOwn = rep("Three Vehicles",
+                                    length(three_veh_pts))) %>%
   st_sf(geom = three_veh_pts)
 
-four_veh_df <- tibble(vehOwn = rep("Four or More Vehicles", 
+four_veh_df <- tibble(vehOwn = rep("Four or More Vehicles",
                                    length(fourPlus_veh_pts))) %>%
   st_sf(geom = fourPlus_veh_pts)
 
- vehOwn_df<- rbind(no_veh_df, one_veh_df, two_veh_df, three_veh_df, four_veh_df)
+vehOwn_df <-
+  rbind(no_veh_df, one_veh_df, two_veh_df, three_veh_df, four_veh_df)
 
- ## Employment total tree map
- total_employment <- sum(zones$total_emp, na.rm=TRUE)
- total_employment_type <- zones %>%
-   summarise(
-     retail=sum(retail_emp, na.rm = TRUE)/total_employment, 
-     basic=sum(basic_emp, na.rm = TRUE)/total_employment, 
-     service=sum(service_emp, na.rm = TRUE)/total_employment) %>%
-   st_drop_geometry() %>%
-   pivot_longer(
-     cols = c("basic", "service", "retail"),
-     names_to = "emp_type",
-     values_to = "pct"
-   )
+## Employment total tree map
+total_employment <- sum(zones$total_emp, na.rm = TRUE)
+total_employment_type <- zones %>%
+  summarise(
+    retail = sum(retail_emp, na.rm = TRUE) / total_employment,
+    basic = sum(basic_emp, na.rm = TRUE) / total_employment,
+    service = sum(service_emp, na.rm = TRUE) / total_employment
+  ) %>%
+  st_drop_geometry() %>%
+  pivot_longer(
+    cols = c("basic", "service", "retail"),
+    names_to = "emp_type",
+    values_to = "pct"
+  )
 
- 
- ggplot(total_employment_type, aes(area=pct, fill=emp_type)) +
-   geom_treemap(show.legend = FALSE, color = NA) +
-   geom_treemap_text(aes(label = paste(emp_type, "\n",
-                                       prettyNum(pct * 100, digits = 1),
-                                       "%",sep = "")), 
-                     color = "white") +
-   scale_fill_brewer(palette = "Set2") +
-   ggtitle("OKC Employment Breakdown")
- 
- 
- ## Plot
- 
- ggplot(zones) + 
-   geom_sf(color = "white") +
-   geom_sf(data = vehOwn_df, 
-           aes(color = vehOwn), 
-           alpha = 0.3,
-           size = 0.1) +
-   scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
-                      palette = "Set1") +
-   theme_void()  +
-   guides(color = guide_legend(override.aes = list(size=5, alpha = 0.6)))
- 
- 
+
+ggplot(total_employment_type, aes(area = pct, fill = emp_type)) +
+  geom_treemap(show.legend = FALSE, color = NA) +
+  geom_treemap_text(aes(label = paste(
+    emp_type, "\n",
+    prettyNum(pct * 100, digits = 1),
+    "%", sep = ""
+  )),
+  color = "white") +
+  scale_fill_brewer(palette = "Set2") +
+  ggtitle("OKC Employment Breakdown")
+
+
+## Plot
+
+ggplot(zones) +
+  geom_sf(color = "white") +
+  geom_sf(data = vehOwn_df,
+          aes(color = vehOwn),
+          alpha = 0.3,
+          size = 0.1) +
+  scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
+                     palette = "Set1") +
+  theme_void()  +
+  guides(color = guide_legend(override.aes = list(size = 5, alpha = 0.6)))
+
+
 ### Reference Space
 
- ## Attempts to get a Tree Map of Employment
-          # emp_vars <- c(`Basic Employees` = zones$basic_emp,
-          #           `Retail Employees` = zones$retail_emp,
-          #           `Service Employees` = zones$service_emp)
-        
-        # treemap_data <- zones %>% 
-        #   select(c(basic_emp, retail_emp, service_emp))
-        # 
-        # summarise(treemap_data, )
-        # 
-        # ggplot(treemap_data, aes(tree = (), fill= basic_emp)) +
-        # geom_treemap(show.legend = FALSE, color = NA) +
-        # geom_treemap_text(aes(label = paste(variable, "\n",
-        #                                       prettyNum(pct * 100, digits = 1),
-        #                                        "%",sep = "")),
-        #                      color = "white") +
-        #    scale_fill_brewer(palette = "Set2")
-        
-        
+## Attempts to get a Tree Map of Employment
+# emp_vars <- c(`Basic Employees` = zones$basic_emp,
+#           `Retail Employees` = zones$retail_emp,
+#           `Service Employees` = zones$service_emp)
+
+# treemap_data <- zones %>%
+#   select(c(basic_emp, retail_emp, service_emp))
+#
+# summarise(treemap_data, )
+#
+# ggplot(treemap_data, aes(tree = (), fill= basic_emp)) +
+# geom_treemap(show.legend = FALSE, color = NA) +
+# geom_treemap_text(aes(label = paste(variable, "\n",
+#                                       prettyNum(pct * 100, digits = 1),
+#                                        "%",sep = "")),
+#                      color = "white") +
+#    scale_fill_brewer(palette = "Set2")
+
+
 
 ## devtools::install_github("katiejolly/nationalparkcolors")
