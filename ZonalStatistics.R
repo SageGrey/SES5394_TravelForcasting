@@ -216,7 +216,27 @@ total_employment_map
 
 hh_size_map
 
+
+#Employment Density Map
+## Data
+employment_density_map <- ggplot(zones) +
+  geom_sf(aes(fill = emp_density)) +
+  scale_fill_gradientn(colors = chlor_pal_greens, name = "Employment Density")+
+  ggtitle("Employment Density") +
+  
+  ##Label Football Stadium
+  geom_point(aes(x=-97.444191, y=35.205841),
+             color = 'black', size = 4, shape =18) +
+  geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black")
+
+## Plot Map
+employment_density_map
+
+
+
 ### Histograms
+
+
 hist_hhs <- zones %>%
   ggplot(aes(x = hh_4person_plusE)) +
   geom_histogram(
