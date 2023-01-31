@@ -221,16 +221,45 @@ hh_size_map
 ## Data
 employment_density_map <- ggplot(zones) +
   geom_sf(aes(fill = emp_density)) +
-  scale_fill_gradientn(colors = chlor_pal_greens, name = "Employment Density")+
+  scale_fill_gradientn(colors = chlor_pal_greens, name = "Employees per Tract")+
   ggtitle("Employment Density") +
   
   ##Label Football Stadium
   geom_point(aes(x=-97.444191, y=35.205841),
              color = 'black', size = 4, shape =18) +
-  geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black")
+  geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black") +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_text("Median Income"),
+        title=element_blank())
 
 ## Plot Map
 employment_density_map
+
+#Activity Density Map
+## Data
+activity_density_map <- ggplot(zones) +
+  geom_sf(aes(fill = act_density)) +
+  scale_fill_gradientn(colors = chlor_pal_greens, name = "Activity per tract")+
+  ggtitle("Activity Density") +
+  
+  ##Label Football Stadium
+  geom_point(aes(x=-97.444191, y=35.205841),
+             color = 'black', size = 4, shape =18) +
+  geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black") +
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_text("Median Income"),
+        title=element_blank())
+
+## Plot Map
+activity_density_map
 
 
 
