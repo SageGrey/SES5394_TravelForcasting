@@ -19,29 +19,29 @@ In the 2021 American Community Survey (ACS), 62% of respondents reported their r
 
 Three major interstates--I-35, I-40, and I-44 all pass through OKC. 
 
-![Sketch of OKC Interstate Highways](OKC_Interstate_Sketch.jpeg){width=75%}
+![Sketch of OKC Interstate Highways](../graphics/a1/OKC_Interstate_Sketch.jpeg){width=75%}
 
 # Census and Employment Visualizations
 
 ## Household Characteristics
 
-![Total Number of Households](num_households.png)
+![Total Number of Households](../graphics/a2/num_households.png)
 
-![Households with no Cars](no_cars.png)
+![Households with no Cars](../graphics/a2/no_cars.png)
 
-![Vehicle Ownership Dot Density Map](vehicle_dot_density.png)
+![Vehicle Ownership Dot Density Map](../graphics/a2/vehicle_dot_density.png)
 
-![Median Income Map](median_income_map.png)
+![Median Income Map](../graphics/a2/median_income_map.png)
 
-![Income, Population Density, and Adults Living with their Parents](structure_income_density.png)
+![Income, Population Density, and Adults Living with their Parents](../graphics/a2/structure_income_density.png)
 
 ## Employment
-![Total Employment](total_emp.png)
+![Total Employment](../graphics/a2/total_emp.png)
 
-![Employment Breakdown](employment.png)
+![Employment Breakdown](../graphics/a2/employment.png)
 
 ## Density Maps
 
-![Employment Density](empl_density.png)
+![Employment Density](../graphics/a2/empl_density.png)
 
-![Activity Density](act_density.png)
+![Activity Density](../graphics/a2/act_density.png)
