@@ -6,8 +6,10 @@ library(sf)
 library(ggplot2)
 library(hrbrthemes)
 library(devtools)
+library(viridis)
 library(ggthemes)
 library(RColorBrewer)
+library(treemapify)
 
 # Download longitudinal employer-household dynamic dataset
 lehd_blocks <-
@@ -56,7 +58,6 @@ hh_vars = c(
   total_18to34 = "B09021_012",
   
   ## Income
-  median_income = "B06011_001",
   total_household_income = "B19001_001",
   inc_lt_10k = "B19001_002",
   inc_btw_10k_15k = "B19001_003",
@@ -327,5 +328,25 @@ four_veh_df <- tibble(vehOwn = rep("Four or More Vehicles",
  
  
 ### Reference Space
+
+ ## Attempts to get a Tree Map of Employment
+          # emp_vars <- c(`Basic Employees` = zones$basic_emp,
+          #           `Retail Employees` = zones$retail_emp,
+          #           `Service Employees` = zones$service_emp)
+        
+        # treemap_data <- zones %>% 
+        #   select(c(basic_emp, retail_emp, service_emp))
+        # 
+        # summarise(treemap_data, )
+        # 
+        # ggplot(treemap_data, aes(tree = (), fill= basic_emp)) +
+        # geom_treemap(show.legend = FALSE, color = NA) +
+        # geom_treemap_text(aes(label = paste(variable, "\n",
+        #                                       prettyNum(pct * 100, digits = 1),
+        #                                        "%",sep = "")),
+        #                      color = "white") +
+        #    scale_fill_brewer(palette = "Set2")
+        
+        
 
 ## devtools::install_github("katiejolly/nationalparkcolors")
