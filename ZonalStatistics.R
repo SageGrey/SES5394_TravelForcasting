@@ -153,23 +153,27 @@ chlor_pal_greens <- brewer.pal(5, "BuGn")
   median_income_map <- ggplot(zones) +
   geom_sf(aes(fill = median_incomeE)) +
   scale_fill_gradientn(colors = chlor_pal_greens, name = "Median Income")+
-  ggtitle("Median Income") +
-  
-  ##Label Football Stadium
+
+      ##Label Football Stadium
       geom_point(aes(x=-97.444191, y=35.205841),
                  color = 'black', size = 4, shape =18) +
-      geom_text(aes(x=-97.20, y=35.205841, label = "football stadium"), size =2, color ="black")
+      geom_text(aes(x=-97.20, y=35.205841, label = "Football Stadium"), size =2, color ="black") +
+    theme(axis.text = element_blank(),
+          axis.ticks = element_blank(),
+          panel.background = element_blank(),
+          panel.grid.major = element_blank(),
+          panel.grid.minor = element_blank(),
+          legend.title = element_text("Median Income"),
+          title=element_blank())
  
     ## Plot Map
     median_income_map 
 
-
+# Number of Households
 hh_size_map <- ggplot(zones) +
   geom_sf(aes(fill = total_hhsE)) +
   scale_fill_gradientn(colors = chlor_pal, name = "# of Households") +
   ggtitle("Number of Households") +
-  #scale_fill_continuous_tableau(name = "Total Households")+
-  theme_ipsum() +
   theme(plot.title = element_text(size = 12)) +
   geom_point(
     aes(x = -97.444191, y = 35.205841),
@@ -177,37 +181,51 @@ hh_size_map <- ggplot(zones) +
     size = 4,
     shape = 18
   ) +
-  # geom_label(aes(x=-97.444191, y=35.205841, label= "football stadium"))
+  # geom_label(aes(x=-97.444191, y=35.205841, label= "Football Stadium"))
   geom_text(
-    aes(x = -97.20, y = 35.205841, label = "football stadium"),
+    aes(x = -97.20, y = 35.205841, label = "Football Stadium"),
     size = 2,
     color = "black"
-  )
-hh_size_map + theme_solarized() + scale_colour_solarized()
+  ) + 
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_text("Median Income"),
+        title=element_blank())
+  
+hh_size_map + scale_colour_solarized()
 
 
-
+# Total Employment
 total_employment_map <- ggplot(zones) +
   geom_sf(aes(fill = total_emp), color = NA) +
   ggtitle("Total Employment") +
-  theme_ipsum() +
-  theme(plot.title = element_text(size = 12))
+  theme(plot.title = element_text(size = 12))  + 
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.background = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        legend.title = element_text("Median Income"),
+        title=element_blank())
 total_employment_map
 
 
 hh_size_map
 
-### Historgrams
+### Histograms
 hist_hhs <- zones %>%
-  ggplot(aes(x = total_hhsE)) +
+  ggplot(aes(x = hh_4person_plusE)) +
   geom_histogram(
     binwidth = 30,
     fill = "#69b3a2",
     color = "#e9ecef",
     alpha = 0.9
   ) +
-  ggtitle("Census Tracts with 'X' Num. of Households") +
-  xlab("Number of Households (Estimated)") +
+  ggtitle("Histogram of Number of 4+ Person Households") +
+  xlab("# of 4+ Person Households (Estimated)") +
   ylab("# of Census Tracts") +
   theme_ipsum() +
   theme(plot.title = element_text(size = 12))
@@ -217,12 +235,14 @@ hist_hhs
 Hist_NoVehAvail <- zones %>%
   ggplot(aes(x = no_vehE)) +
   geom_histogram(
-    binwidth = 30,
+    binwidth = 15,
     fill = "sienna",
     color = "#e9ecef",
     alpha = 0.9
   ) +
-  ggtitle("Census Tracts with 'X' Num. of Households with no cars") +
+  ggtitle("Histogram of Number of Households with no cars") +
+  xlab("# of households without cars") +
+  ylab("# of Census Tracts") +
 
   theme_ipsum() +
   theme(plot.title = element_text(size = 10))
@@ -233,33 +253,15 @@ Hist_NoVehAvail
 
 #Income & Children Living at Home
 
-Living_At_Home_By_Income <- ggplot(zones, aes(x=total_18to34E, y=median_incomeE, color= no_vehE)) + 
+Living_At_Home_By_Income <- ggplot(zones, aes(x=total_18to34E, y=median_incomeE, color= pop_density)) + 
   geom_point(size=3) +
-  xlab("Number of adults living with parents per census tract") +
-  ylab("Median income for census tract") +
-  theme_ipsum()
+  ggtitle("Census Tracts by Income, Household Structure, and Density ") +
+  xlab("# of households where adults live with their parents") +
+  ylab("Median income") +
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 10))
 
 Living_At_Home_By_Income
-
-myvars_acs <- load_variables(2020, "pl")
-population <- get_decennial(
-  geography = "tract",
-  state = "OK",
-  year = 2020,
-  county = c(
-    "Oklahoma",
-    "Lincoln",
-    "Logan",
-    "Canadian",
-    "Grady",
-    "McClain",
-    "Cleveland"
-  ),
-  variables = "P1_001N",
-  output = "wide",
-  geometry = FALSE
-)
-
 
 # Dot Density Map
 ##Create Points
@@ -300,6 +302,15 @@ four_veh_df <- tibble(vehOwn = rep("Four or More Vehicles",
 
  vehOwn_df<- rbind(no_veh_df, one_veh_df, two_veh_df, three_veh_df, four_veh_df)
 
+ ## Employment total tree map
+ total_employment <- sum(zones$total_emp, na.rm=TRUE)
+ total_employment_type <- zones %>%
+   summarise(
+     retail=sum(retail_emp, na.rm = TRUE)/total_employment, 
+     basic=sum(basic_emp, na.rm = TRUE)/total_employment, 
+     service=sum(service_emp, na.rm = TRUE)/total_employment) %>%
+   st_drop_geometry()
+ 
  
  ## Plot
  
