@@ -310,7 +310,22 @@ four_veh_df <- tibble(vehOwn = rep("Four or More Vehicles",
      retail=sum(retail_emp, na.rm = TRUE)/total_employment, 
      basic=sum(basic_emp, na.rm = TRUE)/total_employment, 
      service=sum(service_emp, na.rm = TRUE)/total_employment) %>%
-   st_drop_geometry()
+   st_drop_geometry() %>%
+   pivot_longer(
+     cols = c("basic", "service", "retail"),
+     names_to = "emp_type",
+     values_to = "pct"
+   )
+
+ 
+ ggplot(total_employment_type, aes(area=pct, fill=emp_type)) +
+   geom_treemap(show.legend = FALSE, color = NA) +
+   geom_treemap_text(aes(label = paste(emp_type, "\n",
+                                       prettyNum(pct * 100, digits = 1),
+                                       "%",sep = "")), 
+                     color = "white") +
+   scale_fill_brewer(palette = "Set2") +
+   ggtitle("OKC Employment Breakdown")
  
  
  ## Plot
