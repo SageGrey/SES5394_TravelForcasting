@@ -41,7 +41,6 @@ chlor_pal_grey <- brewer.pal(5, "Greys")
 chlor_pal_greens <- brewer.pal(5, "BuGn")
 
 # Median Income Map
-## Data
 ggplot(zones) +
   geom_sf(aes(fill = median_incomeE)) +
   scale_fill_gradientn(colors = chlor_pal_greens, name = "Median Income") +
@@ -58,10 +57,12 @@ ggplot(zones) +
   geom_sf(aes(fill = total_hhsE)) +
   scale_fill_gradientn(colors = chlor_pal, name = "# of Households") +
   ggtitle("Number of Households") +
-  theme(plot.title = element_text(size = 12)) +
+  theme(
+    plot.title = element_text(size = 12),
+    legend.title = element_text("Median Income")
+  ) +
   football_point +
   football_text +
-  theme(legend.title = element_text("Median Income")) +
   clear_map_theme +
   scale_colour_solarized()
 
@@ -70,84 +71,40 @@ ggplot(zones) +
 ggplot(zones) +
   geom_sf(aes(fill = total_emp), color = NA) +
   ggtitle("Total Employment") +
-  theme(plot.title = element_text(size = 12))  +
+  theme(
+    plot.title = element_text(size = 12),
+    legend.title = element_text("Median Income")
+  )  +
+  clear_map_theme
+
+
+# Employment Density Map
+ggplot(zones) +
+  geom_sf(aes(fill = emp_density)) +
+  scale_fill_gradientn(colors = chlor_pal_greens, name = "Employees per Tract") +
+  ggtitle("Employment Density") +
+  football_point +
+  football_text +
   theme(legend.title = element_text("Median Income")) +
   clear_map_theme
 
 
-hh_size_map
-
-
-#Employment Density Map
-## Data
-employment_density_map <- ggplot(zones) +
-  geom_sf(aes(fill = emp_density)) +
-  scale_fill_gradientn(colors = chlor_pal_greens, name = "Employees per Tract") +
-  ggtitle("Employment Density") +
-  
-  ##Label Football Stadium
-  geom_point(
-    aes(x = -97.444191, y = 35.205841),
-    color = 'black',
-    size = 4,
-    shape = 18
-  ) +
-  geom_text(
-    aes(x = -97.20, y = 35.205841, label = "football stadium"),
-    size = 2,
-    color = "black"
-  ) +
-  theme(
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    panel.background = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    legend.title = element_text("Median Income"),
-    title = element_blank()
-  )
-
-## Plot Map
-employment_density_map
-
 #Activity Density Map
-## Data
-activity_density_map <- ggplot(zones) +
+ggplot(zones) +
   geom_sf(aes(fill = act_density)) +
   scale_fill_gradientn(colors = chlor_pal_greens, name = "Activity per tract") +
   ggtitle("Activity Density") +
   
   ##Label Football Stadium
-  geom_point(
-    aes(x = -97.444191, y = 35.205841),
-    color = 'black',
-    size = 4,
-    shape = 18
-  ) +
-  geom_text(
-    aes(x = -97.20, y = 35.205841, label = "football stadium"),
-    size = 2,
-    color = "black"
-  ) +
-  theme(
-    axis.text = element_blank(),
-    axis.ticks = element_blank(),
-    panel.background = element_blank(),
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    legend.title = element_text("Median Income"),
-    title = element_blank()
-  )
-
-## Plot Map
-activity_density_map
-
+  football_point +
+  football_text +
+  theme(legend.title = element_text("Median Income")) +
+  clear_map_theme
 
 
 #### Create Histograms ####
-
-
-hist_hhs <- zones %>%
+# 4+ Person Households
+zones %>%
   ggplot(aes(x = hh_4person_plusE)) +
   geom_histogram(
     binwidth = 30,
@@ -160,10 +117,9 @@ hist_hhs <- zones %>%
   ylab("# of Census Tracts") +
   theme_ipsum() +
   theme(plot.title = element_text(size = 12))
-hist_hhs
 
-
-Hist_NoVehAvail <- zones %>%
+# Households with no cars
+zones %>%
   ggplot(aes(x = no_vehE)) +
   geom_histogram(
     binwidth = 15,
@@ -177,15 +133,11 @@ Hist_NoVehAvail <- zones %>%
   
   theme_ipsum() +
   theme(plot.title = element_text(size = 10))
-Hist_NoVehAvail
 
 
-#ScatterPlot
-
+#### Scatter Plot ####
 #Income & Children Living at Home
-
-Living_At_Home_By_Income <-
-  ggplot(zones,
+ggplot(zones,
          aes(x = total_18to34E, y = median_incomeE, color = pop_density)) +
   geom_point(size = 3) +
   ggtitle("Census Tracts by Income, Household Structure, and Density ") +
@@ -194,10 +146,9 @@ Living_At_Home_By_Income <-
   theme_ipsum() +
   theme(plot.title = element_text(size = 10))
 
-Living_At_Home_By_Income
 
-# Dot Density Map
-##Create Points
+#### Dot Density Map ####
+# Create Points
 no_veh_pct <- st_sample(zones,
                         size = ceiling(zones$no_vehE / 100))
 
@@ -212,7 +163,7 @@ three_veh_pts <- st_sample(census,
 fourPlus_veh_pts <- st_sample(zones,
                               size = ceiling (zones$fourplus_vehE / 100))
 
-## Create Df of Dots
+# Create Df of Dots
 no_veh_df <- tibble(vehOwn = rep("No Vehicles",
                                  length(no_veh_pct))) %>%
   st_sf(geom = no_veh_pct)
@@ -236,7 +187,22 @@ four_veh_df <- tibble(vehOwn = rep("Four or More Vehicles",
 vehOwn_df <-
   rbind(no_veh_df, one_veh_df, two_veh_df, three_veh_df, four_veh_df)
 
-## Employment total tree map
+# Plot
+ggplot(zones) +
+  geom_sf(color = "white") +
+  geom_sf(data = vehOwn_df,
+          aes(color = vehOwn),
+          alpha = 0.3,
+          size = 0.1) +
+  scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
+                     palette = "Set1") +
+  theme_void()  +
+  guides(color = guide_legend(override.aes = list(size = 5, alpha = 0.6)))
+
+
+#### Tree Map ####
+# Employment Breakdown
+## Sum data
 total_employment <- sum(zones$total_emp, na.rm = TRUE)
 total_employment_type <- zones %>%
   summarise(
@@ -251,7 +217,7 @@ total_employment_type <- zones %>%
     values_to = "pct"
   )
 
-
+# Plot
 ggplot(total_employment_type, aes(area = pct, fill = emp_type)) +
   geom_treemap(show.legend = FALSE, color = NA) +
   geom_treemap_text(aes(label = paste(
@@ -262,21 +228,6 @@ ggplot(total_employment_type, aes(area = pct, fill = emp_type)) +
   color = "white") +
   scale_fill_brewer(palette = "Set2") +
   ggtitle("OKC Employment Breakdown")
-
-
-## Plot
-
-ggplot(zones) +
-  geom_sf(color = "white") +
-  geom_sf(data = vehOwn_df,
-          aes(color = vehOwn),
-          alpha = 0.3,
-          size = 0.1) +
-  scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
-                     palette = "Set1") +
-  theme_void()  +
-  guides(color = guide_legend(override.aes = list(size = 5, alpha = 0.6)))
-
 
 
 ## devtools::install_github("katiejolly/nationalparkcolors")
