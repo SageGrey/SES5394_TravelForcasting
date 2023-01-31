@@ -59,6 +59,8 @@ hh_vars = c(
             total_18to34 = "B09021_012",
 
             ## Income
+            
+            median_income = "B06011_001",
             total_household_income = "B19001_001",
             inc_lt_10k = "B19001_002",
             inc_btw_10k_15k = "B19001_003",
