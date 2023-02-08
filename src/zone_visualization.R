@@ -57,10 +57,8 @@ ggplot(zones) +
   geom_sf(aes(fill = total_hhsE)) +
   scale_fill_gradientn(colors = chlor_pal, name = "# of Households") +
   ggtitle("Number of Households") +
-  theme(
-    plot.title = element_text(size = 12),
-    legend.title = element_text("Median Income")
-  ) +
+  theme(plot.title = element_text(size = 12),
+        legend.title = element_text("Median Income")) +
   football_point +
   football_text +
   clear_map_theme +
@@ -71,10 +69,8 @@ ggplot(zones) +
 ggplot(zones) +
   geom_sf(aes(fill = total_emp), color = NA) +
   ggtitle("Total Employment") +
-  theme(
-    plot.title = element_text(size = 12),
-    legend.title = element_text("Median Income")
-  )  +
+  theme(plot.title = element_text(size = 12),
+        legend.title = element_text("Median Income"))  +
   clear_map_theme
 
 
@@ -138,7 +134,7 @@ zones %>%
 #### Scatter Plot ####
 #Income & Children Living at Home
 ggplot(zones,
-         aes(x = total_18to34E, y = median_incomeE, color = pop_density)) +
+       aes(x = total_18to34E, y = median_incomeE, color = pop_density)) +
   geom_point(size = 3) +
   ggtitle("Census Tracts by Income, Household Structure, and Density ") +
   xlab("# of households where adults live with their parents") +
