@@ -1,17 +1,22 @@
 ---
 title: "Oklahoma City Analysis"
 output:
-  word_document: default
-  pdf_document: default
   html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: 
+      toc_collapsed: true 
+    theme: lumen
     df_print: paged
+  pdf_document: default
+  word_document: default
 ---
 
 **Nur Shlapobersky**
 
 **Sage Voorhees**
 
-# Introduction
+# **(A01):** Introduction
 
 Oklahoma City is the capital of Oklahoma and the largest city in the state. At the 2020 Census, the OKC Metro area had a population just shy of 1.5 million (1,425,695)   (Census, 2020). 
 
@@ -21,7 +26,7 @@ Three major interstates--I-35, I-40, and I-44 all pass through OKC.
 
 ![Sketch of OKC Interstate Highways](../graphics/a1/OKC_Interstate_Sketch.jpeg){width=75%}
 
-# Census and Employment Visualizations
+# **(A02):** Census and Employment Visualizations
 
 ## Household Characteristics
 
@@ -45,3 +50,28 @@ Three major interstates--I-35, I-40, and I-44 all pass through OKC.
 ![Employment Density](../graphics/a2/empl_density.png)
 
 ![Activity Density](../graphics/a2/act_density.png)
+
+# **(A03):** Road Network Description
+
+
+## Description of our Model’s Network 
+In this model we used data pulled from Open Street Map, downloaded through the service https://extract.bbbike.org/. We included in our road network all road segments labeled as motorways, motorway_links, secondary, tertiary,  trunks or unclassified roads. We decided to include the unclassified roads when we realized that major roads including US-77, US-62 were not included in motorways. Adding in unclassified roads also brought back in “boulevards,” such as Oklahoma City Boulevard and North Lincoln Boulevard. Our assumption is that since the original data did not label any roads as “primary,” many roads that would have been considered primary were instead labeled as unclassified.   
+  In our network we have 419 transit analysis zones. The longest distance between zones was  just over 3 hours and 15 minutes (190.5 minutes). The shortest distance was half a minute (0.5 minutes). The average distance between centroids is roughly 30 minutes (30.7). The median time between centroids was around 25 minutes (25.6 minutes). 
+
+## Assumptions
+In this model we made the following assumptions
+
+1. All primary and secondary roads in rural areas are two-way roads even if coded as one-way roads in the OSM data. This assumption was based on cross-referencing against satellite images that indicated roads had bi-directional traffic despite being coded as one-ways in OSM. We identified rural areas by looking at the network and selecting areas that had large, mostly rectangular Transit Area Zones (TAZs). See image for an image of primary or secondary road segments that we treated as rural. 
+![Rural Primary and Tertiary Roads](../graphics/a3/ruralAreasSelected.jpeg)
+
+2. We made the following speed assumptions: 
+* Unclassified road speeds are 30 mph
+* Motorways are 60 mph
+* Primary are 60 mph
+* Secondary are 40 mph
+* Tertiary are 30 mph
+* Centroid Connectors are 15.
+3. In our model we assumed that centroid connectors could model residential roads in each TAZ. In our model, centroid connectors can be up to 25 miles long, but must connect to a road no more than .1 miles outside of the zone boundary. Each centroid could have up to 7 centroid connectors. 
+
+![Travel Time Chloropleth](../graphics/a3/uok_travel_time.png)
+
