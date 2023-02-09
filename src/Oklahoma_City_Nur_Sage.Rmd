@@ -62,7 +62,7 @@ In this model we used data pulled from Open Street Map, downloaded through the s
 In this model we made the following assumptions
 
 1. All primary and secondary roads in rural areas are two-way roads even if coded as one-way roads in the OSM data. This assumption was based on cross-referencing against satellite images that indicated roads had bi-directional traffic despite being coded as one-ways in OSM. We identified rural areas by looking at the network and selecting areas that had large, mostly rectangular Transit Area Zones (TAZs). See image for an image of primary or secondary road segments that we treated as rural. 
-![Rural Primary and Tertiary Roads](../graphics/a3/ruralAreasSelected.jpeg)
+![Rural Primary and Tertiary Roads](../graphics/a3/modified_network.png)
 
 2. We made the following speed assumptions: 
 * Unclassified road speeds are 30 mph
@@ -72,6 +72,8 @@ In this model we made the following assumptions
 * Tertiary are 30 mph
 * Centroid Connectors are 15.
 3. In our model we assumed that centroid connectors could model residential roads in each TAZ. In our model, centroid connectors can be up to 25 miles long, but must connect to a road no more than .1 miles outside of the zone boundary. Each centroid could have up to 7 centroid connectors. 
+
+Below is a chloropleth map which visualizes the travel times from each zone to the one containing the University of Oklahoma. 
 
 ![Travel Time Chloropleth](../graphics/a3/uok_travel_time.png)
 
