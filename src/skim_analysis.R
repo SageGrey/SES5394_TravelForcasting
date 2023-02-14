@@ -54,3 +54,6 @@ ggplot(okc_travel_zones) +
   clear_map_theme
 
   
+#### Find info about skim 
+
+min(skim)
