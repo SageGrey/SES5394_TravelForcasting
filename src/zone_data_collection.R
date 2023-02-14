@@ -140,6 +140,7 @@ areas <- tracts(
 zones <- left_join(census, lehd_tracts) %>%
   left_join(areas) %>%
   left_join(population) %>%
+  replace(is.na(.), 0) %>%
   
   ## Calculate densities
   mutate(emp_density = 1e6 * total_emp / ALAND) %>% # calculate employment density per km2
