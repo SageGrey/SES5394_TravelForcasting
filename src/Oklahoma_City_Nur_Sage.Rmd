@@ -77,3 +77,25 @@ Below is a chloropleth map which visualizes the travel times from each zone to t
 
 ![Travel Time Chloropleth](../graphics/a3/uok_travel_time.png)
 
+# **(A04):** Transit Network Description
+
+
+## Description of our Model’s Network 
+In this model we used data pulled from Oklahoma City [EMBARK's GTFS feed](https://embarkok.com/data/gtfs/google_transit.zip). The network is composed of 651 miles of bus routes, across 30 different bus lines. The map below shows the bus network in detail, and in the context of the whole city:
+![Zoomed network](../graphics/a4/BestColor_TransitNetworksClevelandAndOklahoma.png)
+![Full map](../graphics/a4/Rplot.png)
+  
+  In our network we have 419 transit analysis zones. The transit network connects only 135 of those zones, with the longest travel time between zones being just over 3 hours and 15 minutes (190.5 minutes). The shortest distance was half a minute (0.5 minutes). The average distance between centroids is roughly 30 minutes (30.7). The median time between centroids was around 25 minutes (25.6 minutes). 
+
+## Assumptions
+In this model we made the following assumptions
+
+1. The maximum initial wait time for a public transit trip was 15 minutes.
+2. The walk speed for a traveler is 2.8 miles per hour.
+3. Buses move at 30 miles per hour.
+4. Centroid connectors could be a maximum of 0.5 miles long.
+
+## Travel Times from the University of Oklahoma
+Below is a chloropleth map showing the time it takes to travel to all reachable zone from the University of Oklahoma:
+
+![UOK Travel Time](../graphics/a4/from_uok_travel.png)
