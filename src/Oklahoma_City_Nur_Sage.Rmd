@@ -1,55 +1,103 @@
 ---
-title: "Oklahoma City Analysis"
+title: "Oklahoma City: Accessibility Analysis:"
+subtitle: "Variations in the Transportation Networks of the Oklahoma City Metro Area"
 output:
   html_document:
     toc: true
-    toc_depth: 2
+    toc_depth: 3
     toc_float: 
       toc_collapsed: true 
     theme: lumen
     df_print: paged
   pdf_document: default
   word_document: default
+  fig_caption: true
 ---
 
-**Nur Shlapobersky**
+**Nur Shlapobersky** + **Sage Voorhees**  
+SES 5394: Travel Behavior and Forecasting  
+Spring Semester 2023  
 
-**Sage Voorhees**
+<center>
 
-# **(A01):** Introduction
+![*Fig 1: OKC City Limits + Interstate Highways*](../graphics/a1/OKC_Interstate_Sketch.jpeg){width=75%}
+</center>
 
-Oklahoma City is the capital of Oklahoma and the largest city in the state. At the 2020 Census, the OKC Metro area had a population just shy of 1.5 million (1,425,695)   (Census, 2020). 
 
-In the 2021 American Community Survey (ACS), 62% of respondents reported their race as white, 10% African American, 8% Multiracial, 3% Native American, 3% Asian, 1% other (ACS 2018). 14% reported identifying as Hispanic (ACS 2018). Some well-known neighborhoods in OKC include Downtown, Bricktown (entertainment district), Deep Deuce (residential, formerly an African American neighborhood), The Arts District, Film Row, Midtown, Automobile Alley, Plaza District, Cottage District, Uptown, Asian District, Paseo Arts District, Crown-Heights-Edgemere Heights, Western Avenue Corridor, and 39th Street Enclave. 
+# Overview 
+## **Oklahoma City at a Glance**
 
-Three major interstates--I-35, I-40, and I-44 all pass through OKC. 
+Oklahoma City is the capital of Oklahoma and the largest city in the state. At the 2020 Census, the OKC Metro area had a population just shy of 1.5 million (1,425,695)   (Census, 2020). In the 2021 American Community Survey (ACS), 62% of respondents reported their race as white, 10% African American, 8% Multiracial, 3% Native American, 3% Asian, 1% other (ACS 2018). 14% reported identifying as Hispanic (ACS 2018). Some well-known neighborhoods in OKC include Downtown, Bricktown (entertainment district), Deep Deuce (residential, formerly an African American neighborhood), The Arts District, Film Row, Midtown, Automobile Alley, Plaza District, Cottage District, Uptown, Asian District, Paseo Arts District, Crown-Heights-Edgemere Heights, Western Avenue Corridor, and 39th Street Enclave. Three major interstates--I-35, I-40, and I-44 all pass through OKC. 
 
-![Sketch of OKC Interstate Highways](../graphics/a1/OKC_Interstate_Sketch.jpeg){width=75%}
 
-# **(A02):** Census and Employment Visualizations
 
-## Household Characteristics
+## **OKC Road Network** 
+<center>
 
-![Total Number of Households](../graphics/a2/num_households.png)
+![*Fig 2: OKC Road Network*](../graphics/a3/modified_network.png){width=30%} 
+
+</center
+
+## **OKC Public Transit Network
+<center>
+
+![*Fig 3: OKC Public Transit Network*](../graphics/a4/Rplot.png){width=40%}
+
+</center>
+
+# **Definitions**
+**Accessibility** is a measure of what destination travelers can reach using transportation modes available to them. Accessibility = mobility x proximity. 
+
+
+# **Methodology + Sources**
+
+### Data About Oklahoma City Demographics and Land Use 
+For data about the population density, income, household size, and vehicle availability of we used 5-year Sample American Community Survey (ACS) Data from 2021. For information about the land use and employment we used Longitudinal Employer Household Dynamics (LEHD). For geographic boundaries we used census data.  
+
+
+### Road Network
+To generate the Road Network we used data pulled from **Open Street Map**, downloaded through the service **https://extract.bbbike.org/.** We included in our road network all road segments labeled as motorways, motorway_links, secondary, tertiary,  trunks or unclassified roads. We decided to include the unclassified roads when we realized that major roads including US-77, US-62 were not included in motorways. Adding in unclassified roads also brought back in “boulevards,” such as Oklahoma City Boulevard and North Lincoln Boulevard. Our assumption is that since the original data did not label any roads as “primary,” many roads that would have been considered primary were instead labeled as unclassified.We then began to generate a transit skim using the software **Transcad.**
+
+### Public Transportation Network
+In this model we used General Transit Feed Specification (GTFS) data pulled from Oklahoma City [EMBARK's GTFS feed](https://embarkok.com/data/gtfs/google_transit.zip).
+
+
+# **Assumptions** 
+
+
+
+
+
+
+
+# **Appendix A**: Visualizations of Census and Employment Data
+
+### **Population, Activity & Employment Densities**
+
+<center>
+
+![](../graphics/a2/num_households.png){width=60%}
+
+![Total Employment](../graphics/a2/total_emp.png){width=40%} ![Employment Breakdown](../graphics/a2/employment.png){width=30%}
+
+![Employment Density](../graphics/a2/empl_density.png){width=40%}![Activity Density](../graphics/a2/act_density.png){width=40%}
+
+
+</center>
+
+
+
+### Vehicle Availability 
 
 ![Households with no Cars](../graphics/a2/no_cars.png)
 
 ![Vehicle Ownership Dot Density Map](../graphics/a2/vehicle_dot_density.png)
+### Income Distribution 
 
 ![Median Income Map](../graphics/a2/median_income_map.png)
 
 ![Income, Population Density, and Adults Living with their Parents](../graphics/a2/structure_income_density.png)
 
-## Employment
-![Total Employment](../graphics/a2/total_emp.png)
-
-![Employment Breakdown](../graphics/a2/employment.png)
-
-## Density Maps
-
-![Employment Density](../graphics/a2/empl_density.png)
-
-![Activity Density](../graphics/a2/act_density.png)
 
 # **(A03):** Road Network Description
 
