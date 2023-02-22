@@ -6,5 +6,4 @@ data/*
 !data/*.csv
 !data/*.xlsx
 !data/*.geojson
-!data/*.MTX
 !data/*.zip
