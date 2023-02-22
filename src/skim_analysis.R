@@ -6,6 +6,12 @@ library(readxl)
 
 library(RColorBrewer)
 
+library(tidytransit)
+library(here)
+library(ggthemes)
+library(tigris)
+
+
 #### Import data ####
 car_centroid_dict <- read_csv(here("data", "car_centroids.csv")) %>%
   select(ID, Centroid) %>%
@@ -137,3 +143,43 @@ ggplot(okc_travel_zones) +
 #### Find info about skim 
 
 min(skim)
+
+
+#### Map Transit Skim ALL COUNTIES
+
+
+OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland", "McClain", "Lincoln", "Logan", "Canadian", "Grady"))
+
+OKC_rta_gtfs <- read_gtfs(
+  "https://embarkok.com/data/gtfs/google_transit.zip")
+
+route_shapes <- shapes_as_sf(OKC_rta_gtfs$shapes)
+
+ggplot() +
+  geom_sf(data = OKC_tracts,
+          fill = "cornsilk",
+          color = "gray") +
+  geom_sf(data = route_shapes,
+          aes(color = shape_id)) +
+  theme_map() +
+  theme(legend.position = "none")
+
+#### Map Transit Skim Oklahoma + Cleveland
+
+
+OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland"))
+
+OKC_rta_gtfs <- read_gtfs(
+  "https://embarkok.com/data/gtfs/google_transit.zip")
+
+route_shapes <- shapes_as_sf(OKC_rta_gtfs$shapes)
+
+ggplot() +
+  geom_sf(data = OKC_tracts,
+          fill = "ivory2",
+          color = "gray") +
+  geom_sf(data = route_shapes,
+          aes(color = shape_id)) +
+  theme_map() +
+  theme(legend.position = "none")
+
