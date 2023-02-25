@@ -1,6 +1,26 @@
 library(tidyverse)
 library(here)
 library(sf)
+library(RColorBrewer)
+library(ggplot2)
+library(ggspatial)
+library(raster)
+library(ggthemes)
+
+
+clear_map_theme <- theme(
+  axis.text = element_blank(),
+  axis.ticks = element_blank(),
+  panel.background = element_blank(),
+  panel.grid.major = element_blank(),
+  panel.grid.minor = element_blank(),
+  title = element_blank()
+)
+
+chlor_pal <- brewer.pal(5, "BrBG")
+chlor_pal_grey <- brewer.pal(5, "Greys")
+chlor_pal_greens <- brewer.pal(5, "BuGn")
+
 
 full_skim <- read_csv(here("data", "okc_full_skim.csv"))
 zone_data <- st_read(here("data", "okc_zones_with_centroids.geojson"))
@@ -19,7 +39,7 @@ accessibility_df <- full_skim %>%
 
 # Define decay function with inflection=25, stdev=5
 logistic_decay <- function(travel_time) {
-  1/(1 + exp((travel_time - 25)/5))
+  1/(1 + exp((travel_time - 25)/5))  # 25 Minutes travel time, standard deviation of 5
 }
 
 # Calculate accessibility measures
@@ -35,3 +55,77 @@ accessibility_summary <- accessibility_df %>%
 
 # Plot
 
+ggplot(accessibility_summary) +
+  geom_histogram(aes(x = car_access),
+                 bins = 35,
+                 color = "blue",
+                 fill = "lightblue") +
+  scale_x_continuous(name = "Accessibility Total by Car") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme_minimal()
+# Analysis, There are a group of OKC census tracts that have a low degree of accessibility with a large number of census tracts with high accessibility
+
+
+ggplot(accessibility_summary) +
+  geom_histogram(aes(x = transit_access),
+                 bins = 35,
+                 color = "blue",
+                 fill = "lightblue") +
+  scale_x_continuous(name = "Accessibility Total by Transit") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme_minimal()
+
+
+## Spatial Distribution
+
+## Car 
+zone_data <- zone_data %>%
+  left_join(accessibility_summary, by=join_by(centroid_id == Origin))
+
+ggplot(zone_data) +
+annotation_map_tile(type = "osm",
+                      zoomin = 0,
+                      progress = "none") +
+  geom_sf(aes(fill =car_access),
+          color = NA,
+          alpha = 0.6) +
+  #clear_map_theme +
+  scale_fill_gradientn(colors = chlor_pal_greens,
+                       name = "Car Accessibility",
+                       trans = "log",
+                       breaks = c(0.000001,100),
+                       labels = c("High",
+                                  "Low")) +
+        
+
+  # scale_fill_viridis_c(name = "Car Accessibility",
+    #                   trans = "log",
+     #                  breaks = c(0.000001,100),
+      #                 labels = c( "High", "Med",
+       #                           "Low"),
+       #                option = "A") +
+  theme_map()
+
+
+## Transit 
+
+zone_data <- zone_data %>%
+  left_join(accessibility_summary, by=join_by(centroid_id == Origin))
+
+ggplot(zone_data) +
+   annotation_map_tile(type = "osm",
+                       zoomin = 0,
+                     progress = "none") +
+  geom_sf(aes(fill = transit_access),
+          color = NA,
+          alpha = 0.6) +
+  
+  scale_fill_gradientn(colors = chlor_pal_greens,
+                       name = "Transit Accessibility",
+                       trans = "log",
+                       breaks = c(0.000001,100),
+                       labels = c("High",
+                                  "Low")) +
+
+  theme_map()
+  #clear_map_theme
