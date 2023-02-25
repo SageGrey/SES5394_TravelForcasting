@@ -76,9 +76,20 @@ ggplot(accessibility_summary) +
   theme_minimal()
 
 
+ggplot(accessibility_summary) +
+  geom_point(aes(x = car_access,
+                 y = transit_access),
+             alpha = 0.7,
+             color = "black",
+             shape = "o") +
+  scale_x_continuous(name = "Car accessibility index") +
+  scale_y_continuous(name = "Transit accessibility index") +
+  theme_minimal()
+
 ## Spatial Distribution
 
 ## Car 
+options(scipen=999)
 zone_data <- zone_data %>%
   left_join(accessibility_summary, by=join_by(centroid_id == Origin))
 
@@ -92,23 +103,16 @@ annotation_map_tile(type = "osm",
   #clear_map_theme +
   scale_fill_gradientn(colors = chlor_pal_greens,
                        name = "Car Accessibility",
-                       trans = "log",
-                       breaks = c(0.000001,100),
-                       labels = c("High",
-                                  "Low")) +
-        
+                       # trans = "log",
+                      # breaks = c(0.000001,100),
+                      # labels = c("Low", "High")
+                      ) +
 
-  # scale_fill_viridis_c(name = "Car Accessibility",
-    #                   trans = "log",
-     #                  breaks = c(0.000001,100),
-      #                 labels = c( "High", "Med",
-       #                           "Low"),
-       #                option = "A") +
   theme_map()
 
 
 ## Transit 
-
+options(digits=3)
 zone_data <- zone_data %>%
   left_join(accessibility_summary, by=join_by(centroid_id == Origin))
 
@@ -123,9 +127,9 @@ ggplot(zone_data) +
   scale_fill_gradientn(colors = chlor_pal_greens,
                        name = "Transit Accessibility",
                        trans = "log",
-                       breaks = c(0.000001,100),
-                       labels = c("High",
-                                  "Low")) +
+                       #breaks = c(0.000001,100),
+                       #labels = c("Low","High")
+                       ) +
 
   theme_map()
   #clear_map_theme
