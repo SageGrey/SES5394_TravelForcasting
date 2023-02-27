@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.cache/
 data/*
 !data/*.csv
 !data/*.xlsx

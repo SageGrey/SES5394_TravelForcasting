@@ -31,7 +31,6 @@ full_skim <- mutate(full_skim, OVTT = transit_time - IVTT) %>%
 
 # Add employment data to skim
 employment_data <- zone_data %>%
-  st_drop_geometry() %>%
   select(centroid_id, GEOID, total_emp)
 
 accessibility_df <- full_skim %>%
@@ -125,7 +124,7 @@ ggplot(zone_data) +
           alpha = 0.6) +
   
   scale_fill_gradientn(colors = chlor_pal_greens,
-                       name = "Transit Accessibility",
+                       name = "Transit Accessibility (log)",
                        trans = "log",
                        #breaks = c(0.000001,100),
                        #labels = c("Low","High")

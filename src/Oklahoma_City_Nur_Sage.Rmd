@@ -1,12 +1,12 @@
 ---
-title: "Oklahoma City: Accessibility Analysis:"
-subtitle: "Variations in the Transportation Networks of the Oklahoma City Metro Area"
+title: "Oklahoma City Travel Analysis"
+subtitle: "Exploring Accessibility"
 output:
   html_document:
     toc: true
     toc_depth: 3
-    toc_float: 
-      toc_collapsed: true 
+    toc_float:
+      toc_collapsed: false 
     theme: lumen
     df_print: paged
   pdf_document: default
@@ -18,65 +18,104 @@ output:
 SES 5394: Travel Behavior and Forecasting  
 Spring Semester 2023  
 
+# **Oklahoma City at a Glance**
 <center>
-
-![*Fig 1: OKC City Limits + Interstate Highways*](../graphics/a1/OKC_Interstate_Sketch.jpeg){width=75%}
+![**Fig 1**: OKC City Limits and Interstate Highways](../graphics/a1/OKC_Interstate_Sketch.jpeg){width=75%}
 </center>
-
-
-# **Overview** 
-## Oklahoma City at a Glance
 
 Oklahoma City is the capital of Oklahoma and the largest city in the state. At the 2020 Census, the OKC Metro area had a population just shy of 1.5 million people (Census, 2020). In the 2021 American Community Survey (ACS), 62% of respondents reported their race as white, 10% African American, 8% Multiracial, 3% Native American, 3% Asian, 1% other (ACS 2018). 14% reported identifying as Hispanic (ACS 2018). Some well-known neighborhoods in OKC include Downtown, Bricktown (entertainment district), Deep Deuce (residential, formerly an African American neighborhood), The Arts District, Film Row, Midtown, Automobile Alley, Plaza District, Cottage District, Uptown, Asian District, Paseo Arts District, Crown-Heights-Edgemere Heights, Western Avenue Corridor, and 39th Street Enclave. Three major interstates--I-35, I-40, and I-44 all pass through OKC. 
 
 
+# **Elements of the Model**
+## Transit Analysis Zones
+Our transportation analysis looks at 419 transit analysis zones across 7 counties, each corresponding to a census tract. In Figure 2 we can see that Oklahoma City follows a typical greater metropolitan area pattern with a dense and active urban core, surrounded by suburbs and rural areas. The
 
-### Transit Analysis Zones
-Our transportation analysis looks at 419 transis analysis zones across 7 counties. 
+<center>
+![**Fig. 2**: Population is densest to the north and south of downtown](../graphics/a2/num_households.png){width=55%}
+</center>
 
-### OKC Road Network 
+## Road Network 
 
 The longest distance between zones by car was just over 3 hours and 15 minutes (190.5 minutes). The shortest distance was half a minute (0.5 minutes). The average distance between TAZ centroids is roughly 30 minutes (30.7), the median time is around 25 minutes (25.6 minutes).
 
 <center>
-![*Fig 2: OKC Road Network* **The roads highlighted in red we are considering to be rural roads**](../graphics/a3/modified_network.png){width=60%} 
-
+![**Fig 3**: OKC Road Network - The roads highlighted in red were modeled as two-way rural roads](../graphics/a3/modified_network.png){width=60%} 
 </center>
 
-### OKC Public Transit Network
+## Public Transit Network
 The OKC Transit network is composed of 651 miles of bus routes, across 30 different bus lines. The map below shows the bus network in detail, and in the context of the whole city. Of our 419 transit analysis zones for OKC metro area, the transit network connects only 135 of those zones, with the longest travel time between zones being just over 3 hours and 15 minutes (190.5 minutes). The shortest distance was half a minute (0.5 minutes). The average distance between centroids is roughly 30 minutes (30.7). The median time between centroids was around 25 minutes (25.6 minutes). The public transit is fully contained in 3 of the 7 counties that make up the OKC statistical area. 
 
+![**Fig 4**: OKC Public Transit  Network](../graphics/a4/BestColor_TransitNetworksClevelandAndOklahoma.png){width=70%}
+![](../graphics/a4/Rplot.png){width=25%}
+<center> **Fig 4**: OKC Public Transit </center>
+
+## Travel Times
+Using the networks we created, we generated travel time skims which provide travel times between every TAZ. By selecting a subset we can map every zone's travel time by car to the University of Oklahoma, as in Figure 5.
+
 <center>
-![Fig 3: OKC Public Transit  Network](../graphics/a4/BestColor_TransitNetworksClevelandAndOklahoma.png)
-
-![*Fig 4: OKC Public Transit Network across all counties*](../graphics/a4/Rplot.png){width=40%}
-
+![**Fig 5**: Travel Time from UOK to other locations using a car](../graphics/a3/uok_travel_time.png){width=60%} 
 </center>
 
-# **Definitions, Methodology & Sources**
+As well as the travel time by bus from the University to other zones, as in Figure 6 (note that many are grayed out because they cannot be reached by bus).
 
-### Definitions
+<center>
+![**Fig 6**: Travel Time from UOK to other locations using public transit](../graphics/a4/from_uok_travel.png){width=60%}
+</center>
 
-**Accessibility** is a measure of what destination travelers can reach using transportation modes available to them. Accessibility = mobility x proximity. 
+# **Accessibility**
 
+**Accessibility** is a measure of how many destination travelers can reach within a *perceived* reasonable time using transportation modes available to them. Put an alternative, and slightly more mathematical way:
 
-### Methodology + Sources
+> **accessibility** = **mobility** (reasonable reachable area) x **proximity** (opportunities / area)
 
-#### Data About Oklahoma City Demographics and Land Use 
-For data about the population density, income, household size, and vehicle availability of we used 5-year Sample American Community Survey (ACS) Data from 2021. For information about the land use and employment we used Longitudinal Employer Household Dynamics (LEHD). For geographic boundaries we used census data.  
+We determine accessibility based on the network skims mentioned earlier and employment data. Travel times are used in a decay function to scale the "worth" of each opportunity, and these are all summed together to determine the accessibility score. See Appendix B for more information.
 
+## Accessibility by Car
+Car access is distributed as is typical for a metropolitan area: the downtown, being both dense and centrally located, has higher scores than the outlying areas. 
 
-#### Road Network
+<center>
+![**Fig 7**: Car accessibility scores for each zone](../graphics/a5/CarAccessibility_Chloropleth.png)
+</center>
+
+While they don't necessarily represent a large percent of the land area, there are many of those downtown high-scoring zones because they are smaller, and this is what forms the right peak in the distribution shown in Figure 8. The left peak represents the outlying rural zones.
+
+<center>
+![**Fig 8**: Distribution of zone accessibility scores](../graphics/a5/CarAccess_Histogram.png)
+</center>
+
+## Accessibility by Transit
+Transit in Oklahoma City is quite limited to the areas in and around Downtown and the University campus. The bus lines between the two areas notably bypass most of the zones in between, creating the two island-like regions in Figure 9.
+
+<center>
+![**Fig 9**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_log.png){width=70%}
+</center>
+
+Taking a look at the accessibility map without using a log transformation in Figure 10, we can see that the majority of those zones have very similar low scores. There are just a few outliers with much higher accessibility scores due to the proximity of transit hubs where many of the bus lines meet.
+
+<center>
+![**Fig 10**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_linear.png){width=70%}
+</center>
+
+Those outliers can also be seen in Figure 11 at the far right tail of the distribution.  
+
+<center>
+![**Fig 11**: Distribution of zone accessibility scores](../graphics/a5/Transit_Histogram.png){width=60%}
+</center>
+
+# **Appendix**
+## A: Methodology and Sources
+### *Demographics and Land Use Data*
+For data about the population density, income, household size, and vehicle availability of we used 5-year Sample American Community Survey (ACS) Data from 2021. For information about the land use and employment we used Longitudinal Employer Household Dynamics (LEHD). For geographic boundaries we used census data.
+
+### *Road Network*
 To generate the Road Network we used data pulled from **Open Street Map**, downloaded through the service **https://extract.bbbike.org/.** We included in our road network all road segments labeled as motorways, motorway_links, secondary, tertiary,  trunks or unclassified roads. We decided to include the unclassified roads when we realized that major roads including US-77, US-62 were not included in motorways. Adding in unclassified roads also brought back in “boulevards,” such as Oklahoma City Boulevard and North Lincoln Boulevard. Our assumption is that since the original data did not label any roads as “primary,” many roads that would have been considered primary were instead labeled as unclassified.We then began to generate a transit skim using the software **Transcad.**
 
-#### Public Transportation Network
+### *Public Transportation Network*
 In this model we used General Transit Feed Specification (GTFS) data pulled from Oklahoma City [EMBARK's GTFS feed](https://embarkok.com/data/gtfs/google_transit.zip).
 
-
-### Assumptions 
-
-#### Assumptions for Road Network
-1. All primary and secondary roads in rural areas are two-way roads even if coded as one-way roads in the OSM data. This assumption was based on cross-referencing against satellite images that indicated roads had bi-directional traffic despite being coded as one-ways in OSM. We identified rural areas by looking at the network and selecting areas that had large, mostly rectangular Transit Area Zones (TAZs). See image for an image of primary or secondary road segments that we treated as rural. 
+## B: Assumptions
+### *Road Network*
+1. All primary and secondary roads in rural areas are two-way roads even if coded as one-way roads in the OSM data. This assumption was based on cross-referencing against satellite images that indicated roads had bi-directional traffic despite being coded as one-ways in OSM. We identified rural areas by looking at the network and selecting areas that had large, mostly rectangular Transit Area Zones (TAZs). See Figure 3 for an image of primary or secondary road segments that we treated as rural two-ways. 
 
 2. We made the following speed assumptions: 
 * Unclassified road speeds are 30 mph
@@ -88,46 +127,36 @@ In this model we used General Transit Feed Specification (GTFS) data pulled from
 
 3. In our model we assumed that centroid connectors could model residential roads in each TAZ. In our model, centroid connectors can be up to 25 miles long, but must connect to a road no more than .1 miles outside of the zone boundary. Each centroid could have up to 7 centroid connectors. 
 
-#### Assumptions for Transit Network
-
+### *Transit Network*
 1. The maximum initial wait time for a public transit trip was 15 minutes.
 2. The walk speed for a traveler is 2.8 miles per hour.
 3. Buses move at 30 miles per hour.
 4. Centroid connectors could be a maximum of 0.5 miles long.
 
-#### Assumptions for Accessibility Metrics
+### *Accessibility Metrics*
 1. We are weighting the portion of time spent waiting for a bus or train as 2.5 times the in-vehicle travel time (IVTT)
 
-2. We are using a logistic decay function with an inflection of 25 and standard deviation of 5 
+2. We are using a logistic decay function with an inflection point of 25 and standard deviation of 5 
 
 
-# **Appendix A**: Visualizations of Census and Employment Data
-
+## C: Supplemental Visualizations
+### *Census and Employment Data*
 
 <center>
 
-![**Appendix Fig. 1**: Population is most dense to the north and south of downtown](../graphics/a2/num_households.png){width=55%}
+![**Fig A1**: Employment is concentrated in the downtown area. Employment information is not available for many of our Transit Analysis Zones](../graphics/a2/total_emp.png){width=55%} 
 
-![**Appendix  Figure 2**: Employment is concentrated in the downtown area. Employment information is not available for many of our Transit Analysis Zones](../graphics/a2/total_emp.png){width=55%} 
-
-![**Appendix Figure 3:** Majority of employment in OKC metro area is in the service industry](../graphics/a2/employment.png){width=40%} 
+![**Fig A2**: Majority of employment in OKC metro area is in the service industry](../graphics/a2/employment.png){width=40%} 
 
 ![](../graphics/a2/empl_density.png){width=40%} ![Activity Density](../graphics/a2/act_density.png){width=40%}
 
-**Appendix Figure 4:** Employment + Activity Density is greatest in downtown OKC
+**Fig A3**: Employment + Activity Density is greatest in downtown OKC
 </center>
 
-![**Appendix figure 5**: The majoirty of census tracts have fewer than 100 households with no cars. But some tracts have more than 500 households with no vehicles. ](../graphics/a2/no_cars.png){width=75%}  
+![**Fig A4**: The majoirty of census tracts have fewer than 100 households with no cars. But some tracts have more than 500 households with no vehicles. ](../graphics/a2/no_cars.png){width=75%}  
 
-![**Appendix figure 6**: Vehicle Ownership Dot Density Map](../graphics/a2/vehicle_dot_density.png){width=75%} 
+![**Fig A5**: Vehicle Ownership Dot Density Map](../graphics/a2/vehicle_dot_density.png){width=75%} 
 
-![**Appendix Figure 7**:Highest income neighborhoods are north of downtown](../graphics/a2/median_income_map.png){width=40%} 
+![**Fig A6**:Highest income neighborhoods are north of downtown](../graphics/a2/median_income_map.png){width=40%} 
 
-![**Appendix figure 8:** Income, Population Density, and Adults Living with their Parents](../graphics/a2/structure_income_density.png){width=30%} 
-
-
-# **Appendix B:** Driving + Transit Time Visualizations
-
-![**Appendix B, Figure 1:** Travel Time from UOK to other locations using a car](../graphics/a3/uok_travel_time.png){width=45%} ![**Appendix B, Figure 2:** Travel Time from UOK to other locations using public transit](../graphics/a4/from_uok_travel.png){width=45%}
-
-**Appendix B, Figure 1:** Travel Time from UOK to other locations using a car (left) versus using public transit (right)
+![**Fig A7**: Income, Population Density, and Adults Living with their Parents](../graphics/a2/structure_income_density.png){width=30%} 
