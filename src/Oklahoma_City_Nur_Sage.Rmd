@@ -87,19 +87,19 @@ While they don't necessarily represent a large percent of the land area, there a
 Transit in Oklahoma City is quite limited to the areas in and around Downtown and the University campus. The bus lines between the two areas notably bypass most of the zones in between, creating the two island-like regions in Figure 9.
 
 <center>
-![**Fig 9**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_log.png){width=70%}
+![**Fig 9**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_log.png)
 </center>
 
 Taking a look at the accessibility map without using a log transformation in Figure 10, we can see that the majority of those zones have very similar low scores. There are just a few outliers with much higher accessibility scores due to the proximity of transit hubs where many of the bus lines meet.
 
 <center>
-![**Fig 10**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_linear.png){width=70%}
+![**Fig 10**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_linear.png)
 </center>
 
 Those outliers can also be seen in Figure 11 at the far right tail of the distribution.  
 
 <center>
-![**Fig 11**: Distribution of zone accessibility scores](../graphics/a5/Transit_Histogram.png){width=60%}
+![**Fig 11**: Distribution of zone accessibility scores](../graphics/a5/Transit_Histogram.png)
 </center>
 
 # **Appendix**
@@ -151,12 +151,11 @@ In this model we used General Transit Feed Specification (GTFS) data pulled from
 ![](../graphics/a2/empl_density.png){width=40%} ![Activity Density](../graphics/a2/act_density.png){width=40%}
 
 **Fig A3**: Employment + Activity Density is greatest in downtown OKC
-</center>
 
 ![**Fig A4**: The majoirty of census tracts have fewer than 100 households with no cars. But some tracts have more than 500 households with no vehicles. ](../graphics/a2/no_cars.png){width=75%}  
 
 ![**Fig A5**: Vehicle Ownership Dot Density Map](../graphics/a2/vehicle_dot_density.png){width=75%} 
 
-![**Fig A6**:Highest income neighborhoods are north of downtown](../graphics/a2/median_income_map.png){width=40%} 
+![**Fig A6**:Highest income neighborhoods are north of downtown](../graphics/a2/median_income_map.png)
 
-![**Fig A7**: Income, Population Density, and Adults Living with their Parents](../graphics/a2/structure_income_density.png){width=30%} 
+![**Fig A7**: Income, Population Density, and Adults Living with their Parents](../graphics/a2/structure_income_density.png) 
