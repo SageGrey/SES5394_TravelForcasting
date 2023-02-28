@@ -1,0 +1,590 @@
+---
+title: "Sage_NatHouseholdTravelSurvey"
+output: html_document
+date: "2023-02-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+## Load Libraries
+
+library(here)
+library(tidyverse)
+library(tidycensus)
+library(downloader)
+library(tidycensus)
+library(sf)
+
+OKC_CBSA <- 36420 #OKC
+BOS_CBSA <- 14460 #BOS
+
+```
+
+```{r}
+
+okc_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
+  filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
+   filter(TRPTRANS != "01" & # Filter Out Walking
+         TRPTRANS != "02" & # Filter Out Biking
+          TRPTRANS != "19") # Filter out Airplane
+
+
+bos_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
+  filter(HH_CBSA == BOS_CBSA) %>% #Filter to only Bos Stat Area
+   filter(TRPTRANS != "19") # Filter out Airplane
+
+
+## Classify Trip Types into 3 Meta Catgories
+
+#HBW: Home-Based Work
+#HBO: Home-Based Other
+#NHB: Non-Home-Based
+
+okc_trips <- okc_trips %>%
+  mutate(home_based = (WHYFROM == "01" |
+                       WHYFROM == "02" |
+                       WHYTO == "01" |
+                       WHYTO == "02"),
+          work = (WHYFROM == "03" |
+                    WHYTO == "03")) %>%
+  mutate(purpose = case_when(home_based & work ~ "HBW",
+                             home_based ~ "HBO",
+                             TRUE ~ "NHB"))
+
+zone_data <- st_read(here("data", "okc_zones_with_centroids.geojson"))
+
+
+##Show Table
+table(okc_trips$purpose)
+
+hh_OKC_trip_counts <- okc_trips %>%
+  group_by(HOUSEID) %>%
+  summarise(HBO_trips = sum(purpose == "HBO"),
+            HBW_trips = sum(purpose == "HBW"),
+            NHB_trips = sum(purpose == "NHB"))
+
+## Load Household Data
+
+OKC_hhs <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\hhpub.csv") %>%
+  filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
+  left_join(hh_OKC_trip_counts) %>%
+  replace_na(list(HBO_trips = 0,
+                  HBW_trips = 0,
+                  NHB_trips = 0))
+
+
+
+
+## Variables for Prediction 
+
+```
+
+
+
+
+```{r}
+#### Assigning 
+
+##Household Income as Continuous
+OKC_hhs <- OKC_hhs %>%
+  mutate(inc_k = case_when(HHFAMINC == "01" ~ 5,
+                           HHFAMINC == "02" ~ 12.5,
+                           HHFAMINC == "03" ~ 17.5,
+                           HHFAMINC == "04" ~ 20,
+                           HHFAMINC == "05" ~ 37.5,
+                           HHFAMINC == "06" ~ 62.5,
+                           HHFAMINC == "07" ~ 82.5,
+                           HHFAMINC == "08" ~ 112.5,
+                           HHFAMINC == "09" ~ 132.5,
+                           HHFAMINC == "10" ~ 175,
+                           HHFAMINC == "11" ~ 300,
+                           TRUE ~ 99)) %>%
+  mutate(inc_k = na_if(inc_k, 99))
+
+## Vehicle Ownership
+OKC_hhs <- OKC_hhs %>%
+  mutate(veh_cat = case_when(HHVEHCNT == 0 ~ "zero",
+                             HHVEHCNT == 1 ~ "one",
+                             TRUE ~ "two-plus"))
+
+## Are there Children? 
+OKC_hhs <- OKC_hhs %>%
+  mutate(any_kids = LIF_CYC != "01" &
+                    LIF_CYC != "02" &
+                    LIF_CYC != "09" &
+                    LIF_CYC != "10")
+
+## Linear Regression
+hbo_trip_prod <- lm(HBO_trips ~ log2(inc_k) +
+                                veh_cat +
+                                any_kids,
+                    data = OKC_hhs)
+
+hbw_trip_prod <- lm(HBW_trips ~ log2(inc_k) +
+                                veh_cat +
+                                any_kids,
+                    data = OKC_hhs)
+nhb_trip_prod <- lm(NHB_trips ~ log2(inc_k) +
+                                veh_cat +
+                                any_kids,
+                    data = OKC_hhs)
+
+
+## Show Summary of Linear Regression
+summary(hbo_trip_prod)
+summary(hbw_trip_prod)
+summary(nhb_trip_prod)
+
+
+## Estimate Trip Productions HBO
+zone_data <- zone_data %>%
+  mutate(hhs_2plus_veh = total_hhsE - no_vehE - one_vehE) %>%
+  mutate(hhs_with_kidsE = total_under6E + total_6to17E) %>%
+  mutate(hbo_prod_per_hh = 0.720 + 
+                           0.215* log2(zone_data$median_incomeE) + 
+                           1.437 * ((hhs_2plus_veh)/total_hhsE) -
+                           0.2263 * (no_vehE/total_hhsE) +
+                           1.7883 * (hhs_with_kidsE/total_hhsE)) %>%
+  
+  mutate(hbw_prod_per_hh =  0.0428 + 
+                           0.0558 * log2(zone_data$median_incomeE) + 
+                           0.9504  * ((hhs_2plus_veh)/total_hhsE) +
+                           0.6960 * (no_vehE/total_hhsE) +
+                           0.1791 * (hhs_with_kidsE/total_hhsE)) %>%
+  
+  mutate(nhb_prod_per_hh = 1.2644 + 
+                           0.1376 * log2(zone_data$median_incomeE) + 
+                           0.0214  * ((hhs_2plus_veh)/total_hhsE) -
+                           0.9083 * (no_vehE/total_hhsE) +
+                           2.6535 * (hhs_with_kidsE/total_hhsE)) 
+  
+
+zone_data <- zone_data %>%
+  mutate(hbo_trip_prod = total_hhsE * hbo_prod_per_hh) %>%
+  mutate(hbw_trip_prod = total_hhsE * hbw_prod_per_hh) %>%
+  mutate(nhb_trip_prod = total_hhsE * nhb_prod_per_hh)
+
+
+  # GEOID with no median income: 40109107407, 78,000.04 (median income)
+
+## Estimate Trip Attractions
+zone_data <- zone_data %>%
+  mutate(hbo_trip_attr = 1.0 * total_hhsE +
+                         0.3 * basic_emp +
+                         5.9 * retail_emp +
+                         2.3 * service_emp) %>%
+
+ # Add home-based work trips
+  mutate(hbw_trip_attr = 1.2 * total_emp) %>%
+  
+  # Add non-home-based trips
+  mutate(nhb_trip_attr = 0.6 * total_hhsE +
+           0.7 * basic_emp +
+           2.6 * retail_emp + 
+           1.0 * service_emp)
+
+
+simplified_okc_zone_data <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_attr, hbw_trip_attr, nhb_trip_attr, nhb_trip_prod, hbo_trip_prod, hbw_trip_prod, hbo_prod_per_hh, hhs_with_kidsE, hhs_2plus_veh, total_hhsE))
+
+simplified_okc_zone_data <- simplified_okc_zone_data %>%
+  filter( hbo_trip_prod != "NaN")
+
+zone_data <- zone_data %>%
+  filter(hbo_trip_prod != "NaN")
+
+
+#Home Based Others
+sum(zone_data$hbo_trip_prod)
+sum(zone_data$hbo_trip_attr)
+
+sum(zone_data$hbw_trip_prod)
+sum(zone_data$hbw_trip_attr)
+
+
+
+zone_data <- zone_data %>%
+  mutate(hbo_bal_attr = hbo_trip_attr * 
+         sum(hbo_trip_prod) / sum(hbo_trip_attr)) %>%
+  mutate(hbw_bal_attr = hbw_trip_attr * 
+         sum(hbw_trip_prod) / sum(hbw_trip_attr)) %>%
+  mutate(nhb_bal_attr = nhb_trip_attr * 
+           sum(nhb_trip_prod) / sum(nhb_trip_attr))
+
+
+sum(zone_data$hbo_bal_attr)
+sum(zone_data$hbo_trip_prod)
+
+sum(zone_data$hbw_bal_attr)
+sum(zone_data$hbw_trip_prod)
+
+sum(zone_data$nhb_bal_attr)
+sum(zone_data$nhb_trip_prod)
+
+
+
+
+zone_data_export <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_prod, hbo_bal_attr, hbw_trip_prod, hbw_bal_attr, nhb_trip_prod, nhb_bal_attr))
+
+
+st_write(zone_data_export, here("data",
+                "trip-gen.geojson"))
+
+
+
+```
+
+
+# ## Analysis of Trip Purpose by Type IN OKC
+
+```{r setup, include=FALSE}
+
+
+## Analysis of Trip Purpose by Type IN OKC
+
+okc_trips_simp <-subset(okc_trips, select=c("HOUSEID", "PERSONID", "TDTRPNUM", "TRVLCMIN", "TRIPPURP","WHYTO", "WHYFROM","TRPTRANS")) 
+
+okc_trips_simp <- okc_trips_simp %>% 
+  filter(TRPTRANS != "19",TRPTRANS != "10", TRPTRANS != "09") %>% # Filter out Airplanes, Schoolbus, Snowmobike/Atv
+  mutate(trip_mode_drivingDetail = case_when(TRPTRANS == "-7" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "01" ~ "Walk",
+                               TRPTRANS == "02" ~ "Bike",
+                               TRPTRANS == "03" ~ "Drive: Car",
+                               TRPTRANS == "04" ~ "Drive: SUV/Van",
+                               TRPTRANS == "05" ~ "Drive: SUV/Van",
+                               TRPTRANS == "06" ~ "Drive: Pickup Truck",
+                               TRPTRANS == "07" ~ "Drive: Golf Cart",
+                               TRPTRANS == "08" ~ "Motorcycle/Scooter",
+                               TRPTRANS == "10" ~ "Public Bus",
+                               TRPTRANS == "11" ~ "Paratransit",
+                               TRPTRANS == "13" ~ "Private Bus",
+                               TRPTRANS == "14" ~ "Private Bus",
+                               TRPTRANS == "15" ~ "Rail",
+                               TRPTRANS == "16" ~ "Rail",
+                               TRPTRANS == "17" ~ "Taxi or Rideshare",
+                               TRPTRANS == "18" ~ "Rental Car",
+                               TRPTRANS == "20" ~ "Boat",
+                               TRPTRANS == "97" ~ "Other"))
+
+okc_trips_simp <- okc_trips_simp %>% 
+  mutate(trip_mode_simplified = case_when(TRPTRANS == "-7" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "01" ~ "Walk",
+                               TRPTRANS == "02" ~ "Bike",
+                               TRPTRANS == "03" ~ "Drive",
+                               TRPTRANS == "04" ~ "Drive",
+                               TRPTRANS == "05" ~ "Drive",
+                               TRPTRANS == "06" ~ "Drive",
+                               TRPTRANS == "07" ~ "Drive",
+                               TRPTRANS == "08" ~ "Motorcycle/Scooter",
+                               TRPTRANS == "10" ~ "Public Transit",
+                               TRPTRANS == "11" ~ "Public Transit",
+                               TRPTRANS == "13" ~ "Private Bus",
+                               TRPTRANS == "14" ~ "Private Bus",
+                               TRPTRANS == "15" ~ "Public Transit",
+                               TRPTRANS == "16" ~ "Public Transit",
+                               TRPTRANS == "17" ~ "Taxi or Rideshare",
+                               TRPTRANS == "18" ~ "Rental Car",
+                               TRPTRANS == "20" ~ "Boat",
+                               TRPTRANS == "97" ~ "Other"))
+
+okc_trips_simp <- okc_trips_simp %>% 
+  filter(WHYTO != "07") %>%  #Filter out changing transportation type
+  mutate(trip_purpose = case_when(WHYTO == "-7" ~ "Not Reported", 
+                                  WHYTO == "-8" ~ "Not Reported",
+                                  WHYTO == "-9" ~ "Not Reported",
+                                  WHYTO == "01" ~ "Going Home",
+                                  WHYTO == "02" ~ "Going Home",
+                                  WHYTO == "03" ~ "Work",
+                                  WHYTO == "04" ~ "Work",
+                                  WHYTO == "05" ~ "Volunteering",
+                                  WHYTO == "06" ~ "Giving someone a ride",
+                                  WHYTO == "08" ~ "Going to School",
+                                  WHYTO == "09" ~ "Going to Childcare",
+                                  WHYTO == "10" ~ "Going to Adult Care",
+                                  WHYTO == "11" ~ "Grocceries or Other Shopping",
+                                  WHYTO == "12" ~ "Errands",
+                                  WHYTO == "13" ~ "Going out to eat",
+                                  WHYTO == "14" ~ "Errands",
+                                  WHYTO == "15" ~ "Recreational Activities",
+                                  WHYTO == "16" ~ "Exercise",
+                                  WHYTO == "17" ~ "Visiting Friends",
+                                  WHYTO == "18" ~ "Medical Visit",
+                                  WHYTO == "19" ~ "Religious",
+                                  WHYTO == "20" ~ "Other"))
+
+okc_trips_simp <- okc_trips_simp %>% 
+  mutate(trip_mode_EXTRA_simplified = case_when(TRPTRANS == "-7" ~ "Other",
+                               TRPTRANS == "-8" ~ "Other",
+                               TRPTRANS == "-8" ~ "Other",
+                               TRPTRANS == "01" ~ "Walk",
+                               TRPTRANS == "02" ~ "Bike",
+                               TRPTRANS == "03" ~ "Drive",
+                               TRPTRANS == "04" ~ "Drive",
+                               TRPTRANS == "05" ~ "Drive",
+                               TRPTRANS == "06" ~ "Drive",
+                               TRPTRANS == "07" ~ "Drive",
+                               TRPTRANS == "08" ~ "Other",
+                               TRPTRANS == "10" ~ "Public Transit",
+                               TRPTRANS == "11" ~ "Public Transit",
+                               TRPTRANS == "13" ~ "Other",
+                               TRPTRANS == "14" ~ "Other",
+                               TRPTRANS == "15" ~ "Public Transit",
+                               TRPTRANS == "16" ~ "Public Transit",
+                               TRPTRANS == "17" ~ "Taxi, Rideshare, or Carshare",
+                               TRPTRANS == "18" ~ "Taxi, Rideshare, or Carshare",
+                               TRPTRANS == "20" ~ "Other",
+                               TRPTRANS == "97" ~ "Other"))
+
+okc_trips_simp <- okc_trips_simp %>% 
+  filter(WHYTO != "07") %>%  #Filter out changing transportation type
+  mutate(trip_purpose_EXTRA_simp = case_when(WHYTO == "-7" ~ "Not Reported", 
+                                  WHYTO == "-8" ~ "Not Reported",
+                                  WHYTO == "-9" ~ "Not Reported",
+                                  WHYTO == "01" ~ "Going Home",
+                                  WHYTO == "02" ~ "Going Home",
+                                  WHYTO == "03" ~ "Work",
+                                  WHYTO == "04" ~ "Work",
+                                  WHYTO == "05" ~ "Volunteering/Religious Activities",
+                                  WHYTO == "06" ~ "Giving Someone a Ride",
+                                  WHYTO == "08" ~ "Going to School",
+                                  WHYTO == "09" ~ "Going to School",
+                                  WHYTO == "10" ~ "Other",
+                                  WHYTO == "11" ~ "Grocceries or Other Shopping",
+                                  WHYTO == "12" ~ "Errands (Non-shopping)",
+                                  WHYTO == "13" ~ "Getting Food/Drinks",
+                                  WHYTO == "14" ~ "Errands (Non-shopping)",
+                                  WHYTO == "15" ~ "Recreational Activities",
+                                  WHYTO == "16" ~ "Other",
+                                  WHYTO == "17" ~ "Visiting Friends",
+                                  WHYTO == "18" ~ "Medical Visit",
+                                  WHYTO == "19" ~ "Volunteering/Religious Activities",
+                                  WHYTO == "20" ~ "Other"))
+
+```
+
+```{r}
+
+## Analysis of Trip Purpose by Type IN OKC
+
+bos_trips_simp <-subset(bos_trips, select=c("HOUSEID", "PERSONID", "TDTRPNUM", "TRVLCMIN", "TRIPPURP","WHYTO", "WHYFROM","TRPTRANS")) 
+
+bos_trips_simp <- bos_trips_simp %>% 
+  filter(TRPTRANS != "19",TRPTRANS != "10", TRPTRANS != "09") %>% # Filter out Airplanes, Schoolbus, Snowmobike/Atv
+  mutate(trip_mode_drivingDetail = case_when(TRPTRANS == "-7" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "01" ~ "Walk",
+                               TRPTRANS == "02" ~ "Bike",
+                               TRPTRANS == "03" ~ "Drive: Car",
+                               TRPTRANS == "04" ~ "Drive: SUV/Van",
+                               TRPTRANS == "05" ~ "Drive: SUV/Van",
+                               TRPTRANS == "06" ~ "Drive: Pickup Truck",
+                               TRPTRANS == "07" ~ "Drive: Golf Cart",
+                               TRPTRANS == "08" ~ "Motorcycle/Scooter",
+                               TRPTRANS == "10" ~ "Public Bus",
+                               TRPTRANS == "11" ~ "Paratransit",
+                               TRPTRANS == "13" ~ "Private Bus",
+                               TRPTRANS == "14" ~ "Private Bus",
+                               TRPTRANS == "15" ~ "Rail",
+                               TRPTRANS == "16" ~ "Rail",
+                               TRPTRANS == "17" ~ "Taxi or Rideshare",
+                               TRPTRANS == "18" ~ "Rental Car",
+                               TRPTRANS == "20" ~ "Boat",
+                               TRPTRANS == "97" ~ "Other"))
+
+bos_trips_simp <- bos_trips_simp %>% 
+  mutate(trip_mode_simplified = case_when(TRPTRANS == "-7" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "-8" ~ "Not Reported",
+                               TRPTRANS == "01" ~ "Walk",
+                               TRPTRANS == "02" ~ "Bike",
+                               TRPTRANS == "03" ~ "Drive",
+                               TRPTRANS == "04" ~ "Drive",
+                               TRPTRANS == "05" ~ "Drive",
+                               TRPTRANS == "06" ~ "Drive",
+                               TRPTRANS == "07" ~ "Drive",
+                               TRPTRANS == "08" ~ "Motorcycle/Scooter",
+                               TRPTRANS == "10" ~ "Public Transit",
+                               TRPTRANS == "11" ~ "Public Transit",
+                               TRPTRANS == "13" ~ "Private Bus",
+                               TRPTRANS == "14" ~ "Private Bus",
+                               TRPTRANS == "15" ~ "Public Transit",
+                               TRPTRANS == "16" ~ "Public Transit",
+                               TRPTRANS == "17" ~ "Taxi or Rideshare",
+                               TRPTRANS == "18" ~ "Rental Car",
+                               TRPTRANS == "20" ~ "Boat",
+                               TRPTRANS == "97" ~ "Other"))
+
+bos_trips_simp <- bos_trips_simp %>% 
+  mutate(trip_mode_EXTRA_simplified = case_when(TRPTRANS == "-7" ~ "Other",
+                               TRPTRANS == "-8" ~ "Other",
+                               TRPTRANS == "-8" ~ "Other",
+                               TRPTRANS == "01" ~ "Walk",
+                               TRPTRANS == "02" ~ "Bike",
+                               TRPTRANS == "03" ~ "Drive",
+                               TRPTRANS == "04" ~ "Drive",
+                               TRPTRANS == "05" ~ "Drive",
+                               TRPTRANS == "06" ~ "Drive",
+                               TRPTRANS == "07" ~ "Drive",
+                               TRPTRANS == "08" ~ "Other",
+                               TRPTRANS == "10" ~ "Public Transit",
+                               TRPTRANS == "11" ~ "Public Transit",
+                               TRPTRANS == "13" ~ "Other",
+                               TRPTRANS == "14" ~ "Other",
+                               TRPTRANS == "15" ~ "Public Transit",
+                               TRPTRANS == "16" ~ "Public Transit",
+                               TRPTRANS == "17" ~ "Taxi, Rideshare, or Carshare",
+                               TRPTRANS == "18" ~ "Taxi, Rideshare, or Carshare",
+                               TRPTRANS == "20" ~ "Other",
+                               TRPTRANS == "97" ~ "Other"))
+
+bos_trips_simp <- bos_trips_simp %>% 
+  filter(WHYTO != "07") %>%  #Filter out changing transportation type
+  mutate(trip_purpose = case_when(WHYTO == "-7" ~ "Not Reported", 
+                                  WHYTO == "-8" ~ "Not Reported",
+                                  WHYTO == "-9" ~ "Not Reported",
+                                  WHYTO == "01" ~ "Going Home",
+                                  WHYTO == "02" ~ "Going Home",
+                                  WHYTO == "03" ~ "Work",
+                                  WHYTO == "04" ~ "Work",
+                                  WHYTO == "05" ~ "Volunteering",
+                                  WHYTO == "06" ~ "Giving someone a ride",
+                                  WHYTO == "08" ~ "Going to School",
+                                  WHYTO == "09" ~ "Going to Childcare",
+                                  WHYTO == "10" ~ "Going to Adult Care",
+                                  WHYTO == "11" ~ "Grocceries or Other Shopping",
+                                  WHYTO == "12" ~ "Errands",
+                                  WHYTO == "13" ~ "Going out to eat",
+                                  WHYTO == "14" ~ "Errands",
+                                  WHYTO == "15" ~ "Recreational Activities",
+                                  WHYTO == "16" ~ "Exercise",
+                                  WHYTO == "17" ~ "Visiting Friends",
+                                  WHYTO == "18" ~ "Medical Visit",
+                                  WHYTO == "19" ~ "Religious",
+                                  WHYTO == "20" ~ "Other"))
+
+bos_trips_simp <- bos_trips_simp %>% 
+  filter(WHYTO != "07") %>%  #Filter out changing transportation type
+  mutate(trip_purpose_EXTRA_simp = case_when(WHYTO == "-7" ~ "Not Reported", 
+                                  WHYTO == "-8" ~ "Not Reported",
+                                  WHYTO == "-9" ~ "Not Reported",
+                                  WHYTO == "01" ~ "Going Home",
+                                  WHYTO == "02" ~ "Going Home",
+                                  WHYTO == "03" ~ "Work",
+                                  WHYTO == "04" ~ "Work",
+                                  WHYTO == "05" ~ "Volunteering/Religious Activities",
+                                  WHYTO == "06" ~ "Giving Someone a Ride",
+                                  WHYTO == "08" ~ "Going to School",
+                                  WHYTO == "09" ~ "Going to School",
+                                  WHYTO == "10" ~ "Other",
+                                  WHYTO == "11" ~ "Grocceries or Other Shopping",
+                                  WHYTO == "12" ~ "Errands (Non-shopping)",
+                                  WHYTO == "13" ~ "Getting Food/Drinks",
+                                  WHYTO == "14" ~ "Errands (Non-shopping)",
+                                  WHYTO == "15" ~ "Recreational Activities",
+                                  WHYTO == "16" ~ "Other",
+                                  WHYTO == "17" ~ "Visiting Friends",
+                                  WHYTO == "18" ~ "Medical Visit",
+                                  WHYTO == "19" ~ "Volunteering/Religious Activities",
+                                  WHYTO == "20" ~ "Other"))
+```
+
+
+
+```{R, include=FALSE}
+## Plot
+
+modeBarGraphOKC <- ggplot(okc_trips_simp, aes(x=trip_mode_simplified)) +
+  geom_bar() +
+  ggtitle("Mode Share in OKC Metro Area")
+  theme_classic() 
+
+modeBarGraphBos <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Mode Share in Bos Metro Area")
+  theme_classic() 
+
+modeByPurpose_Bos <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified, fill=trip_purpose)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area by Trip Purpose")
+  theme_classic() 
+
+
+modeByPurpose_Bos <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified, fill=trip_purpose)) +
+  geom_bar(position=) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area")
+  theme_classic()
+  
+modeByPurpose_Bos_PCT <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified, fill=trip_purpose)) +
+  geom_bar(position="fill") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area")
+ 
+  
+modeByPurpose_Bos_Simple <- ggplot(bos_trips_simp, aes(x=trip_mode_EXTRA_simplified, fill=trip_purpose)) +
+  geom_bar(position=) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area")
+
+  
+modeByPurpose_Bos_Simple_PCT <- ggplot(bos_trips_simp, aes(x=trip_mode_EXTRA_simplified, fill=trip_purpose))+
+  geom_bar(position="fill") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area")
+
+  
+PurposebyMode_Bos <- ggplot(bos_trips_simp, aes(x=trip_purpose,fill=trip_mode_EXTRA_simplified)) +
+  geom_bar()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose and Mode Share in Boston Metro Area")
+ 
+PurposebyMode_Bos_PCT <- ggplot(bos_trips_simp, aes(x=trip_purpose,fill=trip_mode_EXTRA_simplified)) +
+  geom_bar(position = "fill") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose and Mode Share in Boston Metro Area")
+  
+PurposebyMode_Bos_simp <- ggplot(bos_trips_simp, aes(x = trip_purpose_EXTRA_simp,fill=trip_mode_EXTRA_simplified)) +
+  geom_bar()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose and Mode Share in Boston Metro Area")
+ 
+PurposebyMode_Bos_PCT_simp <- ggplot(bos_trips_simp, aes(x=trip_purpose_EXTRA_simp,fill=trip_mode_EXTRA_simplified)) +
+  geom_bar(position = "fill") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose and Mode Share in Boston Metro Area")
+
+PurposebyMode_OKC_PCT_simp <- ggplot(okc_trips_simp, aes(x=trip_purpose_EXTRA_simp,fill=trip_mode_EXTRA_simplified)) +
+  geom_bar(position = "fill") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose and Mode Share in Oklahoma City Metro Area")
+
+modeByPurpose_OKC_Simple_PCT <- ggplot(okc_trips_simp, aes(x=trip_mode_EXTRA_simplified, fill=trip_purpose))+
+  geom_bar(position="fill") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Oklahoma City Metro Area")
+
+
+modeBarGraphOKC
+modeBarGraphBos
+modeByPurpose_Bos
+modeByPurpose_Bos_PCT
+modeByPurpose_Bos_Simple
+modeByPurpose_Bos_Simple_PCT
+
+PurposebyMode_Bos
+PurposebyMode_Bos_PCT
+PurposebyMode_Bos_simp
+PurposebyMode_Bos_PCT_simp
+PurposebyMode_OKC_PCT_simp
+modeByPurpose_OKC_Simple_PCT
+
+``` 
+
+
