@@ -2,6 +2,9 @@
 title: "Sage_NatHouseholdTravelSurvey"
 output: html_document
 date: "2023-02-25"
+
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -309,11 +312,50 @@ zone_data_export <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_prod, hbo_b
 
 
 st_write(zone_data_export, here("data",
-                "trip-gen.geojson"))
+                "trip-gen-newVariables.geojson"))
 
 
 
 ```
+
+
+```{r}
+
+
+library(sf)
+
+hbo_tripAttr_pts <- st_sample(zone_data, 
+                            size = ceiling(zone_data$hbo_trip_attr/100))
+
+ hbo_tripProd_pts<- st_sample(census, 
+                            size = ceiling(zone_data$hbo_trip_prod/100))
+
+
+#Then we’ll put each of those four sets of points into its own dataframe with a column indicating the household size category, and finally, we’ll combine the four sets into a single dataframe.
+
+hbo_tripAttr_df <- tibble(hh_size = rep("1 Trip Attraction", 
+                                      length(hbo_tripAttr_pts))) %>%
+  st_sf(geom = hbo_tripAttr_pts)
+                        
+hbo_tripProd_df<- tibble(hh_size = rep("1 Trip Production", 
+                                      length(hbo_tripProd_pts))) %>%
+  st_sf(geom = hbo_tripProd_pts)
+ 
+# create df
+hbo_pts <- rbind(hbo_tripAttr_df, hbo_tripProd_df)
+
+ggplot(zone_data) + 
+  geom_sf(color = "white") +
+  geom_sf(data = hbo_pts, 
+          aes(color = hh_size), 
+          alpha = 0.3,
+          size = 0.1) +
+  scale_color_brewer("\nEach points represents\n100 trips)",
+                     palette = "Set3") +
+  theme_void()  +
+  guides(color = guide_legend(override.aes = list(size=5, alpha = 0.6)))
+```
+
 
 
 # ## Analysis of Trip Purpose by Type IN OKC

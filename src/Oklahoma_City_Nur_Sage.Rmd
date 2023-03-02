@@ -102,6 +102,61 @@ Those outliers can also be seen in Figure 11 at the far right tail of the distri
 ![**Fig 11**: Distribution of zone accessibility scores](../graphics/a5/Transit_Histogram.png)
 </center>
 
+# **Trip Attractions and Trip Productions** 
+
+
+**Estimating Productions and Attractions** 
+Data for our analysis of Trip Attractions and Productions comes from the National Household Travel Survey (NHTS) from 2017. 
+
+To generate Trip Attractions and Trip Productions for each transit analysis zones, we broke up trip types into three main categories. 
+
+1. Home Based Work: Travel between work and home 
+2. Home Based Other: Travel between home and places other than a workplace
+3. Non-Home Based: Travel that does not start or end at home
+
+To generate our trip attractions and productions we conducted a linear regression using factors present in both the NHTS and the ACS. 
+
+We used: 
+
+
+  1. Median Income (Continuous)
+  2. Whether or not the household had a vehicle (yes, no)
+  3. Household size (1 person, 2 people, 3 people, 4 or more people)
+  4. Whether or not the household had kids (yes, no)
+  
+We had a very low R-Squared value in our regressions ranging from .124 to .129. In our regressions, only household size and presence of kids was statistically significant, so we only used these variables to generate trip attractions and productions. 
+
+#### Totals for Trip Productions and Attractions
+**Home Based Work:** 124,464  
+**Home Based Other:** 1,392,300  
+**Non Home Based:** 1,618,000  
+
+
+
+<center>
+![**Fig 12**: Home Based Other, Trip Productions and Attractions](../graphics/a6/HBO_DotDensity.png)
+</center>
+
+
+<center>
+![**Fig 13**: Non Home Based, Trip Productions and Attractions](../graphics/a6/NHB_DotDensity.png)
+</center>
+
+We also used NHTS data to examine mode share in OKC based on various trip types. 
+
+<center>
+![**Fig 14**: Mode Share OKC Metro Area](../graphics/a6/OKC_modeshare.png)
+</center>
+
+<center>
+![**Fig 15**: Mode Share and Trip Purpose](../graphics/a6/ModeShare_TripPurpose_Simple.png)
+</center>
+
+<center>
+![**Fig 16**: Mode Share and Trip Purpose Detail](../graphics/a6/TripModeDetail.png)
+</center>
+
+
 # **Appendix**
 ## A: Methodology and Sources
 ### *Demographics and Land Use Data*
