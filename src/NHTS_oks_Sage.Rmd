@@ -2,7 +2,6 @@
 title: "Sage_NatHouseholdTravelSurvey"
 output: html_document
 date: "2023-02-25"
-
 editor_options: 
   chunk_output_type: console
 ---
@@ -26,16 +25,16 @@ BOS_CBSA <- 14460 #BOS
 
 ```{r}
 
-okc_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
+okc_trips <- read_csv(here("data", "nhts", "trippub.csv")) %>%
   filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
    filter(TRPTRANS != "01" & # Filter Out Walking
          TRPTRANS != "02" & # Filter Out Biking
           TRPTRANS != "19") # Filter out Airplane
 
-
-bos_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
-  filter(HH_CBSA == BOS_CBSA) %>% #Filter to only Bos Stat Area
-   filter(TRPTRANS != "19") # Filter out Airplane
+# 
+# bos_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
+#   filter(HH_CBSA == BOS_CBSA) %>% #Filter to only Bos Stat Area
+#    filter(TRPTRANS != "19") # Filter out Airplane
 
 
 ## Classify Trip Types into 3 Meta Categories
@@ -93,7 +92,7 @@ hh_OKC_trip_counts <- okc_trips %>%
 
 ## Load Household Data
 
-OKC_hhs <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\hhpub.csv") %>%
+OKC_hhs <- read_csv(here("data", "nhts", "hhpub.csv")) %>%
   filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
   left_join(hh_OKC_trip_counts) %>%
   replace_na(list(HBO_trips = 0,
@@ -221,27 +220,27 @@ zone_data <- zone_data %>%
   
   
   mutate(hbo_prod_per_hh = 0.827 + 
-                         #  0.151 * log2(zone_data$median_incomeE) - 
-                         #  1.251 * ((hisp_origin)/total_hhsE) -
-                         #  1.01  * (hh_noVehicles/total_hhsE) +
+                          0.151 * log2(zone_data$median_incomeE) -
+                          1.251 * ((hisp_origin)/total_hhsE) -
+                          1.01  * (hh_noVehicles/total_hhsE) +
                            2.837 * (hhs_3plus_people/total_hhsE) +
-                           1.933 *  (hh_2personE/total_hhsE)) %>%
-                         #   0.678 * (hhs_with_kidsE/total_hhsE)) 
+                           1.933 *  (hh_2personE/total_hhsE) +
+                           0.678 * (hhs_with_kidsE/total_hhsE)) %>%
   
   mutate(hbw_prod_per_hh = -0.218 + 
-                          # 0.098 * log2(zone_data$median_incomeE) - 
-                          # 1.0719 * ((hisp_origin)/total_hhsE) -
-                          # 0.300  * (hh_noVehicles/total_hhsE) +
+                          0.098 * log2(zone_data$median_incomeE) -
+                          1.0719 * ((hisp_origin)/total_hhsE) -
+                          0.300  * (hh_noVehicles/total_hhsE) +
                            1.9509 * (hhs_3plus_people/total_hhsE) +
                           .8997 *  (hh_2personE/total_hhsE) 
                           -.9849 * (hhs_with_kidsE/total_hhsE)) %>%
   
   mutate(nhb_prod_per_hh = .908 + 
-                          # 0.129 * log2(zone_data$median_incomeE) - 
-                          # 1.0719 * ((hisp_origin)/total_hhsE) -
-                          # 0.300  * (hh_noVehicles/total_hhsE) +
-                          # -.587 * (hhs_3plus_people/total_hhsE) +
-                          #.780 *  (hh_2personE/total_hhsE) +
+                          0.129 * log2(zone_data$median_incomeE) -
+                          1.0719 * ((hisp_origin)/total_hhsE) -
+                          0.300  * (hh_noVehicles/total_hhsE) +
+                          -.587 * (hhs_3plus_people/total_hhsE) +
+                          .780 *  (hh_2personE/total_hhsE) +
                           3.400 * (hhs_with_kidsE/total_hhsE)) 
 
 zone_data <- zone_data %>%
