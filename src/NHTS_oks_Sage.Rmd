@@ -219,29 +219,30 @@ zone_data <- zone_data %>%
   mutate(hh_noVehicles = no_vehE) %>%
   
   
-  mutate(hbo_prod_per_hh = 0.827 + 
-                          0.151 * log2(zone_data$median_incomeE) -
-                          1.251 * ((hisp_origin)/total_hhsE) -
-                          1.01  * (hh_noVehicles/total_hhsE) +
-                           2.837 * (hhs_3plus_people/total_hhsE) +
-                           1.933 *  (hh_2personE/total_hhsE) +
-                           0.678 * (hhs_with_kidsE/total_hhsE)) %>%
+  mutate(hbo_prod_per_hh = 0.8267 + 
+                           0.1512 * log2(zone_data$median_incomeE) +
+                          -1.2506 * ((hisp_origin)/total_hhsE) +
+                          -1.0009 * (hh_noVehicles/total_hhsE) +
+                           2.8366 * (hhs_3plus_people/total_hhsE) +
+                           1.9330 *  (hh_2personE/total_hhsE) +
+                           0.6780 * (hhs_with_kidsE/total_hhsE)) %>%
   
-  mutate(hbw_prod_per_hh = -0.218 + 
-                          0.098 * log2(zone_data$median_incomeE) -
-                          1.0719 * ((hisp_origin)/total_hhsE) -
-                          0.300  * (hh_noVehicles/total_hhsE) +
-                           1.9509 * (hhs_3plus_people/total_hhsE) +
-                          .8997 *  (hh_2personE/total_hhsE) 
-                          -.9849 * (hhs_with_kidsE/total_hhsE)) %>%
+  mutate(hbw_prod_per_hh = -0.21076 + 
+                            0.09851 * log2(zone_data$median_incomeE) +
+                            1.07191 * ((hisp_origin)/total_hhsE) +
+                            0.29996 * (hh_noVehicles/total_hhsE) +
+                            0.89970 * (hhs_3plus_people/total_hhsE) +
+                            0.89970 *  (hh_2personE/total_hhsE) +
+                           -0.98494 * (hhs_with_kidsE/total_hhsE)) %>%
   
-  mutate(nhb_prod_per_hh = .908 + 
-                          0.129 * log2(zone_data$median_incomeE) -
-                          1.0719 * ((hisp_origin)/total_hhsE) -
-                          0.300  * (hh_noVehicles/total_hhsE) +
-                          -.587 * (hhs_3plus_people/total_hhsE) +
-                          .780 *  (hh_2personE/total_hhsE) +
-                          3.400 * (hhs_with_kidsE/total_hhsE)) 
+  mutate(nhb_prod_per_hh = 0.9077 + 
+                           0.1287 * log2(zone_data$median_incomeE) +
+                           1.1998 * ((hisp_origin)/total_hhsE) +
+                          -0.9000 * (hh_noVehicles/total_hhsE) +
+                          -0.5867 * (hhs_3plus_people/total_hhsE) +
+                           0.7800 *  (hh_2personE/total_hhsE) +
+                           3.3999 * (hhs_with_kidsE/total_hhsE)) 
+
 
 zone_data <- zone_data %>%
   mutate(hbo_trip_prod = total_hhsE * hbo_prod_per_hh) %>%
@@ -268,13 +269,8 @@ zone_data <- zone_data %>%
            1.0 * service_emp)
 
 
-simplified_okc_zone_data <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_attr, hbw_trip_attr, nhb_trip_attr, nhb_trip_prod, hbo_trip_prod, hbw_trip_prod, hbo_prod_per_hh, hhs_with_kidsE,  total_hhsE))
-
-simplified_okc_zone_data <- simplified_okc_zone_data %>%
-  filter( hbo_trip_prod != "NaN")
-
 zone_data <- zone_data %>%
-  filter(hbo_trip_prod != "NaN")
+  replace(is.na(.), 0)
 
 
 #Home Based Others
@@ -311,7 +307,7 @@ zone_data_export <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_prod, hbo_b
 
 
 st_write(zone_data_export, here("data",
-                "trip-gen-newVariables.geojson"))
+                "trip-gen.geojson"))
 
 
 

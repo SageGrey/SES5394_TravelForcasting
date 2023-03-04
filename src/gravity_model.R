@@ -65,18 +65,20 @@ ttime_by_purpose <- trips_svy %>%
 # write_csv(skim, here("data", "okc_full_skim_geoid.csv"))
 
 skim <- read_csv(here("data", "okc_full_skim_geoid.csv"))
-trip_gen <- st_read(here("data", "trip-gen-newVariables.geojson"))
+trip_gen <- st_read(here("data", "trip-gen.geojson"))
 
 #### Balancing ####
 # Add friction factors
 skim <- skim %>%
   filter(!is.na(car_time)) %>%
+  select(Origin, Destination, car_time) %>%
   mutate(Origin = as.character(Origin)) %>%
   mutate(Destination = as.character(Destination)) %>%
-  select(Origin, Destination, car_time) %>%
-  mutate(f_hbo = car_time^-2) %>%
-  mutate(f_hbw = car_time^-2) %>%
-  mutate(f_nhb = car_time^-2)
+  rename(from_GEOID=Origin) %>%
+  rename(to_GEOID=Destination) %>%
+  mutate(F_HBO = car_time^-2) %>%
+  mutate(F_HBW = car_time^-2) %>%
+  mutate(F_NHB = car_time^-2)
 
 # Run Carole's tool
 hbo_dist <- grvty_balancing(od_zones = trip_gen,
@@ -84,10 +86,11 @@ hbo_dist <- grvty_balancing(od_zones = trip_gen,
                             zone_id = "GEOID",
                             zone_o = "hbo_trip_prod",
                             zone_d = "hbo_bal_attr",
-                            friction_o_id = "Origin",
-                            friction_d_id = "Destination",
-                            friction_factor = "f_hbo",
+                            friction_o_id = "from_GEOID",
+                            friction_d_id = "to_GEOID",
+                            friction_factor = "F_HBO",
                             tolerance = 0.01,
                             max_iter = 50000)
 
 tail(hbo_dist$convergence)
+head(hbo_dist$flows)
