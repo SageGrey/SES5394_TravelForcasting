@@ -44,17 +44,25 @@ ttime_by_purpose <- trips_svy %>%
 
 #### Import skim and trip generation data ####
 # Convert from centroids to GEOIDs
+# 
+# other_dict <- zone_data %>%
+#   select(centroid_id, GEOID) %>%
+#   rename(centroid=centroid_id)
+# 
 # car_centroid_dict <- read_csv(here("data", "car_centroids.csv")) %>%
 #   select(ID, Centroid) %>%
 #   rename(geoid=ID) %>%
-#   rename(centroid=Centroid)
+#   rename(centroid=Centroid) %>%
+#   left_join(other_dict) #%>%
+#   # select(centroid, GEOID) %>%
+  # rename(geoid=GEOID)
 # 
 # match_geoid <- function(v, dict) {
 #   sapply(v, function(id) {
 #     # row <- dict[dict$centroid_id,]
 #     # row$GEOID
 #     dict$geoid[id]
-#     
+# 
 #   })
 # }
 # 
@@ -62,10 +70,12 @@ ttime_by_purpose <- trips_svy %>%
 #   mutate(Origin=match_geoid(Origin, car_centroid_dict)) %>%
 #   mutate(Destination=match_geoid(Destination, car_centroid_dict))
 # 
-# write_csv(skim, here("data", "okc_full_skim_geoid.csv"))
+# write_csv(skim, here("data", "okc_full_skim_GEOID.csv"))
+# write_csv(car_centroid_dict, here("data", "full_geoid_centroid_dict.csv"))
 
 skim <- read_csv(here("data", "okc_full_skim_geoid.csv"))
-trip_gen <- st_read(here("data", "trip-gen.geojson"))
+trip_gen <- st_read(here("data", "trip-gen.geojson")) %>%
+  mutate(hbo_trip_prod=replace(hbo_trip_prod, hbo_trip_prod < 0, 0))
 
 #### Balancing ####
 # Add friction factors
