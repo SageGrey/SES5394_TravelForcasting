@@ -85,13 +85,21 @@ skim <- skim %>%
   mutate(Origin = as.character(Origin)) %>%
   mutate(Destination = as.character(Destination)) %>%
   rename(from_GEOID=Origin) %>%
-  rename(to_GEOID=Destination) %>%
-  mutate(F_HBO = car_time^-2) %>%
-  mutate(F_HBW = car_time^-2) %>%
-  mutate(F_NHB = car_time^-2)
+  rename(to_GEOID=Destination)
+
+skim <- skim %>%
+  mutate(F_HBO = car_time^-3) %>%
+  mutate(F_HBW = car_time^-0.5) %>%
+  mutate(F_NHB = car_time^-2.9)
+
+# Exponential friction factor
+# skim <- skim %>%
+#   mutate(F_HBO = exp(-16.30407 * car_time)) %>%
+#   mutate(F_HBW = exp(-26.10191 * car_time)) %>%
+#   mutate(F_NHB = exp(-15.94483* car_time))
 
 # Run Carole's tool
-hbo_dist <- grvty_balancing(od_zones = trip_gen,
+HBO_dist <- grvty_balancing(od_zones = trip_gen,
                             friction = skim,
                             zone_id = "GEOID",
                             zone_o = "hbo_trip_prod",
@@ -100,7 +108,67 @@ hbo_dist <- grvty_balancing(od_zones = trip_gen,
                             friction_d_id = "to_GEOID",
                             friction_factor = "F_HBO",
                             tolerance = 0.01,
-                            max_iter = 50000)
+                            max_iter = 10000)
 
-tail(hbo_dist$convergence)
-head(hbo_dist$flows)
+tail(HBO_dist$convergence)
+
+HBW_dist <- grvty_balancing(od_zones = trip_gen,
+                            friction = skim,
+                            zone_id = "GEOID",
+                            zone_o = "hbw_trip_prod",
+                            zone_d = "hbw_bal_attr",
+                            friction_o_id = "from_GEOID",
+                            friction_d_id = "to_GEOID",
+                            friction_factor = "F_HBW",
+                            tolerance = 0.01,
+                            max_iter = 10000)
+
+tail(HBW_dist$convergence)
+
+NHB_dist <- grvty_balancing(od_zones = trip_gen,
+                            friction = skim,
+                            zone_id = "GEOID",
+                            zone_o = "nhb_trip_prod",
+                            zone_d = "nhb_bal_attr",
+                            friction_o_id = "from_GEOID",
+                            friction_d_id = "to_GEOID",
+                            friction_factor = "F_NHB",
+                            tolerance = 0.01,
+                            max_iter = 10000)
+
+tail(NHB_dist$convergence)
+
+HBO_flows <- HBO_dist$flows %>%
+  rename(from_GEOID = o_id,
+         to_GEOID = d_id,
+         HBO_flow = flow)
+
+HBW_flows <- HBW_dist$flows %>%
+  rename(from_GEOID = o_id,
+         to_GEOID = d_id,
+         HBW_flow = flow)
+
+NHB_flows <- NHB_dist$flows %>%
+  rename(from_GEOID = o_id,
+         to_GEOID = d_id,
+         NHB_flow = flow)
+
+skim <- skim %>%
+  left_join(HBO_flows) %>%
+  left_join(HBW_flows) %>%
+  left_join(NHB_flows)
+
+sum(skim$HBO_flow * skim$car_time) / sum(skim$HBO_flow)
+sum(skim$HBW_flow * skim$car_time) / sum(skim$HBW_flow)
+sum(skim$NHB_flow * skim$car_time) / sum(skim$NHB_flow)
+
+desire_lines_HBO_threshold <- od_to_sf(skim, trip_gen, silent = TRUE) %>%
+  filter(HBO_flow > 400)
+
+ggplot(desire_lines_HBO_threshold) +
+  geom_sf(data=zone_data) +
+  # annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(alpha = HBO_flow)) +
+  theme_void()
+
+
