@@ -9,17 +9,20 @@ library(knitr)
 library(readxl)
 library(tigris)
 library(scenRios)
+library(devtools)
+library(chorddiag)
+library(RColorBrewer)
 
 OKC_CBSA <- "36420" #OKC
 
 #### Import NHTS travel data by purpose ####
-trips <- read_csv(here("data", "nhts", "trippub.csv"), show_col_types = FALSE) %>%
+# trips <- read_csv(here("data", "nhts", "trippub.csv"), show_col_types = FALSE) %>%
+ trips <- read_csv(here("data", "NHTS_csv", "trippub.csv"), show_col_types = FALSE) %>%
   filter(HH_CBSA == OKC_CBSA) %>%
   filter(TRPTRANS == "03" | # Car
          TRPTRANS == "04" | # SUV
          TRPTRANS == "05" | # Van
          TRPTRANS == "06") # pickup truck
-
 
 # Recode based on trip type
 trips <- trips %>%
@@ -171,4 +174,128 @@ ggplot(desire_lines_HBO_threshold) +
   geom_sf(aes(alpha = HBO_flow)) +
   theme_void()
 
+## Aggregating Zones 
 
+county_skim <- skim %>%
+  mutate(from_county = substr(from_GEOID, 1, 5),
+         to_county = substr(to_GEOID, 1, 5)) %>%
+  group_by(from_county, to_county) %>%
+  summarise(HBO_flow = sum(HBO_flow), HBW_flow = sum(HBW_flow), NHB_flow = sum(NHB_flow)) %>%
+  filter(HBO_flow > 0) %>%
+  filter(NHB_flow > 0) %>%
+  filter(HBW_flow > 0) 
+
+
+counties <- counties(state = "OK") %>%
+  filter(NAME %in% c(
+    "Oklahoma",
+    "Lincoln",
+    "Logan",
+    "Canadian",
+    "Grady",
+    "McClain",
+    "Cleveland"
+  )) %>%
+  select(GEOID)
+
+desire_lines_HBO_counties <- od_to_sf(county_skim, counties, silent = TRUE) 
+desire_lines_HBW_counties <- od_to_sf(county_skim, counties, silent = TRUE) 
+desire_lines_NHB_counties <- od_to_sf(county_skim, counties, silent = TRUE) 
+
+## Plotting County Level Desire Lines
+ggplot(desire_lines_HBO_counties) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBO_flow,
+              linewidth = HBO_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log") +
+  theme_void()
+
+ggplot(desire_lines_HBW_counties) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBW_flow,
+              linewidth = HBW_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log") +
+  theme_void()
+
+ggplot(desire_lines_NHB_counties) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = NHB_flow,
+              linewidth = NHB_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log") +
+  theme_void()
+
+## Chord Diagram
+
+install_github("https://github.com/mattflor/chorddiag")
+
+
+county_names = c(
+  "Oklahoma",
+  "Lincoln",
+  "Logan",
+  "Canadian",
+  "Grady",
+  "McClain",
+  "Cleveland"
+)
+
+labeled_skim <- tibble(prod_name = sort(rep(county_names, 7)),
+                       attr_name = rep(county_names, 7))
+
+labeled_skim <- labeled_skim %>%
+  mutate(from_county = case_when(
+    prod_name == "Oklahoma" ~ "40109",
+    prod_name == "Logan" ~ "40083",
+    prod_name == "Lincoln" ~ "40081",
+    prod_name == "Canadian" ~ "40017",
+    prod_name == "Grady" ~ "40051",
+    prod_name == "McClain" ~ "40087",
+    prod_name == "Cleveland" ~ "40027"),
+    to_county = case_when(
+      attr_name == "Oklahoma" ~ "40109",
+      attr_name == "Logan" ~ "40083",
+      attr_name == "Lincoln" ~ "40081",
+      attr_name == "Canadian" ~ "40017",
+      attr_name == "Grady" ~ "40051",
+      attr_name == "McClain" ~ "40087",
+      attr_name == "Cleveland" ~ "40027")) %>%
+  left_join(county_skim) %>%
+  replace_na(list(HBO_flow = 0)) %>%
+  replace_na(list(HBW_flow = 0)) %>%
+  replace_na(list(NHB_flow = 0)) 
+
+## Setup for Chord Diagram
+hbo_mat <- matrix(labeled_skim$HBO_flow,
+                  byrow = TRUE,
+                  nrow = 7, ncol = 7)
+dimnames(hbo_mat) <- list(production = county_names,
+                          attraction = county_names)
+
+
+hbw_mat <- matrix(labeled_skim$HBW_flow,
+                  byrow = TRUE,
+                  nrow = 7, ncol = 7)
+dimnames(hbw_mat) <- list(production = county_names,
+                          attraction = county_names)
+
+nhb_mat <- matrix(labeled_skim$NHB_flow,
+                  byrow = TRUE,
+                  nrow = 7, ncol = 7)
+dimnames(nhb_mat) <- list(production = county_names,
+                          attraction = county_names)
+nhb_mat
+hbo_mat
+hbw_mat
+
+## Plotting Chord Diagrams
+chord_palette <- brewer.pal(6, "Set2")
+
+chorddiag(hbo_mat, groupColors = chord_palette, groupnamePadding = 20)
+chorddiag(hbw_mat, groupColors = chord_palette, groupnamePadding = 20)
+chorddiag(nhb_mat, groupColors = chord_palette, groupnamePadding = 20)
