@@ -25,16 +25,16 @@ BOS_CBSA <- 14460 #BOS
 
 ```{r}
 
-okc_trips <- read_csv(here("data", "nhts", "trippub.csv")) %>%
+okc_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
   filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
    filter(TRPTRANS != "01" & # Filter Out Walking
          TRPTRANS != "02" & # Filter Out Biking
           TRPTRANS != "19") # Filter out Airplane
 
-# 
-# bos_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
-#   filter(HH_CBSA == BOS_CBSA) %>% #Filter to only Bos Stat Area
-#    filter(TRPTRANS != "19") # Filter out Airplane
+
+bos_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
+  filter(HH_CBSA == BOS_CBSA) %>% #Filter to only Bos Stat Area
+   filter(TRPTRANS != "19") # Filter out Airplane
 
 
 ## Classify Trip Types into 3 Meta Categories
@@ -92,7 +92,7 @@ hh_OKC_trip_counts <- okc_trips %>%
 
 ## Load Household Data
 
-OKC_hhs <- read_csv(here("data", "nhts", "hhpub.csv")) %>%
+OKC_hhs <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\hhpub.csv") %>%
   filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
   left_join(hh_OKC_trip_counts) %>%
   replace_na(list(HBO_trips = 0,
@@ -219,30 +219,29 @@ zone_data <- zone_data %>%
   mutate(hh_noVehicles = no_vehE) %>%
   
   
-  mutate(hbo_prod_per_hh = 0.8267 + 
-                           0.1512 * log2(zone_data$median_incomeE) +
-                          -1.2506 * ((hisp_origin)/total_hhsE) +
-                          -1.0009 * (hh_noVehicles/total_hhsE) +
-                           2.8366 * (hhs_3plus_people/total_hhsE) +
-                           1.9330 *  (hh_2personE/total_hhsE) +
-                           0.6780 * (hhs_with_kidsE/total_hhsE)) %>%
+  mutate(hbo_prod_per_hh = 0.827 + 
+                         #  0.151 * log2(zone_data$median_incomeE) - 
+                         #  1.251 * ((hisp_origin)/total_hhsE) -
+                         #  1.01  * (hh_noVehicles/total_hhsE) +
+                           2.837 * (hhs_3plus_people/total_hhsE) +
+                           1.933 *  (hh_2personE/total_hhsE)) %>%
+                         #   0.678 * (hhs_with_kidsE/total_hhsE)) 
   
-  mutate(hbw_prod_per_hh = -0.21076 + 
-                            0.09851 * log2(zone_data$median_incomeE) +
-                            1.07191 * ((hisp_origin)/total_hhsE) +
-                            0.29996 * (hh_noVehicles/total_hhsE) +
-                            0.89970 * (hhs_3plus_people/total_hhsE) +
-                            0.89970 *  (hh_2personE/total_hhsE) +
-                           -0.98494 * (hhs_with_kidsE/total_hhsE)) %>%
+  mutate(hbw_prod_per_hh = -0.218 + 
+                          # 0.098 * log2(zone_data$median_incomeE) - 
+                          # 1.0719 * ((hisp_origin)/total_hhsE) -
+                          # 0.300  * (hh_noVehicles/total_hhsE) +
+                           1.9509 * (hhs_3plus_people/total_hhsE) +
+                          .8997 *  (hh_2personE/total_hhsE) 
+                          -.9849 * (hhs_with_kidsE/total_hhsE)) %>%
   
-  mutate(nhb_prod_per_hh = 0.9077 + 
-                           0.1287 * log2(zone_data$median_incomeE) +
-                           1.1998 * ((hisp_origin)/total_hhsE) +
-                          -0.9000 * (hh_noVehicles/total_hhsE) +
-                          -0.5867 * (hhs_3plus_people/total_hhsE) +
-                           0.7800 *  (hh_2personE/total_hhsE) +
-                           3.3999 * (hhs_with_kidsE/total_hhsE)) 
-
+  mutate(nhb_prod_per_hh = .908 + 
+                          # 0.129 * log2(zone_data$median_incomeE) - 
+                          # 1.0719 * ((hisp_origin)/total_hhsE) -
+                          # 0.300  * (hh_noVehicles/total_hhsE) +
+                          # -.587 * (hhs_3plus_people/total_hhsE) +
+                          #.780 *  (hh_2personE/total_hhsE) +
+                          3.400 * (hhs_with_kidsE/total_hhsE)) 
 
 zone_data <- zone_data %>%
   mutate(hbo_trip_prod = total_hhsE * hbo_prod_per_hh) %>%
@@ -269,8 +268,13 @@ zone_data <- zone_data %>%
            1.0 * service_emp)
 
 
+simplified_okc_zone_data <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_attr, hbw_trip_attr, nhb_trip_attr, nhb_trip_prod, hbo_trip_prod, hbw_trip_prod, hbo_prod_per_hh, hhs_with_kidsE,  total_hhsE))
+
+simplified_okc_zone_data <- simplified_okc_zone_data %>%
+  filter( hbo_trip_prod != "NaN")
+
 zone_data <- zone_data %>%
-  replace(is.na(.), 0)
+  filter(hbo_trip_prod != "NaN")
 
 
 #Home Based Others
@@ -307,7 +311,7 @@ zone_data_export <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_prod, hbo_b
 
 
 st_write(zone_data_export, here("data",
-                "trip-gen.geojson"))
+                "trip-gen-newVariables.geojson"))
 
 
 
@@ -319,14 +323,15 @@ st_write(zone_data_export, here("data",
 
 library(sf)
 
+# Dot Density
+## Home Based Other 
+
 hbo_tripAttr_pts <- st_sample(zone_data, 
                             size = ceiling(zone_data$hbo_trip_attr/100))
 
- hbo_tripProd_pts<- st_sample(census, 
+ hbo_tripProd_pts<- st_sample(zone_data, 
                             size = ceiling(zone_data$hbo_trip_prod/100))
-
-
-#Then we’ll put each of those four sets of points into its own dataframe with a column indicating the household size category, and finally, we’ll combine the four sets into a single dataframe.
+# Step 2 
 
 hbo_tripAttr_df <- tibble(hh_size = rep("1 Trip Attraction", 
                                       length(hbo_tripAttr_pts))) %>%
@@ -336,19 +341,97 @@ hbo_tripProd_df<- tibble(hh_size = rep("1 Trip Production",
                                       length(hbo_tripProd_pts))) %>%
   st_sf(geom = hbo_tripProd_pts)
  
-# create df
+# Step 3 create df
 hbo_pts <- rbind(hbo_tripAttr_df, hbo_tripProd_df)
 
-ggplot(zone_data) + 
+
+dotdensity_hbo <- ggplot(zone_data) + 
   geom_sf(color = "white") +
   geom_sf(data = hbo_pts, 
           aes(color = hh_size), 
           alpha = 0.3,
           size = 0.1) +
-  scale_color_brewer("\nEach points represents\n100 trips)",
+  scale_color_brewer("Home Based Other \nEach points represents\n100 trips)",
                      palette = "Set3") +
   theme_void()  +
   guides(color = guide_legend(override.aes = list(size=5, alpha = 0.6)))
+
+dotdensity_hbo
+
+
+## Home Based Work
+
+hbw_tripAttr_pts <- st_sample(zone_data, 
+                            size = ceiling(zone_data$hbw_trip_attr/100))
+
+ hbw_tripProd_pts<- st_sample(zone_data, 
+                            size = ceiling(zone_data$hbw_trip_prod/100))
+
+
+# Step Two
+hbw_tripAttr_df <- tibble(hh_size = rep("1 Trip Attraction", 
+                                      length(hbw_tripAttr_pts))) %>%
+  st_sf(geom = hbw_tripAttr_pts)
+                        
+hbw_tripProd_df<- tibble(hh_size = rep("1 Trip Production", 
+                                      length(hbw_tripProd_pts))) %>%
+  st_sf(geom = hbw_tripProd_pts)
+ 
+# create df
+hbw_pts <- rbind(hbw_tripAttr_df, hbw_tripProd_df)
+
+
+dotdensity_hbw <- ggplot(zone_data) + 
+  geom_sf(color = "white") +
+  geom_sf(data = hbw_pts, 
+          aes(color = hh_size), 
+          alpha = 0.3,
+          size = 0.1) +
+  scale_color_brewer("Home Based Work \nEach points represents\n100 trips)",
+                     palette = "Set3") +
+  theme_void()  +
+  guides(color = guide_legend(override.aes = list(size=5, alpha = 0.6)))
+
+dotdensity_hbw
+
+
+
+## Non Home Based
+
+nhb_tripAttr_pts <- st_sample(zone_data, 
+                            size = ceiling(zone_data$nhb_trip_attr/100))
+
+ nhb_tripProd_pts<- st_sample(zone_data, 
+                            size = ceiling(zone_data$nhb_trip_prod/100))
+
+
+# Step Two
+nhb_tripAttr_df <- tibble(hh_size = rep("1 Trip Attraction", 
+                                      length(nhb_tripAttr_pts))) %>%
+  st_sf(geom = nhb_tripAttr_pts)
+                        
+nhb_tripProd_df<- tibble(hh_size = rep("1 Trip Production", 
+                                      length(nhb_tripProd_pts))) %>%
+  st_sf(geom = nhb_tripProd_pts)
+ 
+# create df
+nhb_pts <- rbind(nhb_tripAttr_df, nhb_tripProd_df)
+
+
+dotdensity_nhb <- ggplot(zone_data) + 
+  geom_sf(color = "white") +
+  geom_sf(data = nhb_pts, 
+          aes(color = hh_size), 
+          alpha = 0.3,
+          size = 0.1) +
+  scale_color_brewer("Non Home Based \nEach points represents\n100 trips)",
+                     palette = "Set3") +
+  theme_void()  +
+  guides(color = guide_legend(override.aes = list(size=5, alpha = 0.6)))
+
+dotdensity_nhb
+
+
 ```
 
 
@@ -488,7 +571,7 @@ okc_trips_simp <- okc_trips_simp %>%
 
 ## Analysis of Trip Purpose by Type IN OKC
 
-bos_trips_simp <-subset(bos_trips, select=c("HOUSEID", "PERSONID", "TDTRPNUM", "TRVLCMIN", "TRIPPURP","WHYTO", "WHYFROM","TRPTRANS")) 
+bos_trips_simp <-subset(bos_trips, select=c("HOUSEID", "PERSONID", "TDTRPNUM", "TRVLCMIN", "TRIPPURP","WHYTO", "WHYFROM","TRPTRANS", "HHVEHCNT")) 
 
 bos_trips_simp <- bos_trips_simp %>% 
   filter(TRPTRANS != "19",TRPTRANS != "10", TRPTRANS != "09") %>% # Filter out Airplanes, Schoolbus, Snowmobike/Atv
@@ -513,6 +596,29 @@ bos_trips_simp <- bos_trips_simp %>%
                                TRPTRANS == "18" ~ "Rental Car",
                                TRPTRANS == "20" ~ "Boat",
                                TRPTRANS == "97" ~ "Other"))
+
+bos_trips_simp <- bos_trips_simp %>% 
+  filter(TRPTRANS != "19",TRPTRANS != "10", TRPTRANS != "09", TRPTRANS != "-8", TRPTRANS != "NA", TRPTRANS != "-7", TRPTRANS != "20", TRPTRANS != "97") %>%
+ mutate(trip_mode_FourModes = case_when(TRPTRANS == "-7" ~ "Other/Not Reported",
+                               TRPTRANS == "-8" ~ "Other/Not Reported",
+                               TRPTRANS == "01" ~ "Micromobility",
+                               TRPTRANS == "02" ~ "Micromobility",
+                               TRPTRANS == "03" ~ "Driving",
+                               TRPTRANS == "04" ~ "Driving",
+                               TRPTRANS == "05" ~ "Driving",
+                               TRPTRANS == "06" ~ "Driving",
+                               TRPTRANS == "07" ~ "Driving",
+                               TRPTRANS == "08" ~ "Micromobility",
+                               TRPTRANS == "10" ~ "Public Transit",
+                               TRPTRANS == "11" ~ "Public Transit",
+                               TRPTRANS == "13" ~ "Public Transit",
+                               TRPTRANS == "14" ~ "Public Transit",
+                               TRPTRANS == "15" ~ "Public Transit",
+                               TRPTRANS == "16" ~ "Public Transit",
+                               TRPTRANS == "17" ~ "Rideshare/Taxi",
+                               TRPTRANS == "18" ~ "Driving",
+                               TRPTRANS == "20" ~ "Other/Not Reported",
+                               TRPTRANS == "97" ~ "Other/Not Reported"))
 
 bos_trips_simp <- bos_trips_simp %>% 
   mutate(trip_mode_simplified = case_when(TRPTRANS == "-7" ~ "Not Reported",
@@ -559,6 +665,9 @@ bos_trips_simp <- bos_trips_simp %>%
                                TRPTRANS == "18" ~ "Taxi, Rideshare, or Carshare",
                                TRPTRANS == "20" ~ "Other",
                                TRPTRANS == "97" ~ "Other"))
+
+
+
 
 bos_trips_simp <- bos_trips_simp %>% 
   filter(WHYTO != "07") %>%  #Filter out changing transportation type
@@ -609,6 +718,42 @@ bos_trips_simp <- bos_trips_simp %>%
                                   WHYTO == "18" ~ "Medical Visit",
                                   WHYTO == "19" ~ "Volunteering/Religious Activities",
                                   WHYTO == "20" ~ "Other"))
+
+
+
+bos_trips_filtered_HASCAR <- bos_trips_simp %>% 
+  filter(HHVEHCNT !="0",
+         WHYTO != "01",
+         WHYTO != "02",
+         WHYTO != "07", #Filter out changing transportation type
+         WHYTO !="-7",
+         WHYTO != "8",
+         WHYTO != "NA") %>% 
+  mutate(filtered_TripPurpose = case_when(WHYTO == "-7" ~ "Not Reported", 
+                                  WHYTO == "-8" ~ "Not Reported",
+                                  WHYTO == "-9" ~ "Not Reported",
+                                  WHYTO == "01" ~ "Going Home",
+                                  WHYTO == "02" ~ "Going Home",
+                                  WHYTO == "03" ~ "Work",
+                                  WHYTO == "04" ~ "Work",
+                                  WHYTO == "05" ~ "Volunteering/Religious Activities",
+                                  WHYTO == "06" ~ "Giving Someone a Ride",
+                                  WHYTO == "08" ~ "Going to School",
+                                  WHYTO == "09" ~ "Going to School",
+                                  WHYTO == "10" ~ "Other",
+                                  WHYTO == "11" ~ "Grocceries or Other Shopping",
+                                  WHYTO == "12" ~ "Errands (Non-shopping)",
+                                  WHYTO == "13" ~ "Getting Food/Drinks",
+                                  WHYTO == "14" ~ "Errands (Non-shopping)",
+                                  WHYTO == "15" ~ "Recreational Activities",
+                                  WHYTO == "16" ~ "Other",
+                                  WHYTO == "17" ~ "Visiting Friends",
+                                  WHYTO == "18" ~ "Medical Visit",
+                                  WHYTO == "19" ~ "Volunteering/Religious Activities",
+                                  WHYTO == "20" ~ "Other"))
+
+bos_trips_filtered <- bos_trips_filtered %>%
+   drop_na()
 ```
 
 
@@ -626,6 +771,22 @@ modeBarGraphBos <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified)) +
   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
   ggtitle("Mode Share in Bos Metro Area")
   theme_classic() 
+  
+  modeBarGraphBos_HASCAR <- ggplot(bos_trips_filtered_HASCAR, aes(x = trip_mode_FourModes)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Mode Share in Bos Metro Area")
+  theme_classic() 
+  
+  modeBarGraphBos_HASCAR
+  
+  modeByPurpose_Bos_HASCAR <- ggplot(bos_trips_filtered_HASCAR, aes(x=trip_mode_FourModes, fill=trip_purpose)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area by Trip Purpose")
+  theme_classic() 
+modeByPurpose_Bos_HASCAR
+  
 
 modeByPurpose_Bos <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified, fill=trip_purpose)) +
   geom_bar() +
@@ -639,6 +800,42 @@ modeByPurpose_Bos <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified, fill=tri
   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
   ggtitle("Trip Purpose by Mode Share in Boston Metro Area")
   theme_classic()
+  
+  
+  
+  library(magrittr)
+library(dplyr)
+
+
+  
+  ## Four Categories
+  FourModes_modeByPurpose_Bos <- ggplot(bos_trips_filtered_HASCAR, aes(x=trip_mode_FourModes, fill=filtered_TripPurpose)) +
+  geom_bar(position=) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area") +
+  theme_classic()
+  
+  FourModes_modeByPurpose_Bos
+  
+  FourCat_modeByPurpose_Bos_Simple_PCT
+  
+  #convert 'position' to factor and specify level order
+bos_trips_filtered$position <- factor(bos_trips_filtered$position, levels=c("Errands (Non-shopping", "Grocceries or Other Shopping"))
+
+#create stacked bar chart
+ggplot(df, aes(x=team, y=points, fill=position)) + 
+    geom_bar(position='stack', stat='identity')
+
+  
+  FourCat_modeByPurpose_Bos_Simple_PCT <- ggplot(bos_trips_filtered_HASCAR, aes(x=reorder(trip_mode_FourModes, filtered_TripPurpose), fill=filtered_TripPurpose, na.rm = TRUE))+
+  geom_bar(position="fill") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  ggtitle("Trip Purpose by Mode Share in Boston Metro Area") +
+  coord_flip() 
+  
+  FourCat_modeByPurpose_Bos_Simple_PCT
+  
+  
   
 modeByPurpose_Bos_PCT <- ggplot(bos_trips_simp, aes(x=trip_mode_simplified, fill=trip_purpose)) +
   geom_bar(position="fill") +
@@ -656,6 +853,7 @@ modeByPurpose_Bos_Simple_PCT <- ggplot(bos_trips_simp, aes(x=trip_mode_EXTRA_sim
   geom_bar(position="fill") +
   theme(axis.text.x = element_text(angle = 60, hjust = 1))+
   ggtitle("Trip Purpose by Mode Share in Boston Metro Area")
+
 
   
 PurposebyMode_Bos <- ggplot(bos_trips_simp, aes(x=trip_purpose,fill=trip_mode_EXTRA_simplified)) +
@@ -689,12 +887,24 @@ modeByPurpose_OKC_Simple_PCT <- ggplot(okc_trips_simp, aes(x=trip_mode_EXTRA_sim
   ggtitle("Trip Purpose by Mode Share in Oklahoma City Metro Area")
 
 
+num_grocc <- sum(bos_trips_filtered_HASCAR$filtered_TripPurpose == "Grocceries or Other Shopping" && bos_trips_filtered_HASCAR$trip_mode_FourModes == "Driving", na.rm=TRUE)
+
+
+num_grocc
+
+
+
 modeBarGraphOKC
 modeBarGraphBos
 modeByPurpose_Bos
 modeByPurpose_Bos_PCT
 modeByPurpose_Bos_Simple
 modeByPurpose_Bos_Simple_PCT
+
+
+  FourModes_modeByPurpose_Bos
+  FourCat_modeByPurpose_Bos_Simple_PCT
+  
 
 PurposebyMode_Bos
 PurposebyMode_Bos_PCT
