@@ -158,15 +158,7 @@ We also used NHTS data to examine mode share in OKC based on various trip types.
 
 # Gravity Model
 
-
-1. Describe deterence function used for each trip purpose
-
-2. Compare the average trip distances of our model vs survey data 
-
-3. Illustrate travel flows
-
-
-```{r, echo=FALSE}
+```{r, echo=FALSE, include=F}
 library(here)
 library(tidyverse)
 library(sf)
@@ -185,8 +177,8 @@ library(RColorBrewer)
 OKC_CBSA <- "36420" #OKC
 
 #### Import NHTS travel data by purpose ####
-# trips <- read_csv(here("data", "nhts", "trippub.csv"), show_col_types = FALSE) %>%
- trips <- read_csv(here("data", "NHTS_csv", "trippub.csv"), show_col_types = FALSE) %>%
+trips <- read_csv(here("data", "nhts", "trippub.csv"), show_col_types = FALSE) %>%
+ # trips <- read_csv(here("data", "NHTS_csv", "trippub.csv"), show_col_types = FALSE) %>%
   filter(HH_CBSA == OKC_CBSA) %>%
   filter(TRPTRANS == "03" | # Car
          TRPTRANS == "04" | # SUV
@@ -333,7 +325,38 @@ skim <- skim %>%
 sum(skim$HBO_flow * skim$car_time) / sum(skim$HBO_flow)
 sum(skim$HBW_flow * skim$car_time) / sum(skim$HBW_flow)
 sum(skim$NHB_flow * skim$car_time) / sum(skim$NHB_flow)
+```
 
+## Calibrating the Model with Friction Functions
+To build our gravity model and calculate our trip attraction/production matrix, we first had to choose friction functions for all three trip types. We chose to use power functions, with coefficients adjusted to cause our model's average travel times to match the NHTS travel data.
+
+For home-based work trips, our function was
+$friction = travelTime^{-3}$
+
+For home-based other trips, the function was
+$friction = travelTime^{-0.5}$
+
+For non-home-based trips, the function was
+$friction = travelTime^{-2.9}$
+
+
+This produced average travel times that closely matched observed data, as shown in Figure 17.
+
+<center>
+| Trip Type | Observed Average | Model Average |
+| :-: | :-: | :-: |
+| Home-Based Work  | 26.1019 | 26.1546 |
+| Home-Based Other | 16.3041 | 16.3455 |
+| Non-Home-Based   | 15.9448 | 15.8869 |
+**Figure 17**: Comparison of survey data averages and model averages.
+</center>
+
+## Illustrating Travel Flows
+
+We can see that the single county which generates the most trips by far (across all three types) originate in Cleveland county. This county includes the University of Oklahoma and a large amount of residential land. The vast majority of those trips end in Oklahoma County, which contains the Downtown area. Both the desire line plot and Chord diagrams below illustrate this.
+
+``` {r echo=F, include=F, message = F, warning = F, cache=T}
+zone_data <- st_read(here("data", "okc_zones_with_centroids.geojson"))
 desire_lines_HBO_threshold <- od_to_sf(skim, trip_gen, silent = TRUE) %>%
   filter(HBO_flow > 400)
 
@@ -371,38 +394,7 @@ desire_lines_HBO_counties <- od_to_sf(county_skim, counties, silent = TRUE)
 desire_lines_HBW_counties <- od_to_sf(county_skim, counties, silent = TRUE) 
 desire_lines_NHB_counties <- od_to_sf(county_skim, counties, silent = TRUE) 
 
-## Plotting County Level Desire Lines
-ggplot(desire_lines_HBO_counties) +
-  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
-  geom_sf(aes(color = HBO_flow,
-              linewidth = HBO_flow),
-          alpha = 0.7) +
-  scale_color_viridis_c(trans = "log") +
-  scale_linewidth(trans = "log") +
-  theme_void()
-
-ggplot(desire_lines_HBW_counties) +
-  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
-  geom_sf(aes(color = HBW_flow,
-              linewidth = HBW_flow),
-          alpha = 0.7) +
-  scale_color_viridis_c(trans = "log") +
-  scale_linewidth(trans = "log") +
-  theme_void()
-
-ggplot(desire_lines_NHB_counties) +
-  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
-  geom_sf(aes(color = NHB_flow,
-              linewidth = NHB_flow),
-          alpha = 0.7) +
-  scale_color_viridis_c(trans = "log") +
-  scale_linewidth(trans = "log") +
-  theme_void()
-
 ## Chord Diagram
-
-install_github("https://github.com/mattflor/chorddiag")
-
 
 county_names = c(
   "Oklahoma",
@@ -468,22 +460,59 @@ chord_palette <- brewer.pal(6, "Set2")
 hbo_chord <- chorddiag(hbo_mat, groupColors = chord_palette, groupnamePadding = 20)
 hbw_chord <- chorddiag(hbw_mat, groupColors = chord_palette, groupnamePadding = 20)
 nhb_chord <- chorddiag(nhb_mat, groupColors = chord_palette, groupnamePadding = 20)
-
 ```
 
 
-```{r}
-                       
-nhb_mat
-hbo_mat
-hbw_mat
+<center>
+```{r echo=F, message = F, warning = F}
+## Plotting County Level Desire Lines
+hbw_desire <- ggplot(desire_lines_HBW_counties) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBW_flow,
+              linewidth = HBW_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
 
-nhb_chord
-hbo_chord
+hbo_desire <- ggplot(desire_lines_HBO_counties) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBO_flow,
+              linewidth = HBO_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+nhb_desire <- ggplot(desire_lines_NHB_counties) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = NHB_flow,
+              linewidth = NHB_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+cowplot::plot_grid(hbo_desire, hbw_desire, nhb_desire)
+```
+
+**Figure 18:** Desire lines plotted between counties in Oklahoma City.
+
+```{r echo=F, message = F, warning = F}
 hbw_chord
-
 ```
+**Figure 19:** Chord diagram for home-based work trips.
 
+```{r echo=F, message = F, warning = F}
+hbo_chord
+```
+**Figure 20:** Chord diagram for home-based other trips.
+
+```{r echo=F, message = F, warning = F}
+nhb_chord
+```
+**Figure 21:** Chord diagram for non-home-based trips.
+</center>
 
 # **Appendix**
 ## A: Methodology and Sources
