@@ -2,9 +2,8 @@ library(tidyverse)
 library(here)
 library(sf)
 library(RColorBrewer)
-library(ggplot2)
 library(ggspatial)
-library(raster)
+# library(raster)
 library(ggthemes)
 
 
@@ -22,8 +21,9 @@ chlor_pal_grey <- brewer.pal(5, "Greys")
 chlor_pal_greens <- brewer.pal(5, "BuGn")
 
 
-full_skim <- read_csv(here("data", "okc_full_skim.csv"))
-zone_data <- st_read(here("data", "okc_zones_with_centroids.geojson"))
+full_skim <- read_csv(here("data", "okc_full_skim_geoid.csv"))
+zone_data <- st_read(here("data", "okc_zones_with_centroids.geojson")) %>%
+  mutate_at("GEOID", funs(as.double(.)))
 
 # Calculate perceived travel time
 full_skim <- mutate(full_skim, OVTT = transit_time - IVTT) %>%
@@ -31,10 +31,10 @@ full_skim <- mutate(full_skim, OVTT = transit_time - IVTT) %>%
 
 # Add employment data to skim
 employment_data <- zone_data %>%
-  select(centroid_id, GEOID, total_emp)
+  select(GEOID, total_emp)
 
 accessibility_df <- full_skim %>%
-  left_join(employment_data, by=join_by(Destination==centroid_id))
+  left_join(employment_data, by=join_by(Destination==GEOID))
 
 # Define decay function with inflection=25, stdev=5
 logistic_decay <- function(travel_time) {
@@ -90,7 +90,7 @@ ggplot(accessibility_summary) +
 ## Car 
 options(scipen=999)
 zone_data <- zone_data %>%
-  left_join(accessibility_summary, by=join_by(centroid_id == Origin))
+  left_join(accessibility_summary, by=join_by(GEOID == Origin))
 
 ggplot(zone_data) +
 annotation_map_tile(type = "osm",
@@ -107,6 +107,16 @@ annotation_map_tile(type = "osm",
                       # labels = c("Low", "High")
                       ) +
 
+  theme_map()
+
+
+ggplot(zone_data) +
+  # annotation_map_tile(type = "osm",
+  #                     zoomin = 0,
+  #                     progress = "none") +
+  geom_sf(aes(fill =car_access),
+          color = NA,
+          alpha = 0.6) +
   theme_map()
 
 

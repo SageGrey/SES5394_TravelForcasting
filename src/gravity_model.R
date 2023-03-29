@@ -16,8 +16,7 @@ library(RColorBrewer)
 OKC_CBSA <- "36420" #OKC
 
 #### Import NHTS travel data by purpose ####
-# trips <- read_csv(here("data", "nhts", "trippub.csv"), show_col_types = FALSE) %>%
- trips <- read_csv(here("data", "NHTS_csv", "trippub.csv"), show_col_types = FALSE) %>%
+trips <- read_csv(here("data", "NHTS_csv", "trippub.csv"), show_col_types = FALSE) %>%
   filter(HH_CBSA == OKC_CBSA) %>%
   filter(TRPTRANS == "03" | # Car
          TRPTRANS == "04" | # SUV
@@ -84,7 +83,7 @@ trip_gen <- st_read(here("data", "trip-gen.geojson")) %>%
 # Add friction factors
 skim <- skim %>%
   filter(!is.na(car_time)) %>%
-  select(Origin, Destination, car_time) %>%
+  # select(Origin, Destination, car_time) %>%
   mutate(Origin = as.character(Origin)) %>%
   mutate(Destination = as.character(Destination)) %>%
   rename(from_GEOID=Origin) %>%
@@ -160,6 +159,12 @@ skim <- skim %>%
   left_join(HBO_flows) %>%
   left_join(HBW_flows) %>%
   left_join(NHB_flows)
+
+skim <- skim %>%
+  select(-F_HBW, -F_HBO, -F_NHB)
+
+
+write_csv(skim, here("data", "trip_flows.csv"))
 
 sum(skim$HBO_flow * skim$car_time) / sum(skim$HBO_flow)
 sum(skim$HBW_flow * skim$car_time) / sum(skim$HBW_flow)

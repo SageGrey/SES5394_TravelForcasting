@@ -4,6 +4,8 @@
 .Ruserdata
 .cache/
 rosm.cache/
+*_cache/
+*_files/
 data/*
 !data/*.csv
 !data/*.xlsx

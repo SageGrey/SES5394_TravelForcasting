@@ -1,17 +1,18 @@
 #### Load Libraries and Data ####
 library(sf)
 library(tidyverse)
-library(ggplot2)
 library(hrbrthemes)
-library(devtools)
 library(ggthemes)
 library(RColorBrewer)
 library(treemapify)
 library(here)
 library(dots)
+library(viridis)
+library(tidytransit)
+library(tigris)
 
 # Load data created in zone_data_collection.R
-zones <- st_read(here("data", "okc_zone_data.geojson"))
+zones <- st_read(here("data", "okc_zones_with_centroids.geojson"))
 
 #### Create reusable elements ####
 
@@ -43,22 +44,61 @@ map_colorbar <- guide_colorbar(
   title.position = 'top'
 )
 
-#### Create Chloropleth Maps ####
-chlor_pal <- brewer.pal(5, "BrBG")
-chlor_pal_grey <- brewer.pal(5, "Greys")
-chlor_pal_greens <- brewer.pal(5, "BuGn")
+# #### Create Chloropleth Maps ####
+# chlor_pal <- brewer.pal(5, "BrBG")
+# chlor_pal_grey <- brewer.pal(5, "Greys")
+# chlor_pal_greens <- brewer.pal(5, "BuGn")
 
-# Median Income Map
-ggplot(zones) +
-  geom_sf(aes(fill = median_incomeE)) +
-  scale_fill_gradientn(colors = chlor_pal_greens, name = "Median Income") +
+
+#### University of Oklahoma Travel Data
+uok_geoid <- "40027201202"
+# uok_geoid <- "40027201201"
+# uok_centroid <- "171"
+
+zone_geometry <- zones %>%
+  select(GEOID, geometry) %>%
+  mutate_at("GEOID", funs(as.double(.)))
+
+uok_origin_skim <- read_csv(here("data", "okc_full_skim_geoid.csv")) %>%
+  filter(Destination==uok_geoid) %>%
+  left_join(zone_geometry, by=join_by(Origin==GEOID)) %>%
+  st_as_sf(sf_column_name = "geometry")
   
-  ##Label Football Stadium
-  football_stadium() +
-  theme(legend.title = element_text("Median Income"))
+uok_dest_skim <- read_csv(here("data", "okc_full_skim_geoid.csv")) %>%
+  filter(Origin==uok_geoid) %>%
+  left_join(zone_geometry, by=join_by(Destination==GEOID)) %>%
+  st_as_sf(sf_column_name = "geometry")
 
+# zones_centroids <- st_read(here("data", "okc_zones_with_centroids.geojson")) %>%
+#   select(centroid_id, geometry)
+# 
+# uok_dest_skim <- read_csv(here("data", "okc_full_skim.csv")) %>%
+#   filter(Destination==uok_centroid) %>%
+#   left_join(zones_centroids, by=join_by(Origin==centroid_id))
+#   st_as_sf(sf_column_name = "geometry")
+# 
+# ggplot(uok_dest_skim) +
+#   geom_sf(aes(fill=transit_time)) +
+#   theme_map() +
+#   theme(
+#     rect = element_rect(fill = "transparent"),
+#     legend.position=c(0.5,0)
+#   )
 # 
 # 
+
+#### Map Transit Routes with GTFS Data
+OKC_rta_gtfs <- read_gtfs("https://embarkok.com/data/gtfs/google_transit.zip")
+route_shapes <- shapes_as_sf(OKC_rta_gtfs$shapes)
+
+OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland", "McClain", "Lincoln", "Logan", "Canadian", "Grady")) %>%
+  mutate(color=case_when(
+    COUNTYFP=="109" | COUNTYFP=="027" ~ "ivory2",
+    TRUE ~ "cornsilk"))
+
+OKC_transit_tracts <- OKC_tracts  %>%
+  filter((COUNTYFP=="109" | COUNTYFP=="027"))
+
 # # Employment Density Map
 # ggplot(zones) +
 #   geom_sf(aes(fill = emp_density)) +
@@ -116,33 +156,47 @@ ggplot(zones) +
 #   theme(plot.title = element_text(size = 10))
 # 
 # 
-# #### Scatter Plot ####
-# #Income & Children Living at Home
-# ggplot(zones,
-#        aes(x = total_18to34E, y = median_incomeE, color = pop_density)) +
-#   geom_point(size = 3) +
-#   ggtitle("Census Tracts by Income, Household Structure, and Density ") +
-#   xlab("# of households where adults live with their parents") +
-#   ylab("Median income") +
-#   theme_ipsum() +
-#   theme(plot.title = element_text(size = 10))
+#### Scatter Plot ####
+#Income & Children Living at Home
+ggplot(zones,
+       aes(x = total_18to34E, y = median_incomeE, color = pop_density)) +
+  geom_point(size = 3) +
+  ggtitle("Census Tracts by Income, Household Structure, and Density ") +
+  xlab("# of households where adults live with their parents") +
+  ylab("Median income") +
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 10))
 # 
 
 #### Dot Density Map ####
-# # Using a library
-# veh_cols <- c("no_vehE", "one_vehE", "two_vehE", "three_vehE", "fourplus_vehE")
-# dots_points(shp=zones, cols=all_of(veh_cols), divisor=1000) %>%
-#   ggplot() +
-#   geom_sf(data=zones, color="white") +
-#   geom_sf(
-#     aes(color=dots_type),
-#     alpha=0.3,
-#     size=0.1
-#   ) + 
-#   scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
-#     palette = "Set1") +
-#   theme_map() +
-#   guides(color = guide_legend(override.aes = list(size = 5, alpha = 0.6)))
+# Using a library
+veh_cols <- c("no_vehE", "one_vehE", "two_vehE", "three_vehE", "fourplus_vehE")
+
+zones_cars <- zones %>%
+  mutate(total_cars=one_vehE + 2*two_vehE + 3*three_vehE + 4*fourplus_vehE)
+
+dots_points(shp=zones_cars, cols=all_of(veh_cols), divisor=1000) %>%
+  ggplot() +
+  geom_sf(data=zones, color="white") +
+  geom_sf(
+    aes(color=dots_type),
+    alpha=0.3,
+    size=0.1
+  ) +
+  scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
+    palette = "Set1") +
+  theme_map() +
+  guides(color = guide_legend(override.aes = list(size = 5, alpha = 0.6)))
+
+dots_points(shp=zones_cars, cols=c("total_cars"), divisor=100) %>%
+  ggplot() +
+  geom_sf(data=zones, color="white") +
+  geom_sf(
+    alpha=0.3,
+    size=0.1,
+    color="darkorange"
+  ) +
+  theme_map()
 # 
 # # Doing it by hand
 # scale_factor <- 1000
@@ -210,6 +264,3 @@ total_employment_type <- zones %>%
     names_to = "emp_type",
     values_to = "pct"
   )
-
-
-# ## devtools::install_github("katiejolly/nationalparkcolors")

@@ -104,41 +104,79 @@ Our transportation analysis looks at 419 transit analysis zones across 7 countie
 
 The longest distance between zones by car was just over 3 hours and 15 minutes (190.5 minutes). The shortest distance was half a minute (0.5 minutes). The average distance between TAZ centroids is roughly 30 minutes (30.7), the median time is around 25 minutes (25.6 minutes). Roads highlighted in red in Figure \@ref(fig:road-network) were modeled as two-way rural roads.
 
-```{r road-network, fig.cap="The modeled Oklahoma City road network.", fig.dim=c(10,10)}
+```{r road-network, fig.cap="\nThe modeled Oklahoma City road network.", fig.dim=c(10,10)}
 knitr::include_graphics("../graphics/a3/modified_network.png")
 ```
 
 ## Public Transit Network
+
+```{r transit-inset, fig.margin=T, fig.cap="Full county map with public transit.", fig.width=4}
+ggplot() +
+  geom_sf(data = OKC_tracts,
+          fill = OKC_tracts$color,
+          color = "gray") +
+  geom_sf(data = route_shapes,
+          aes(color = shape_id)) +
+  theme_map() +
+  theme(legend.position = "none")
+```
+
 The OKC Transit network is composed of 651 miles of bus routes, across 30 different bus lines. The map below shows the bus network in detail, and in the context of the whole city. Of our 419 transit analysis zones for OKC metro area, the transit network connects only 135 of those zones, with the longest travel time between zones being just over 3 hours and 15 minutes (190.5 minutes). The shortest distance was half a minute (0.5 minutes). The average distance between centroids is roughly 30 minutes (30.7). The median time between centroids was around 25 minutes (25.6 minutes). The public transit is fully contained in 3 of the 7 counties that make up the OKC statistical area. 
 
-```{r transit-inset, fig.margin=T, fig.cap="Full county map with public transit.", fig.width=5}
-knitr::include_graphics("../graphics/a4/Rplot.png")
+```{r transit-network, fig.cap="The public transit network in Oklahoma City.", fig.dim=c(8,8)}
+ggplot() +
+  geom_sf(data = OKC_transit_tracts,
+          fill = "ivory2",
+          color = "gray") +
+  geom_sf(data = route_shapes,
+          aes(color = shape_id),
+          lwd=1.5) +
+  theme_map() +
+  theme(legend.position = "none")
 ```
-
-```{r transit-network, fig.cap="The public transit network in Oklahoma City.", fig.dim=c(1,1)}
-knitr::include_graphics("../graphics/a4/BestColor_TransitNetworksClevelandAndOklahoma.png")
-```
-<!-- ![**Fig 4**: OKC Public Transit  Network](../graphics/a4/BestColor_TransitNetworksClevelandAndOklahoma.png){width=70%} -->
-
-<!-- ![](../graphics/a4/Rplot.png){width=25%} -->
-<!-- <center> **Fig 4**: OKC Public Transit </center> -->
 
 ## Travel Times
 Using the networks we created, we generated travel time skims which provide travel times between every TAZ. By selecting a subset we can map every zone's travel time by car to the University of Oklahoma, as in Figure 5.
 
-<center>
-![**Fig 5**: Travel Time from UOK to other locations using a car](../graphics/a3/uok_travel_time.png){width=60%} 
-</center>
+```{r uok-origin, fig.cap="Travel time by car from the University of Oklahoma", fig.dim=c(10,10)}
+ggplot(uok_origin_skim) +
+  geom_sf(aes(fill=car_time)) +
+  scale_fill_viridis(
+    option = "mako",
+    direction = -1,
+    name = "Car travel time (min)",
+    guide = map_colorbar
+  ) +
+  theme_map() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.5,0)
+  )
+```
 
 As well as the travel time by bus from the University to other zones, as in Figure 6 (note that many are grayed out because they cannot be reached by bus).
 
-<center>
-![**Fig 6**: Travel Time from UOK to other locations using public transit](../graphics/a4/from_uok_travel.png){width=60%}
-</center>
+TODO: Something in this data isn't right
+
+```{r uok-destination, fig.cap="Public transit travel time to the University of Oklahoma", fig.dim=c(10,10)}
+ggplot(uok_dest_skim) +
+  geom_sf(aes(fill=transit_time)) +
+  scale_fill_viridis(
+    option = "mako",
+    direction = -1,
+    name = "Transit travel time (min)",
+    guide = map_colorbar
+  ) +
+  theme_map() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.5,0)
+  )
+```
 
 # **Accessibility**
 
-**Accessibility** is a measure of how many destination travelers can reach within a *perceived* reasonable time using transportation modes available to them. Put an alternative, and slightly more mathematical way:
+Accessibility is a measure of how many destination travelers can reach within a *perceived* reasonable time using transportation modes available to them. Put an alternative, and slightly more mathematical way:
 
 `r tufte::margin_note("Mobility: reasonable reachable area")`
 `r tufte::margin_note("Proximity: opportunities per area")`
@@ -311,6 +349,28 @@ ggplot(total_employment_type, aes(area = pct, fill = emp_type)) +
 
 ![**Fig A5**: Vehicle Ownership Dot Density Map](../graphics/a2/vehicle_dot_density.png){width=75%} 
 
-![**Fig A6**:Highest income neighborhoods are north of downtown](../graphics/a2/median_income_map.png)
+``` {r median-income, fig.cap="Highest income neighborhoods are north of downtown.", fig.dim=c(5,5)}
+ggplot(zones) +
+  geom_sf(aes(fill = median_incomeE)) +
+  scale_fill_viridis(
+    option = "mako",
+    direction = -1,
+    name = "Median Income",
+    guide = map_colorbar
+  ) +
+  theme_map() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.5,0)
+  )
+```
 
-![**Fig A7**: Income, Population Density, and Adults Living with their Parents](../graphics/a2/structure_income_density.png) 
+``` {r income-density-structure-scatter, fig.cap="Census tracts by income, population density, and # of adults Living with their parents.", fig.dim=c(8,5)}
+ggplot(zones,
+       aes(x = total_18to34E, y = median_incomeE, color = pop_density)) +
+  geom_point(size = 3) +
+  xlab("# of households where adults live with their parents") +
+  ylab("Median income") +
+  theme_ipsum() +
+  theme(plot.title = element_text(size = 10))
+```

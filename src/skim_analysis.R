@@ -3,9 +3,7 @@ library(here)
 library(sf)
 library(ggplot2)
 library(readxl)
-
 library(RColorBrewer)
-
 library(tidytransit)
 library(here)
 library(ggthemes)
@@ -89,11 +87,41 @@ full_skim <- full_join(car_skim, transit_time_skim) %>%
 zones_with_centroid_ids <- zones %>%
   mutate(centroid_id=match_centroid_id(centroid_id, car_centroid_dict))
   
+
+#### Import skim and trip generation data ####
+# Convert from centroids to GEOIDs
+# 
+# other_dict <- zone_data %>%
+#   select(centroid_id, GEOID) %>%
+#   rename(centroid=centroid_id)
+# 
+# car_centroid_dict <- read_csv(here("data", "car_centroids.csv")) %>%
+#   select(ID, Centroid) %>%
+#   rename(geoid=ID) %>%
+#   rename(centroid=Centroid) %>%
+#   left_join(other_dict) #%>%
+#   # select(centroid, GEOID) %>%
+# rename(geoid=GEOID)
+# 
+# match_geoid <- function(v, dict) {
+#   sapply(v, function(id) {
+#     # row <- dict[dict$centroid_id,]
+#     # row$GEOID
+#     dict$geoid[id]
+# 
+#   })
+# }
+# 
+# skim <- read_csv(here("data", "okc_full_skim.csv")) %>%
+#   mutate(Origin=match_geoid(Origin, car_centroid_dict)) %>%
+#   mutate(Destination=match_geoid(Destination, car_centroid_dict))
+# 
+# write_csv(skim, here("data", "okc_full_skim_GEOID.csv"))
   
 write_csv(full_skim, here("data", "okc_full_skim.csv"))
 st_write(zones_with_centroid_ids, here("data", "okc_zones_with_centroids.geojson"), append=FALSE, delete_layer=TRUE)
 
-skim <- read_csv(here("data", "best_skim.csv")) %>%
+skim <- read_csv(here("data", "okc_full_skim.csv")) %>%
   mutate(centroid_id = Origin)
 centroids <- read_csv(here("data", "centroids.csv")) %>%
   
@@ -106,6 +134,8 @@ zones <- zones %>%
   rename(centroid_id = ID) %>%
   select(-Elevation) %>%
   select(-Centroid)
+
+zones <- st_read(here("data", "okc_zones_with_centroids.geojson"))
 
 # Chloropleth map of travel times to the University of OK
 # Centroid ID is 900625
@@ -144,43 +174,3 @@ ggplot(okc_travel_zones) +
 #### Find info about skim 
 
 min(skim)
-
-
-#### Map Transit Skim ALL COUNTIES
-
-
-OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland", "McClain", "Lincoln", "Logan", "Canadian", "Grady"))
-
-OKC_rta_gtfs <- read_gtfs(
-  "https://embarkok.com/data/gtfs/google_transit.zip")
-
-route_shapes <- shapes_as_sf(OKC_rta_gtfs$shapes)
-
-ggplot() +
-  geom_sf(data = OKC_tracts,
-          fill = "cornsilk",
-          color = "gray") +
-  geom_sf(data = route_shapes,
-          aes(color = shape_id)) +
-  theme_map() +
-  theme(legend.position = "none")
-
-#### Map Transit Skim Oklahoma + Cleveland
-
-
-OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland"))
-
-OKC_rta_gtfs <- read_gtfs(
-  "https://embarkok.com/data/gtfs/google_transit.zip")
-
-route_shapes <- shapes_as_sf(OKC_rta_gtfs$shapes)
-
-ggplot() +
-  geom_sf(data = OKC_tracts,
-          fill = "ivory2",
-          color = "gray") +
-  geom_sf(data = route_shapes,
-          aes(color = shape_id)) +
-  theme_map() +
-  theme(legend.position = "none")
-

@@ -20,6 +20,9 @@ okc_no_transit_tracts <- tracts(state="Oklahoma", county = c(
   "McClain"
 ))
 
+
+
+
 okc_transit <- read_gtfs("https://embarkok.com/data/gtfs/google_transit.zip")
 
 transit_routes <- shapes_as_sf(okc_transit$shapes)
@@ -42,16 +45,7 @@ from_uok_skim <- transit_time_skim %>%
 zones_skim <- left_join(zones_with_centroid_ids, from_uok_skim) %>%
   mutate_at("transit_time", funs(as.double(.)))
 
-#### Create reusable themes ####
-# Create clear theme for maps
-clear_map_theme <- theme(
-  axis.text = element_blank(),
-  axis.ticks = element_blank(),
-  panel.background = element_blank(),
-  panel.grid.major = element_blank(),
-  panel.grid.minor = element_blank(),
-  title = element_blank()
-)
+
 
 #### Create Chloropleth Maps ####
 chlor_pal <- brewer.pal(5, "BrBG")
