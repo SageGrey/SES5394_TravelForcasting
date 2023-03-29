@@ -196,3 +196,42 @@ skim <- skim %>%
                                  exp_u_transit_NHB,
                                  na.rm = TRUE)) %>%
   ungroup()
+
+## Probability of each modes
+### HBO
+skims <- skims %>%
+  mutate(p_transit_HBO = exp(utility_transit_HBO) / total_utility_HBO,
+         p_SOV_HBO = exp(utility_SOV_HBO) / total_utility_HBO,
+         p_HOV_HBO = exp(utility_HOV_HBO) / total_utility_HBO) %>%
+  replace_na(list(p_transit_HBO = 0,
+                  p_SOV_HBO = 0,
+                  p_HOV_HBO = 0))
+head(skims) %>%
+  
+  select(fromId, toId, p_transit_HBO, p_SOV_HBO, p_HOV_HBO)
+### NHB
+skims <- skims %>%
+  mutate(p_transit_NHB = exp(utility_transit_NHB) / total_utility_NHB,
+         p_SOV_NHB = exp(utility_SOV_NHB) / total_utility_NHB,
+         p_HOV_NHB = exp(utility_HOV_NHB) / total_utility_NHB) %>%
+  replace_na(list(p_transit_NHB = 0,
+                  p_SOV_NHB = 0,
+                  p_HOV_NHB = 0))
+
+head(skims) %>%
+  select(fromId, toId, p_transit_NHB, p_SOV_NHB, p_HOV_NHB)
+
+### HWB
+skims <- skims %>%
+  mutate(p_transit_HBW = exp(utility_transit_HBW) / total_utility_HBW,
+         p_SOV_HBW = exp(utility_SOV_HBW) / total_utility_HBW,
+         p_HOV_HBW = exp(utility_HOV_HBW) / total_utility_HBW) %>%
+  replace_na(list(p_transit_HBW = 0,
+                  p_SOV_HBW = 0,
+                  p_HOV_NHB = 0))
+
+head(skims) %>%
+  select(fromId, toId, p_transit_HBW, p_SOV_HBW, p_HOV_HBW)
+
+
+
