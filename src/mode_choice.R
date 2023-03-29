@@ -93,17 +93,24 @@ mode_by_purpose <- trips_svy %>%
 # Apply mode-choice model
 # We'd rather use nested logit models, but some of them aren't available
 
+SOV_const_HBO <- 0.01
+HOV_const_HBO <- 0.19
+transit_const_HBO <- 2
+
+SOV_const_HBW <- 1.8
+HOV_const_HBW <- -0.6
+transit_const_HBW <- 5
+beta_car_nest_HBW = 0.5
+
+SOV_const_NHB <- 0.95
+HOV_const_NHB <- 0.9
+transit_const_NHB <- 5
+
 ## HBO using Model G because we don't want non-motorized or transit submodes
 
 SOV_share_HBO <- mode_by_purpose$pct_SOV[mode_by_purpose$purpose == "HBO"]
-
 HOV_share_HBO <- mode_by_purpose$pct_HOV[mode_by_purpose$purpose == "HBO"]
-
 transit_share_HBO <- mode_by_purpose$pct_transit[mode_by_purpose$purpose == "HBO"]
-
-SOV_const_HBO <- log(SOV_share_HBO / (1 - SOV_share_HBO))
-HOV_const_HBO <- log(HOV_share_HBO / (1 - HOV_share_HBO))
-transit_const_HBO <- log(transit_share_HBO / (1 - transit_share_HBO))
 
 skim <- skim %>%
   mutate(utility_transit_HBO = transit_const_HBO +
@@ -129,16 +136,8 @@ skim <- skim %>%
 
 ## HBW using model G bc it's nested logit
 SOV_share_HBW <- mode_by_purpose$pct_SOV[mode_by_purpose$purpose == "HBW"]
-
 HOV_share_HBW <- mode_by_purpose$pct_HOV[mode_by_purpose$purpose == "HBW"]
-
 transit_share_HBW <- mode_by_purpose$pct_transit[mode_by_purpose$purpose == "HBW"]
-
-SOV_const_HBW <- log(SOV_share_HBW / (1 - SOV_share_HBW))
-HOV_const_HBW <- log(HOV_share_HBW / (1 - HOV_share_HBW))
-transit_const_HBW <- log(transit_share_HBW / (1 - transit_share_HBW))
-
-beta_car_nest_HBW = 0.5
 
 skim <- skim %>%
   mutate(utility_transit_HBW = transit_const_HBW +
@@ -167,14 +166,8 @@ skim <- skim %>%
 
 ## NHB using model G bc we don't have detailed walk and transfer wait time
 SOV_share_NHB <- mode_by_purpose$pct_SOV[mode_by_purpose$purpose == "NHB"]
-
 HOV_share_NHB <- mode_by_purpose$pct_HOV[mode_by_purpose$purpose == "NHB"]
-
 transit_share_NHB <- mode_by_purpose$pct_transit[mode_by_purpose$purpose == "NHB"]
-
-SOV_const_NHB <- log(SOV_share_NHB / (1 - SOV_share_NHB))
-HOV_const_NHB <- log(HOV_share_NHB / (1 - HOV_share_NHB))
-transit_const_NHB <- log(transit_share_NHB / (1 - transit_share_NHB))
 
 skim <- skim %>%
   mutate(utility_transit_NHB = transit_const_HBO +
@@ -199,18 +192,17 @@ skim <- skim %>%
 
 ## Probability of each modes
 ### HBO
-skims <- skims %>%
+skim <- skim %>%
   mutate(p_transit_HBO = exp(utility_transit_HBO) / total_utility_HBO,
          p_SOV_HBO = exp(utility_SOV_HBO) / total_utility_HBO,
          p_HOV_HBO = exp(utility_HOV_HBO) / total_utility_HBO) %>%
   replace_na(list(p_transit_HBO = 0,
                   p_SOV_HBO = 0,
                   p_HOV_HBO = 0))
-head(skims) %>%
-  
-  select(fromId, toId, p_transit_HBO, p_SOV_HBO, p_HOV_HBO)
+
+
 ### NHB
-skims <- skims %>%
+skim <- skim %>%
   mutate(p_transit_NHB = exp(utility_transit_NHB) / total_utility_NHB,
          p_SOV_NHB = exp(utility_SOV_NHB) / total_utility_NHB,
          p_HOV_NHB = exp(utility_HOV_NHB) / total_utility_NHB) %>%
@@ -218,20 +210,66 @@ skims <- skims %>%
                   p_SOV_NHB = 0,
                   p_HOV_NHB = 0))
 
-head(skims) %>%
-  select(fromId, toId, p_transit_NHB, p_SOV_NHB, p_HOV_NHB)
 
-### HWB
-skims <- skims %>%
+### HBW
+skim <- skim %>%
   mutate(p_transit_HBW = exp(utility_transit_HBW) / total_utility_HBW,
-         p_SOV_HBW = exp(utility_SOV_HBW) / total_utility_HBW,
-         p_HOV_HBW = exp(utility_HOV_HBW) / total_utility_HBW) %>%
+         p_car_HBW = exp(utility_car_HBW_nest) / total_utility_HBW) %>%
   replace_na(list(p_transit_HBW = 0,
-                  p_SOV_HBW = 0,
-                  p_HOV_NHB = 0))
+                  p_car_HBW = 0))
 
-head(skims) %>%
-  select(fromId, toId, p_transit_HBW, p_SOV_HBW, p_HOV_HBW)
+skim <- skim %>%
+  mutate(p_SOV_if_car_HBW = exp(utility_SOV_HBW) / exp(utility_car_HBW_total),
+         p_HOV_if_car_HBW = exp(utility_HOV_HBW) / exp(utility_car_HBW_total)) %>%
+  mutate(p_SOV_HBW = p_car_HBW * p_SOV_if_car_HBW,
+         p_HOV_HBW = p_car_HBW * p_HOV_if_car_HBW)
 
+
+## Calculate number of trips
+skim <- skim %>%
+  mutate(n_transit_HBO = round(HBO_flow * p_transit_HBO),
+         n_SOV_HBO = round(HBO_flow * p_SOV_HBO),
+         n_HOV_HBO = round(HBO_flow * p_HOV_HBO),
+         n_transit_HBW = round(HBW_flow * p_transit_HBW),
+         n_SOV_HBW = round(HBW_flow * p_SOV_HBW),
+         n_HOV_HBW = round(HBW_flow * p_HOV_HBW),
+         n_transit_NHB = round(NHB_flow * p_transit_NHB),
+         n_SOV_NHB = round(NHB_flow * p_SOV_NHB),
+         n_HOV_NHB = round(NHB_flow * p_HOV_NHB)) %>%
+  replace_na(list(n_transit_HBO = 0,
+                  n_SOV_HBO = 0,
+                  n_HOV_HBO = 0,
+                  n_transit_HBW = 0,
+                  n_SOV_HBW = 0,
+                  n_HOV_HBW = 0,
+                  n_transit_NHB = 0,
+                  n_SOV_NHB = 0,
+                  n_HOV_NHB = 0))
+
+
+modeled_mode_by_purpose_1 <- tibble(
+  purpose = c("HBO_model 1", "HBW_model 1", "NHB_model 1"),
+  pct_transit = c(sum(skim$n_transit_HBO) /
+                    sum(skim$HBO_flow),
+                  sum(skim$n_transit_HBW) /
+                    sum(skim$HBW_flow),
+                  sum(skim$n_transit_NHB) /
+                    sum(skim$NHB_flow)),
+  pct_SOV = c(sum(skim$n_SOV_HBO) /
+                sum(skim$HBO_flow),
+              sum(skim$n_SOV_HBW) /
+                sum(skim$HBW_flow),
+              sum(skim$n_SOV_NHB) /
+                sum(skim$NHB_flow)),
+  pct_HOV = c(sum(skim$n_HOV_HBO) /
+                sum(skim$HBO_flow),
+              sum(skim$n_HOV_HBW) /
+                sum(skim$HBW_flow),
+              sum(skim$n_HOV_NHB) /
+                sum(skim$NHB_flow)))
+
+model_compare <- rbind(mode_by_purpose, modeled_mode_by_purpose_1) 
+
+model_compare
 
 
