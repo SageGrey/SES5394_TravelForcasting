@@ -10,6 +10,7 @@ library(dots)
 library(viridis)
 library(tidytransit)
 library(tigris)
+library(kableExtra)
 
 # Load data created in zone_data_collection.R
 zones <- st_read(here("data", "okc_zones_with_centroids.geojson"))
@@ -99,6 +100,17 @@ OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland", "McClain",
 OKC_transit_tracts <- OKC_tracts  %>%
   filter((COUNTYFP=="109" | COUNTYFP=="027"))
 
+
+trip_gen <- st_read(here("data", "trip-gen-newVariables.geojson"))
+# 
+# total_trips <- trip_gen %>%
+#   summarise("Home Based Work"=round(sum(hbw_trip_prod)),
+#             "Home Based Other"=round(sum(hbo_trip_prod)),
+#             "Non Home Based"=round(sum(nhb_trip_prod))) %>%
+#   st_drop_geometry() %>%
+#   t()
+
+
 # # Employment Density Map
 # ggplot(zones) +
 #   geom_sf(aes(fill = emp_density)) +
@@ -172,31 +184,31 @@ ggplot(zones,
 # Using a library
 veh_cols <- c("no_vehE", "one_vehE", "two_vehE", "three_vehE", "fourplus_vehE")
 
+# dots_points(shp=zones_cars, cols=all_of(veh_cols), divisor=100) %>%
+#   ggplot() +
+#   geom_sf(data=zones, color="white") +
+#   geom_sf(
+#     aes(color=dots_type),
+#     alpha=0.3,
+#     size=0.1
+#   ) +
+#   scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
+#     palette = "Set1") +
+#   theme_map() +
+#   guides(color = guide_legend(override.aes = list(size = 5, alpha = 0.6)))
+
 zones_cars <- zones %>%
   mutate(total_cars=one_vehE + 2*two_vehE + 3*three_vehE + 4*fourplus_vehE)
-
-dots_points(shp=zones_cars, cols=all_of(veh_cols), divisor=1000) %>%
-  ggplot() +
-  geom_sf(data=zones, color="white") +
-  geom_sf(
-    aes(color=dots_type),
-    alpha=0.3,
-    size=0.1
-  ) +
-  scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
-    palette = "Set1") +
-  theme_map() +
-  guides(color = guide_legend(override.aes = list(size = 5, alpha = 0.6)))
-
-dots_points(shp=zones_cars, cols=c("total_cars"), divisor=100) %>%
-  ggplot() +
-  geom_sf(data=zones, color="white") +
-  geom_sf(
-    alpha=0.3,
-    size=0.1,
-    color="darkorange"
-  ) +
-  theme_map()
+# 
+# dots_points(shp=zones_cars, cols=c("total_cars"), divisor=100) %>%
+#   ggplot() +
+#   geom_sf(data=zones, color="white") +
+#   geom_sf(
+#     alpha=0.3,
+#     size=0.1,
+#     color="darkorange"
+#   ) +
+#   theme_map()
 # 
 # # Doing it by hand
 # scale_factor <- 1000

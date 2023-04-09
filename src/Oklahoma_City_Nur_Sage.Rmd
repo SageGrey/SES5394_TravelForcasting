@@ -182,8 +182,8 @@ library(RColorBrewer)
 OKC_CBSA <- "36420" #OKC
 
 #### Import NHTS travel data by purpose ####
-trips <- read_csv(here("data", "nhts", "trippub.csv"), show_col_types = FALSE) %>%
-#  trips <- read_csv(here("data", "NHTS_csv", "trippub.csv"), show_col_types = FALSE) %>%
+# trips <- read_csv(here("data", "nhts", "trippub.csv"), show_col_types = FALSE) %>%
+ trips <- read_csv(here("data", "NHTS_csv", "trippub.csv"), show_col_types = FALSE) %>%
   filter(HH_CBSA == OKC_CBSA) %>%
   filter(TRPTRANS == "03" | # Car
          TRPTRANS == "04" | # SUV
@@ -521,67 +521,61 @@ nhb_chord
 
 # **Mode Choice**
 
-#### Generating Travel Costs
+## Generating Travel Costs
 For this step of the model we began by generating costs for our three forms of transportation: driving alone (SOV), driving with someone else (HOV), and taking transit. 
-Although our transit skim contained Fare information, we chose to instead use information from the National Transit Database as we thought it would better reflect information about transit discounts. We then made the assumption that transit cost is a function of the baseline fare cost multiplied by the number of transfers. 
+Although our transit skim contained fare information, we chose to instead use information from the National Transit Database as we thought it would better reflect information about transit discounts. We then made the assumption that transit cost is a function of the baseline fare cost multiplied by the number of transfers. 
 For travel by car we used NHTS data to first find total expenditure on gas and total driving time. Using these two numbers we generated cost per minute of driving. We then used information from table 4.16 of NCHRP 716 to estimate average occupancy of vehicles for our different categories of trip types (Home Based Work, Non-Home Based, Home-Based Other). We assume that driving cost is shared equally among all car occupants. 
 
 
 |Transportation Mode|Transportation Cost|
-|---|---|
+|:---|:---:|
 |Transit Base Fare| $ 0.68|
 | SOV|$0.07 per mile |
 |HOV (HBO)| $0.025 per mile|
 |HOV(NHB)|$0.025 per mile|
 |HOV (HBW)| $0.025 per mile|
 
-#### Estimate Mode Shares
-We then went into NHTS data to pull survey data about the existing Mode Share in OKC. We divided the modes into three categories: HOV, SOV, and Transit. 
+## Estimating Mode Shares
+We then went into NHTS data to pull survey data about the existing mode share in OKC. We divided the modes into our three categories: HOV, SOV, and Transit. 
 
 We made the following assumptions:
 
 |Category|Subcategories|
-|---|---|
-|Transit|Public Bus, Para-transit, private Bus, Rail| 
-|SOV|Car, SUV/VAN, Pickup Truck, Rental Car, Rideshare/Taxi|
-|HOV| Same as Car, but occupancy >1|
+|:---|:---|
+|Transit|Public Bus, Para-transit, Private Bus, Rail| 
+|SOV|Car, SUV/VAN, Pickup Truck, Rental Car, Rideshare/Taxi (all with occupancy = 1)|
+|HOV|Same as SOV (with occupancy > 1)|
 |Not-Included|Golf-Cart, Boat, Airplane, Snowmobile, ATV, Walking, Biking|
 
 We then used the NHTS survey weights to determine the percent of each of these three modes over our study area. 
 
-#### Choosing Model
-In our process of choosing Mode Choice models from NCHRP 716 we went with two criteria
-1. Using a Nested Logit when possible and 
+## Choosing Models
+In our process of choosing mode choice models from NCHRP 716 we went with two criteria
+1. Using a Nested Logit when possible
 2. Using models that we had all values for
 
-For Home Based Work Trips we Chose
-
-We chose the following models
+We chose the following models:
 
 |Trip Type| Model Chosen|Assumptions of Model|
-|---|---|---|
-|Home Based Work|**Model G**|Nested Logit for more than 1 million, Does not included motorized, has submodes for auto but none for transit|
-|Home Based Other| **Model G**|For more than a million, Not a nested logit, does not include motorized or transit submodes, does include auto submodes|
-|Non Home Based|**Model G**|More than a million, Not a nested logit, does not include motorized or transit submodes, does include auto submodes|
+|:---|:---:|:---|
+|Home Based Work|Model G|Nested; > 1 million; Excludes non-motorized; Submodes for HOV/SOV|
+|Home Based Other|Model G|Non-nested; > 1 million; Excludes non-motorized; No submodes|
+|Non Home Based|Model G|Non-nested; > 1 million; Excludes non-motorized; Submodes for HOV/SOV|
 
-#### Calculating Utility by Applying a Mode-Choice Model
-The next step we needed to do was to calculate utility. To figure out how much someone's utility of a trip depends on characteristics of that trip. For example how long someone has to wait for a bus decreases their utility of transit and how long someone has to drive decreases their utility of driving.The NCHRP models give us coeficients (how different aspects such as waiting time influence utility) but they don't provide mode-specific constants which would tell us how the utilities of modes relate to each other. To estimate the utility of each mode we will start by using the log-odds to generate constants, and then return and adjust them when we are calibrating our model.   
+## Calculating Mode Share by Applying a Mode-Choice Model
+### Utility
+Next we calculated utility for the different modes. This allows us to encode how much someone's utility of a trip depends on characteristics of that trip. For example, how long someone has to wait for a bus decreases their perceived utility of transit, and how long someone has to drive decreases their utility of driving.The NCHRP models give us coefficients (how different aspects such as waiting time influence utility) but they don't provide mode-specific constants which would tell us how the utilities of modes relate to each other. To estimate the utility of each mode we started by using the log-odds to generate total mode share for the region.
 
-Once we have utility for each trip we can calculate probability of each mode by trip type. This ultimately lets us calculate number of trips by mode. 
+### Probability and Ridership by Mode
+We then used the calculated utilities in a probability model which generated the mode-share distribution for the region. By using the flow data generated by the gravity model described in the previous section, we were able to calculate the total ridership of our three different modes. Once we generated an initial estimate we were able to adjust our mode share coefficients to match the observed NHTS data, as shown in the table below:
 
-
-#### Calculate Regional Mode Shares
-Now that we have number of trips per mode by each GEOID we can use our flow data generated through our gravity model in last section to estimate mode shares across OKC. 
-
-
-When we compared this to NHTS data we can see that the numbers are close, but off. We then altered the utility constants that we generated through calculating log-odds for each mode share until our model matched NHTS data.
-
-```{r, INCLUDE = F, MESSAGE = FALSE, WARNING = FALSE}
+```{r message = F, warning = F, echo=F, cache=T}
 source("mode_choice.R")
 head(model_compare) %>%
   kbl() %>%
   kable_styling()
 ``` 
+
 
 
 # **Trip Assignment**
@@ -593,6 +587,7 @@ From this stage, we loaded our production-attraction matrix into Transcad to con
 The other things we needed for this step were information about the capacity if each link (road) in our network and free flow travel times. We calculated capacity by assuming that capacity is a function of the number of lanes and the speed of the road. We assumed that all roads that did not have lanes in the open street map dataset were 2 lane roads. And we assumed that the capacity of the road would be 1,800 vehicles per hour multiplied by the speed of the road divided by sixty. 
 
 Once we had these three inputs, we were able to calculate vehicle volumes for each link in the network. 
+
 
 # **Appendix**
 ## A: Methodology and Sources
