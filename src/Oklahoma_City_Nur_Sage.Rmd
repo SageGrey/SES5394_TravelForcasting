@@ -585,10 +585,10 @@ To begin the Trip Assignment step we first did some manipulations on our product
 
 From this stage, we loaded our production-attraction matrix into Transcad to convert the production-attraction matrix into a one-hour origin-destination matrix for the hour 5pm-6pm. We chose this time assuming that it would reveal information about peak congestion times. 
 
-The other things we needed for this step were information about the capacity of each link (road) in our network and free flow travel times. We calculated capacity by assuming that capacity is a function of the number of lanes and the speed of the road. We assumed that all roads that did not have lanes in the open street map dataset were 2 lane roads. We also assumed that the capacity for a given lane of road at 60 miles per hour is 1800 cars. To generate the capacity for each link we used the formula capacity = 1800 * numberOfLanses * (speed/60). 
+The other things we needed for this step were information about the capacity of each link (road) in our network and free flow travel times. We calculated capacity by assuming that capacity is a function of the number of lanes and the speed of the road. We assumed that all roads that did not have lanes in the open street map dataset were 2 lane roads. We also assumed that the capacity for a given lane of road at 60 miles per hour is 1800 cars. To generate the capacity for each link we used the formula capacity = 1800 * numberOfLanes * (speed/60). 
 
 Once we had these three inputs, we were able to calculate vehicle volumes for each link in the network. 
-
+![**Fig 22**: Road Congestion at 5pm in Oklahoma City.Orange and Red links show where the number of vehicles (v) exceeds the capacity (c) of the road](../graphics/a9/okc_roads_congestion.png)
 
 # **Appendix**
 ## A: Methodology and Sources
