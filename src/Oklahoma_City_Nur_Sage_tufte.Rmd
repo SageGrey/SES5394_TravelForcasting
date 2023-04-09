@@ -26,6 +26,7 @@ knitr::opts_chunk$set(
 options(htmltools.dir.version = FALSE)
 
 source("zone_visualization_sourced.R")
+source("accessibility_analysis.R")
 ```
 
 **Nur Shlapobersky** + **Sage Voorhees**  
@@ -174,7 +175,7 @@ ggplot(uok_dest_skim) +
   )
 ```
 
-# **Accessibility**
+# Accessibility
 
 Accessibility is a measure of how many destination travelers can reach within a *perceived* reasonable time using transportation modes available to them. Put an alternative, and slightly more mathematical way:
 
@@ -185,42 +186,115 @@ $$accessibility = mobility * proximity$$
 We determine accessibility based on the network skims mentioned earlier and employment data. Travel times are used in a decay function to scale the "worth" of each opportunity, and these are all summed together to determine the accessibility score. See Appendix B for more information.
 
 ## Accessibility by Car
+
 Car access is distributed as is typical for a metropolitan area: the downtown, being both dense and centrally located, has higher scores than the outlying areas. 
 
-<center>
-![**Fig 7**: Car accessibility scores for each zone](../graphics/a5/CarAccessibility_Chloropleth.png)
-</center>
+``` {r car-access-map, fig.cap="Car accessibility scores for each zone", fig.dim=c(10,10)}
+ggplot(zone_data) +
+  annotation_map_tile(type = "osm",
+                      zoomin = 0,
+                      progress = "none") +
+  geom_sf(aes(fill =car_access),
+          color = NA,
+          alpha = 0.6) +
+ scale_fill_viridis(
+    option = "mako",
+    direction = -1,
+    name = "Car Accessibility",
+    guide = map_colorbar,
+    alpha=0.6
+  ) +
+  theme_map() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.5,0)
+  )
+```
 
-While they don't necessarily represent a large percent of the land area, there are many of those downtown high-scoring zones because they are smaller, and this is what forms the right peak in the distribution shown in Figure 8. The left peak represents the outlying rural zones.
+While they don't necessarily represent a large percent of the land area, there are many of those downtown high-scoring zones because they are smaller, and this is what forms the right peak in the distribution shown in Figure \@ref(fig:car-access-histogram). The left peak represents the outlying rural zones.
 
-<center>
-![**Fig 8**: Distribution of zone accessibility scores](../graphics/a5/CarAccess_Histogram.png)
-</center>
+``` {r car-access-histogram, fig.cap="Distribution of zone accessibility scores", fig.dim=c(10,5)}
+ggplot(accessibility_summary) +
+  geom_histogram(aes(x = car_access),
+                 bins = 35,
+                 color = "gray",
+                 fill = "darkgreen") +
+  scale_x_continuous(name = "Accessibility Total by Car") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme_minimal() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.5,0)
+  )
+```
 
 ## Accessibility by Transit
-Transit in Oklahoma City is quite limited to the areas in and around Downtown and the University campus. The bus lines between the two areas notably bypass most of the zones in between, creating the two island-like regions in Figure 9.
-
-<center>
-![**Fig 9**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_log.png)
-</center>
-
-Taking a look at the accessibility map without using a log transformation in Figure 10, we can see that the majority of those zones have very similar low scores. There are just a few outliers with much higher accessibility scores due to the proximity of transit hubs where many of the bus lines meet.
-
-<center>
-![**Fig 10**: Transit accessibility scores for each zone (on a log scale)](../graphics/a5/trans_access_linear.png)
-</center>
-
-Those outliers can also be seen in Figure 11 at the far right tail of the distribution.  
-
-<center>
-![**Fig 11**: Distribution of zone accessibility scores](../graphics/a5/Transit_Histogram.png)
-</center>
-
-# **Trip Attractions and Trip Productions** 
+Transit in Oklahoma City is quite limited to the areas in and around Downtown and the University campus. The bus lines between the two areas notably bypass most of the zones in between, creating the two island-like regions in Figure \@ref(fig:transit-access-map). Taking a look at the linear scale accessibility map, we can see that the majority of those zones have very similar low scores. There are just a few outliers with much higher accessibility scores due to the proximity of transit hubs where many of the bus lines meet.
 
 
-**Estimating Productions and Attractions** 
-Data for our analysis of Trip Attractions and Productions comes from the National Household Travel Survey (NHTS) from 2017. 
+``` {r transit-access-map, fig.cap="Transit accessibility scores for each zone (on a log scale and a linear scale)", fig.dim=c(10,5)}
+options(digits=3)
+
+log_map <- ggplot(zone_data) +
+   annotation_map_tile(type = "osm",
+                       zoomin = 0,
+                     progress = "none") +
+  geom_sf(aes(fill = transit_access),
+          color = NA,
+          alpha = 0.6) +
+  scale_fill_viridis(
+    option = "mako",
+    direction = -1,
+    name = "Transit Accessibility (log)",
+    guide = map_colorbar,
+    alpha=0.6,
+    trans="log"
+  ) +
+  theme_map() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.5,0)
+  )
+
+lin_map <- ggplot(zone_data) +
+   annotation_map_tile(type = "osm",
+                       zoomin = 0,
+                     progress = "none") +
+  geom_sf(aes(fill = transit_access),
+          color = NA,
+          alpha = 0.6) +
+  scale_fill_viridis(
+    option = "mako",
+    direction = -1,
+    name = "Transit Accessibility (linear)",
+    guide = map_colorbar,
+    alpha=0.6
+  ) +
+  theme_map() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.5,0)
+  )
+
+gridExtra::grid.arrange(log_map, lin_map, ncol=2)
+```
+
+Those outliers can also be seen in \@ref(fig:transit-access-histogram) at the far right tail of the distribution.  
+
+``` {r transit-access-histogram, fig.cap="Distribution of zone accessibility scores", fig.dim=c(10,5)}
+ggplot(accessibility_summary) +
+  geom_histogram(aes(x = transit_access),
+                 bins = 35,
+                 color = "gray",
+                 fill = "darkgreen") +
+  scale_x_continuous(name = "Accessibility Total by Transit") +
+  scale_y_continuous(name = "Number of census tracts") +
+  theme_minimal()
+```
+
+# Trip Attractions and Trip Productions 
+
+## Estimating Productions and Attractions
 
 To generate Trip Attractions and Trip Productions for each transit analysis zones, we broke up trip types into three main categories. 
 
@@ -228,33 +302,72 @@ To generate Trip Attractions and Trip Productions for each transit analysis zone
 2. Home Based Other: Travel between home and places other than a workplace
 3. Non-Home Based: Travel that does not start or end at home
 
-To generate our trip attractions and productions we conducted a linear regression using factors present in both the NHTS and the ACS. 
+To generate our trip attractions and productions we conducted a linear regression using factors present in both the NHTS^[National Household Travel Survey (NHTS) from 2017] and the ACS. 
 
 We used: 
-
 
   1. Median Income (Continuous)
   2. Whether or not the household had a vehicle (yes, no)
   3. Household size (1 person, 2 people, 3 people, 4 or more people)
   4. Whether or not the household had kids (yes, no)
   
-We had a very low R-Squared value in our regressions ranging from .124 to .129. In our regressions, only household size and presence of kids was statistically significant, so we only used these variables to generate trip attractions and productions. 
+We had a very low R-Squared value in our regressions ranging from .124 to .129. In our regressions, only household size and presence of kids was statistically significant. The resulting trips by type were as follows: 
 
-#### Totals for Trip Productions and Attractions
-**Home Based Work:** 124,464  
-**Home Based Other:** 1,392,300  
-**Non Home Based:** 1,618,000  
+::: {style="width:50%; margin-left:15%"}
+| Trip Type | Total Trips |
+|:-|:-:|
+|Home Based Work|124,464|
+|Home Based Other|1,392,300|
+|Non Home Based|1,618,000|
+:::
 
+```{r hbo-dot, fig.cap="Home Based Other, Trip Productions and Attractions", fig.dim=c(10,10)}
+hbo_cols <- c("hbo_trip_prod", "hbo_bal_attr")
 
+hbo_dots <- dots_points(shp=trip_gen, cols=all_of(hbo_cols), divisor=100) %>%
+  ggplot() +
+  geom_sf(data=zones, color="white") +
+  geom_sf(
+    aes(color=dots_type),
+    alpha=0.3,
+    size=0.5
+  ) +
+  scale_color_brewer("Home Based Other \nEach points represents\n100 trips)",
+                     palette = "Set3") +
+  theme_map() +
+  guides(color = guide_legend(override.aes = list(size = 10, alpha = 0.6))) +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.85,0.2)
+  )
 
-<center>
-![**Fig 12**: Home Based Other, Trip Productions and Attractions](../graphics/a6/HBO_DotDensity.png)
-</center>
+ggplot()
+hbo_dots
+```
 
+```{r nhb-dot, fig.cap="Non-Home Based, Trip Productions and Attractions", fig.dim=c(10,10)}
+nhb_cols <- c("nhb_trip_prod", "nhb_bal_attr")
 
-<center>
-![**Fig 13**: Non Home Based, Trip Productions and Attractions](../graphics/a6/NHB_DotDensity.png)
-</center>
+nhb_dots <- dots_points(shp=trip_gen, cols=all_of(nhb_cols), divisor=100) %>%
+  ggplot() +
+  geom_sf(data=zones, color="white") +
+  geom_sf(
+    aes(color=dots_type),
+    alpha=0.3,
+    size=0.5
+  ) +
+  scale_color_brewer("Non-Home Based \nEach points represents\n100 trips)",
+                     palette = "Set3") +
+  theme_map() +
+  guides(color = guide_legend(override.aes = list(size = 10, alpha = 0.6))) +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.85,0.2)
+  )
+
+ggplot()
+nhb_dots
+```
 
 We also used NHTS data to examine mode share in OKC based on various trip types. 
 
@@ -347,7 +460,29 @@ ggplot(total_employment_type, aes(area = pct, fill = emp_type)) +
 
 ![**Fig A4**: The majoirty of census tracts have fewer than 100 households with no cars. But some tracts have more than 500 households with no vehicles. ](../graphics/a2/no_cars.png){width=75%}  
 
-![**Fig A5**: Vehicle Ownership Dot Density Map](../graphics/a2/vehicle_dot_density.png){width=75%} 
+```{r veh-ownership-dot, fig.cap="Vehicle Ownership Dot Density Map", fig.dim=c(10,10)}
+veh_cols <- c("no_vehE", "one_vehE", "two_vehE", "three_vehE", "fourplus_vehE")
+
+veh_dots <- dots_points(shp=zones_cars, cols=all_of(veh_cols), divisor=100) %>%
+  ggplot() +
+  geom_sf(data=zones, color="white") +
+  geom_sf(
+    aes(color=dots_type),
+    alpha=0.3,
+    size=0.5
+  ) +
+  scale_color_brewer("Vehicles Owned\n(each points represents\n100 households)",
+    palette = "Set1") +
+  theme_map() +
+  guides(color = guide_legend(override.aes = list(size = 10, alpha = 0.6))) +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.85,0.2)
+  )
+
+ggplot()
+veh_dots
+```
 
 ``` {r median-income, fig.cap="Highest income neighborhoods are north of downtown.", fig.dim=c(5,5)}
 ggplot(zones) +

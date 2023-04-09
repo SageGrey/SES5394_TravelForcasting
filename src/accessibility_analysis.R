@@ -53,37 +53,37 @@ accessibility_summary <- accessibility_df %>%
 
 
 # Plot
-
-ggplot(accessibility_summary) +
-  geom_histogram(aes(x = car_access),
-                 bins = 35,
-                 color = "blue",
-                 fill = "lightblue") +
-  scale_x_continuous(name = "Accessibility Total by Car") +
-  scale_y_continuous(name = "Number of census tracts") +
-  theme_minimal()
+# 
+# ggplot(accessibility_summary) +
+#   geom_histogram(aes(x = car_access),
+#                  bins = 35,
+#                  color = "blue",
+#                  fill = "lightblue") +
+#   scale_x_continuous(name = "Accessibility Total by Car") +
+#   scale_y_continuous(name = "Number of census tracts") +
+#   theme_minimal()
 # Analysis, There are a group of OKC census tracts that have a low degree of accessibility with a large number of census tracts with high accessibility
+# 
+# 
+# ggplot(accessibility_summary) +
+#   geom_histogram(aes(x = transit_access),
+#                  bins = 35,
+#                  color = "blue",
+#                  fill = "lightblue") +
+#   scale_x_continuous(name = "Accessibility Total by Transit") +
+#   scale_y_continuous(name = "Number of census tracts") +
+#   theme_minimal()
 
-
-ggplot(accessibility_summary) +
-  geom_histogram(aes(x = transit_access),
-                 bins = 35,
-                 color = "blue",
-                 fill = "lightblue") +
-  scale_x_continuous(name = "Accessibility Total by Transit") +
-  scale_y_continuous(name = "Number of census tracts") +
-  theme_minimal()
-
-
-ggplot(accessibility_summary) +
-  geom_point(aes(x = car_access,
-                 y = transit_access),
-             alpha = 0.7,
-             color = "black",
-             shape = "o") +
-  scale_x_continuous(name = "Car accessibility index") +
-  scale_y_continuous(name = "Transit accessibility index") +
-  theme_minimal()
+# 
+# ggplot(accessibility_summary) +
+#   geom_point(aes(x = car_access,
+#                  y = transit_access),
+#              alpha = 0.7,
+#              color = "black",
+#              shape = "o") +
+#   scale_x_continuous(name = "Car accessibility index") +
+#   scale_y_continuous(name = "Transit accessibility index") +
+#   theme_minimal()
 
 ## Spatial Distribution
 
@@ -91,54 +91,54 @@ ggplot(accessibility_summary) +
 options(scipen=999)
 zone_data <- zone_data %>%
   left_join(accessibility_summary, by=join_by(GEOID == Origin))
+# 
+# ggplot(zone_data) +
+# annotation_map_tile(type = "osm",
+#                       zoomin = 0,
+#                       progress = "none") +
+#   geom_sf(aes(fill =car_access),
+#           color = NA,
+#           alpha = 0.6) +
+#   #clear_map_theme +
+#   scale_fill_gradientn(colors = chlor_pal_greens,
+#                        name = "Car Accessibility",
+#                        # trans = "log",
+#                       # breaks = c(0.000001,100),
+#                       # labels = c("Low", "High")
+#                       ) +
+# 
+#   theme_map()
 
-ggplot(zone_data) +
-annotation_map_tile(type = "osm",
-                      zoomin = 0,
-                      progress = "none") +
-  geom_sf(aes(fill =car_access),
-          color = NA,
-          alpha = 0.6) +
-  #clear_map_theme +
-  scale_fill_gradientn(colors = chlor_pal_greens,
-                       name = "Car Accessibility",
-                       # trans = "log",
-                      # breaks = c(0.000001,100),
-                      # labels = c("Low", "High")
-                      ) +
-
-  theme_map()
+# 
+# ggplot(zone_data) +
+#   # annotation_map_tile(type = "osm",
+#   #                     zoomin = 0,
+#   #                     progress = "none") +
+#   geom_sf(aes(fill =car_access),
+#           color = NA,
+#           alpha = 0.6) +
+#   theme_map()
 
 
-ggplot(zone_data) +
-  # annotation_map_tile(type = "osm",
-  #                     zoomin = 0,
-  #                     progress = "none") +
-  geom_sf(aes(fill =car_access),
-          color = NA,
-          alpha = 0.6) +
-  theme_map()
-
-
-## Transit 
-options(digits=3)
-zone_data <- zone_data %>%
-  left_join(accessibility_summary, by=join_by(centroid_id == Origin))
-
-ggplot(zone_data) +
-   annotation_map_tile(type = "osm",
-                       zoomin = 0,
-                     progress = "none") +
-  geom_sf(aes(fill = transit_access),
-          color = NA,
-          alpha = 0.6) +
-  
-  scale_fill_gradientn(colors = chlor_pal_greens,
-                       name = "Transit Accessibility (log)",
-                       trans = "log",
-                       #breaks = c(0.000001,100),
-                       #labels = c("Low","High")
-                       ) +
-
-  theme_map()
+# ## Transit 
+# options(digits=3)
+# zone_data <- zone_data %>%
+#   left_join(accessibility_summary, by=join_by(centroid_id == Origin))
+# 
+# ggplot(zone_data) +
+#    annotation_map_tile(type = "osm",
+#                        zoomin = 0,
+#                      progress = "none") +
+#   geom_sf(aes(fill = transit_access),
+#           color = NA,
+#           alpha = 0.6) +
+#   
+#   scale_fill_gradientn(colors = chlor_pal_greens,
+#                        name = "Transit Accessibility (log)",
+#                        trans = "log",
+#                        #breaks = c(0.000001,100),
+#                        #labels = c("Low","High")
+#                        ) +
+# 
+#   theme_map()
   #clear_map_theme
