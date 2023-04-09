@@ -27,8 +27,14 @@ Oklahoma City is the capital of Oklahoma and the largest city in the state. At t
 
 
 # **Elements of the Model**
+## Four Step Model
+We are using for this analysis a classic four-step model. Because this is a student assignment with limited capacity, we are using various shortcuts throughout the model that will be identified. Shortcomings with the way we have modeled transportation do not necessarily reflect shortcomings of the four-step model. 
+
+![**Fig 1.2**: Overview of the Four Step Model](../graphics/intro/Four_Step_Model.png){width=100%}
+
+
 ## Transit Analysis Zones
-Our transportation analysis looks at 419 transit analysis zones across 7 counties, each corresponding to a census tract. In Figure 2 we can see that Oklahoma City follows a typical greater metropolitan area pattern with a dense and active urban core, surrounded by suburbs and rural areas. The
+Our transportation analysis looks at 419 transit analysis zones across 7 counties, each corresponding to a census tract. In Figure 2 we can see that Oklahoma City follows a typical greater metropolitan area pattern with a dense and active urban core, surrounded by suburbs and rural areas. 
 
 <center>
 ![**Fig. 2**: Population is densest to the north and south of downtown](../graphics/a2/num_households.png){width=55%}
@@ -570,6 +576,18 @@ head(model_compare) %>%
   kbl() %>%
   kable_styling()
 ``` 
+
+
+
+# **Trip Assignment**
+
+To begin the Trip Assignment step we first did some manipulations on our production-attraction matrix to convert the information from person based (how many people traveling between zones) to a vehicle based (how many cars traveling between zones). To do this, we divided the number of HOV trips by the predicted average carpool size for each type of trip. We used the same averages that we used in the Mode Choice step which came from table 4.16 of NCHRP 716. We then summed the three separate production-attraction matrices for all three trip types into one consolidated matrix that contained information for all types of trips (Home Based Work, Non Home Based and Home Based Other). 
+
+From this stage, we loaded our production-attraction matrix into Transcad to convert the production-attraction matrix into a one-hour origin-destination matrix for the hour 5pm-6pm. We chose this time assuming that it would reveal information about peak congestion times. 
+
+The other things we needed for this step were information about the capacity of each link (road) in our network and free flow travel times. We calculated capacity by assuming that capacity is a function of the number of lanes and the speed of the road. We assumed that all roads that did not have lanes in the open street map dataset were 2 lane roads. We also assumed that the capacity for a given lane of road at 60 miles per hour is 1800 cars. To generate the capacity for each link we used the formula capacity = 1800 * numberOfLanses * (speed/60). 
+
+Once we had these three inputs, we were able to calculate vehicle volumes for each link in the network. 
 
 
 # **Appendix**
