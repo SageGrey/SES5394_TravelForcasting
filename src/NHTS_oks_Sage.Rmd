@@ -17,6 +17,7 @@ library(tidycensus)
 library(downloader)
 library(tidycensus)
 library(sf)
+library(here)
 
 OKC_CBSA <- 36420 #OKC
 BOS_CBSA <- 14460 #BOS
@@ -25,16 +26,16 @@ BOS_CBSA <- 14460 #BOS
 
 ```{r}
 
-okc_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
+okc_trips <- read_csv(here("data", "NHTS_csv", "trippub.csv")) %>%
   filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
    filter(TRPTRANS != "01" & # Filter Out Walking
          TRPTRANS != "02" & # Filter Out Biking
           TRPTRANS != "19") # Filter out Airplane
 
-
-bos_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
-  filter(HH_CBSA == BOS_CBSA) %>% #Filter to only Bos Stat Area
-   filter(TRPTRANS != "19") # Filter out Airplane
+# 
+# bos_trips <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\trippub.csv") %>%
+#   filter(HH_CBSA == BOS_CBSA) %>% #Filter to only Bos Stat Area
+#    filter(TRPTRANS != "19") # Filter out Airplane
 
 
 ## Classify Trip Types into 3 Meta Categories
@@ -92,7 +93,7 @@ hh_OKC_trip_counts <- okc_trips %>%
 
 ## Load Household Data
 
-OKC_hhs <- read_csv("C:\\Users\\sageg\\OneDrive\\Documents\\SES5394_TravelForcasting\\data\\NHTS_csv\\hhpub.csv") %>%
+OKC_hhs <- read_csv(here("data", "NHTS_csv", "hhpub.csv")) %>%
   filter(HH_CBSA == OKC_CBSA) %>% #Filter to only OKC Stat Area
   left_join(hh_OKC_trip_counts) %>%
   replace_na(list(HBO_trips = 0,
@@ -310,8 +311,8 @@ sum(zone_data$nhb_trip_prod)
 zone_data_export <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_prod, hbo_bal_attr, hbw_trip_prod, hbw_bal_attr, nhb_trip_prod, nhb_bal_attr))
 
 
-st_write(zone_data_export, here("data",
-                "trip-gen-newVariables.geojson"))
+# st_write(zone_data_export, here("data",
+#                 "trip-gen-newVariables.geojson"))
 
 
 
@@ -564,6 +565,8 @@ okc_trips_simp <- okc_trips_simp %>%
                                   WHYTO == "18" ~ "Medical Visit",
                                   WHYTO == "19" ~ "Volunteering/Religious Activities",
                                   WHYTO == "20" ~ "Other"))
+
+write_csv(okc_trips_simp, here("data", "okc_trips_simple.csv"))
 
 ```
 

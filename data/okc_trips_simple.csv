@@ -1,0 +1,695 @@
+HOUSEID,PERSONID,TDTRPNUM,TRVLCMIN,TRIPPURP,WHYTO,WHYFROM,TRPTRANS,trip_mode_drivingDetail,trip_mode_simplified,trip_purpose,trip_mode_EXTRA_simplified,trip_purpose_EXTRA_simp
+30002708,01,01,30,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30002708,01,02,30,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30002708,02,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30002708,02,02,30,NHB,06,03,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30002708,02,03,30,NHB,06,06,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30002708,02,04,30,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30002708,03,02,45,NHB,08,08,03,Drive: Car,Drive,Going to School,Drive,Going to School
+30002708,03,03,30,HBO,01,08,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30012060,01,01,20,NHB,11,03,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30012060,01,02,10,NHB,11,11,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30012060,01,03,5,NHB,11,11,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30012060,01,04,10,NHB,13,11,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30012060,01,05,10,NHB,11,13,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30012060,01,06,20,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30021941,01,01,20,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30021941,01,02,20,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30031892,01,01,15,NHB,15,15,06,Drive: Pickup Truck,Drive,Recreational Activities,Drive,Recreational Activities
+30031892,01,02,15,NHB,15,15,06,Drive: Pickup Truck,Drive,Recreational Activities,Drive,Recreational Activities
+30031892,01,03,152,HBSOCREC,01,15,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30035673,01,01,6,HBSHOP,11,01,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30035673,01,02,5,NHB,19,11,04,Drive: SUV/Van,Drive,Religious,Drive,Volunteering/Religious Activities
+30035673,01,03,3,HBO,01,19,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30035673,02,01,5,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30035673,02,02,30,NHB,03,11,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30035673,02,03,55,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30035673,03,01,25,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30035673,03,02,30,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30035673,05,01,30,HBSOCREC,15,01,13,Private Bus,Private Bus,Recreational Activities,Other,Recreational Activities
+30035673,05,02,15,HBSOCREC,01,15,13,Private Bus,Private Bus,Going Home,Other,Going Home
+30060086,01,01,15,HBSHOP,13,02,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30060086,01,02,15,HBSHOP,01,13,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30072539,01,01,10,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+30072539,01,02,10,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30072539,01,03,20,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30072539,01,04,15,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30072539,01,05,25,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+30072539,01,06,20,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30102696,01,01,5,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30102696,01,02,5,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30102696,01,03,35,HBSOCREC,17,01,06,Drive: Pickup Truck,Drive,Visiting Friends,Drive,Visiting Friends
+30103941,01,01,18,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30103941,01,02,15,NHB,11,03,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30103941,01,03,30,NHB,12,11,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30103941,01,04,30,HBSHOP,01,12,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30103941,02,01,40,HBW,03,01,05,Drive: SUV/Van,Drive,Work,Drive,Work
+30103941,02,02,60,NHB,03,03,05,Drive: SUV/Van,Drive,Work,Drive,Work
+30103941,03,01,60,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30103941,03,02,60,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30106206,01,01,20,NHB,11,15,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30106206,01,02,205,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30106206,02,01,20,NHB,14,15,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30106206,02,02,205,HBO,01,14,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30111632,01,01,20,HBSOCREC,17,01,04,Drive: SUV/Van,Drive,Visiting Friends,Drive,Visiting Friends
+30111632,01,02,28,NHB,19,17,04,Drive: SUV/Van,Drive,Religious,Drive,Volunteering/Religious Activities
+30111632,01,03,22,HBO,01,19,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30117140,01,01,2,HBSHOP,11,01,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30117140,01,02,2,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30117140,03,01,7,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+30117140,03,02,21,NHB,13,16,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30117140,03,03,5,NHB,17,13,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30117140,03,04,7,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30117140,03,05,8,HBO,08,01,03,Drive: Car,Drive,Going to School,Drive,Going to School
+30117140,03,06,9,NHB,12,08,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30117140,03,07,15,NHB,12,12,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30117140,03,08,18,NHB,13,12,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30117140,03,09,13,NHB,17,13,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30117140,03,10,8,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30120699,01,01,20,HBSOCREC,15,01,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+30120699,01,02,25,NHB,06,15,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30120699,01,03,18,NHB,06,06,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30120699,01,04,20,HBO,01,06,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30120699,01,05,15,HBO,01,01,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30120699,01,06,14,HBO,01,01,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30120699,02,01,5,HBSHOP,13,01,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30120699,02,02,5,HBSHOP,01,13,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30120699,02,03,20,HBSOCREC,15,01,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+30120699,02,04,25,NHB,06,15,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30120699,02,05,18,NHB,06,06,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30120699,02,06,20,HBO,01,06,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30120699,02,07,15,HBSHOP,13,01,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30120699,02,08,14,HBSHOP,01,13,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30136874,01,01,4,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30136874,01,02,9,NHB,03,11,03,Drive: Car,Drive,Work,Drive,Work
+30136874,01,03,12,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30136874,02,01,41,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30136874,02,02,3,NHB,13,03,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30136874,02,03,2,NHB,03,13,03,Drive: Car,Drive,Work,Drive,Work
+30136874,02,04,52,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30136874,02,05,4,HBSHOP,13,01,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30136874,02,06,4,HBSHOP,01,13,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30167084,01,01,10,HBO,05,01,03,Drive: Car,Drive,Volunteering,Drive,Volunteering/Religious Activities
+30167084,01,02,10,NHB,13,05,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30167084,01,03,25,NHB,14,13,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30167084,01,04,20,HBO,01,14,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30167084,01,05,5,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30167084,01,06,5,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30167084,02,01,10,NHB,08,15,03,Drive: Car,Drive,Going to School,Drive,Going to School
+30167084,02,02,10,NHB,13,08,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30167084,02,03,25,NHB,97,13,03,Drive: Car,Drive,NA,Drive,NA
+30167084,02,04,20,NHB,15,97,03,Drive: Car,Drive,Recreational Activities,Drive,Recreational Activities
+30170843,01,06,5,HBSHOP,01,13,17,Taxi or Rideshare,Taxi or Rideshare,Going Home,"Taxi, Rideshare, or Carshare",Going Home
+30170843,02,06,5,HBSHOP,01,13,17,Taxi or Rideshare,Taxi or Rideshare,Going Home,"Taxi, Rideshare, or Carshare",Going Home
+30189089,01,01,60,NHB,06,15,06,Drive: Pickup Truck,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30189089,01,02,15,NHB,15,06,06,Drive: Pickup Truck,Drive,Recreational Activities,Drive,Recreational Activities
+30189089,01,03,90,HBSOCREC,01,15,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30189089,02,01,60,NHB,15,15,06,Drive: Pickup Truck,Drive,Recreational Activities,Drive,Recreational Activities
+30189089,02,02,15,NHB,15,15,06,Drive: Pickup Truck,Drive,Recreational Activities,Drive,Recreational Activities
+30189089,02,03,90,HBSOCREC,01,15,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30189180,01,01,30,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30189180,01,02,90,NHB,03,03,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30189180,01,03,90,NHB,04,03,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30189180,01,04,15,HBW,01,04,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30189180,02,01,15,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30189180,02,02,15,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30207305,01,01,15,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30207305,01,02,15,NHB,17,11,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30207305,01,03,15,NHB,13,17,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30207305,01,04,15,NHB,16,13,03,Drive: Car,Drive,Exercise,Drive,Other
+30207305,01,05,15,NHB,17,16,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30207305,01,06,15,NHB,11,17,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30207305,01,07,30,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30207305,02,01,15,NHB,13,16,05,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30207305,02,02,15,HBSHOP,01,13,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30208701,01,01,10,HBO,06,01,06,Drive: Pickup Truck,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30208701,01,02,9,HBO,01,06,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30224026,01,01,7,HBSHOP,13,01,05,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30224026,01,03,7,HBW,01,04,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30224026,01,04,20,HBW,04,01,05,Drive: SUV/Van,Drive,Work,Drive,Work
+30224026,01,05,12,NHB,04,04,05,Drive: SUV/Van,Drive,Work,Drive,Work
+30224026,01,06,20,HBW,01,04,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30224026,02,01,7,HBSHOP,13,01,05,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30224026,02,03,7,HBW,01,04,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30224026,02,04,20,HBW,04,01,05,Drive: SUV/Van,Drive,Work,Drive,Work
+30224026,02,05,12,NHB,04,04,05,Drive: SUV/Van,Drive,Work,Drive,Work
+30224026,02,06,20,HBW,01,04,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30226482,01,01,15,HBSOCREC,16,01,04,Drive: SUV/Van,Drive,Exercise,Drive,Other
+30226482,01,02,12,NHB,11,16,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30226482,01,03,17,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30237511,02,01,180,HBSOCREC,15,01,03,Drive: Car,Drive,Recreational Activities,Drive,Recreational Activities
+30283500,01,01,8,HBSHOP,13,01,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30283500,01,02,10,NHB,06,13,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30283500,01,03,22,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30283500,01,04,10,HBSOCREC,15,01,03,Drive: Car,Drive,Recreational Activities,Drive,Recreational Activities
+30283500,01,05,12,HBSOCREC,01,15,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30283500,01,06,9,HBSOCREC,15,01,05,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+30283500,01,07,10,HBSOCREC,01,15,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30283500,02,01,5,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30283500,02,02,10,NHB,03,11,03,Drive: Car,Drive,Work,Drive,Work
+30283500,02,05,15,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30283500,02,06,10,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30283500,02,07,10,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30292575,01,01,16,HBO,19,01,06,Drive: Pickup Truck,Drive,Religious,Drive,Volunteering/Religious Activities
+30292575,01,02,7,NHB,11,19,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30292575,01,03,7,NHB,11,11,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30292575,01,04,9,NHB,11,11,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30292575,01,05,9,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30292575,02,01,13,HBO,19,01,06,Drive: Pickup Truck,Drive,Religious,Drive,Volunteering/Religious Activities
+30292575,02,02,7,NHB,11,19,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30292575,02,03,7,NHB,11,11,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30292575,02,04,9,NHB,11,11,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30292575,02,05,9,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30333683,01,01,15,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30333683,01,02,30,NHB,13,03,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30333683,01,03,15,HBSHOP,01,13,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30334347,01,01,27,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30334347,01,02,5,HBSHOP,12,01,06,Drive: Pickup Truck,Drive,Errands,Drive,Errands (Non-shopping)
+30334347,01,03,5,HBSHOP,01,12,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30334347,01,04,5,HBSOCREC,16,01,06,Drive: Pickup Truck,Drive,Exercise,Drive,Other
+30334347,01,05,5,HBSOCREC,01,16,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30334347,01,06,27,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30334347,02,01,15,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30334347,02,02,15,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30340104,01,01,10,NHB,14,14,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+30340104,01,02,30,NHB,11,14,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30340104,01,03,5,NHB,13,11,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30340104,01,04,45,NHB,17,13,04,Drive: SUV/Van,Drive,Visiting Friends,Drive,Visiting Friends
+30340104,01,05,15,NHB,03,17,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30340104,01,06,25,NHB,13,03,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30340104,01,07,15,NHB,17,13,04,Drive: SUV/Van,Drive,Visiting Friends,Drive,Visiting Friends
+30340104,01,08,20,HBSOCREC,01,17,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30345117,01,01,40,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30345117,01,04,20,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30345117,02,01,20,HBO,08,01,03,Drive: Car,Drive,Going to School,Drive,Going to School
+30345117,02,04,20,HBO,01,08,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30347575,01,01,5,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30347575,01,02,5,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30350403,01,03,35,NHB,11,04,16,Rail,Public Transit,Grocceries or Other Shopping,Public Transit,Grocceries or Other Shopping
+30350403,01,04,30,NHB,04,11,16,Rail,Public Transit,Work,Public Transit,Work
+30353381,01,01,64,HBO,08,01,13,Private Bus,Private Bus,Going to School,Other,Going to School
+30353381,01,02,10,NHB,08,08,13,Private Bus,Private Bus,Going to School,Other,Going to School
+30353381,01,03,56,NHB,17,08,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30353381,01,04,16,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30353381,01,05,8,HBSHOP,13,01,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30353381,01,06,1,NHB,13,13,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30353381,01,07,9,NHB,11,13,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30353381,01,08,4,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30353381,02,01,10,HBSHOP,13,01,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30353381,02,02,10,HBSHOP,01,13,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30353381,02,03,5,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30353381,02,04,5,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30353381,02,05,5,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30353381,02,06,20,NHB,17,03,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30353381,02,07,20,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30366594,01,01,12,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30366594,01,02,28,NHB,03,11,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30366594,01,03,32,NHB,11,03,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30366594,01,04,31,NHB,13,11,06,Drive: Pickup Truck,Drive,Going out to eat,Drive,Getting Food/Drinks
+30366594,01,05,36,NHB,03,13,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30366594,01,06,32,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30366594,02,01,72,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30366594,02,02,30,NHB,03,03,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30366594,02,03,30,NHB,03,03,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30366594,02,04,93,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30371734,01,01,5,HBO,19,01,03,Drive: Car,Drive,Religious,Drive,Volunteering/Religious Activities
+30371734,01,02,5,HBO,01,19,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30391311,01,01,15,HBSOCREC,17,01,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30391311,01,02,15,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30418243,01,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30418243,01,04,20,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30429378,01,01,12,HBSHOP,12,01,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+30429378,01,02,10,NHB,12,12,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+30429378,01,03,5,NHB,13,12,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30429378,01,04,20,NHB,19,13,04,Drive: SUV/Van,Drive,Religious,Drive,Volunteering/Religious Activities
+30429378,01,05,6,NHB,19,19,04,Drive: SUV/Van,Drive,Religious,Drive,Volunteering/Religious Activities
+30429378,01,06,16,NHB,11,19,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30429378,01,07,14,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30429378,02,01,20,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30429378,02,02,7,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30429378,02,03,19,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30429378,02,04,7,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30429378,02,05,10,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30429378,02,06,10,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30429378,02,07,7,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30429378,03,01,17,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30429378,03,02,23,NHB,04,03,03,Drive: Car,Drive,Work,Drive,Work
+30429378,03,03,20,NHB,03,04,03,Drive: Car,Drive,Work,Drive,Work
+30429378,03,04,14,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30429378,04,06,15,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30429378,04,07,5,NHB,11,03,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30429378,04,08,15,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30430432,01,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30430432,01,02,30,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30430432,02,01,60,HBW,03,01,13,Private Bus,Private Bus,Work,Other,Work
+30430432,02,02,75,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30431265,01,01,203,HBSOCREC,17,01,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30431265,01,02,10,NHB,11,17,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30431265,01,03,10,NHB,17,11,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30431265,02,01,30,HBW,03,01,05,Drive: SUV/Van,Drive,Work,Drive,Work
+30431265,02,02,35,HBW,01,03,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30431265,03,01,200,HBSOCREC,17,01,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30442091,01,01,15,NHB,03,16,03,Drive: Car,Drive,Work,Drive,Work
+30442091,01,02,30,NHB,12,03,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30473586,01,01,30,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30473586,01,02,29,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30473586,02,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30473586,02,02,5,NHB,16,03,03,Drive: Car,Drive,Exercise,Drive,Other
+30473586,02,03,5,NHB,03,16,03,Drive: Car,Drive,Work,Drive,Work
+30473586,02,04,26,NHB,11,03,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30473586,02,05,12,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30473586,03,01,30,HBO,19,01,03,Drive: Car,Drive,Religious,Drive,Volunteering/Religious Activities
+30473586,03,02,33,HBO,01,19,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30475615,02,01,15,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30475615,02,02,2,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30479234,01,01,5,NHB,11,17,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30479234,01,02,25,NHB,17,11,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30479234,01,03,30,NHB,12,17,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30479234,01,04,-9,NHB,06,12,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30479234,01,05,9,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30507495,01,01,15,HBO,18,01,03,Drive: Car,Drive,Medical Visit,Drive,Medical Visit
+30507495,01,02,45,NHB,03,18,03,Drive: Car,Drive,Work,Drive,Work
+30507495,01,03,5,NHB,16,03,03,Drive: Car,Drive,Exercise,Drive,Other
+30507495,01,04,5,NHB,03,16,03,Drive: Car,Drive,Work,Drive,Work
+30507495,01,05,55,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30507495,02,01,7,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30507495,02,02,16,NHB,13,03,06,Drive: Pickup Truck,Drive,Going out to eat,Drive,Getting Food/Drinks
+30507495,02,03,10,HBSHOP,01,13,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30508347,02,01,10,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30508347,02,02,30,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30513081,01,01,84,HBW,04,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30513081,01,02,60,NHB,04,04,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30513081,01,03,30,NHB,04,04,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30513081,01,04,60,HBW,01,04,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30513081,02,01,30,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30513081,02,02,30,NHB,11,03,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30513081,02,03,10,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30513081,03,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30513081,03,02,30,NHB,13,03,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+30513081,03,03,10,HBSHOP,01,13,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30515138,01,01,15,HBSHOP,13,01,05,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30515138,01,02,10,HBSHOP,01,13,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30517687,01,01,30,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30517687,01,02,19,NHB,13,03,06,Drive: Pickup Truck,Drive,Going out to eat,Drive,Getting Food/Drinks
+30517687,01,03,12,NHB,03,13,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+30517687,01,04,21,NHB,12,03,06,Drive: Pickup Truck,Drive,Errands,Drive,Errands (Non-shopping)
+30517687,01,05,19,HBSHOP,01,12,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30517687,02,01,30,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30517687,02,02,5,NHB,11,03,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30517687,02,03,30,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30533565,01,01,45,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30533565,01,02,45,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30533565,01,03,5,HBO,14,01,06,Drive: Pickup Truck,Drive,Errands,Drive,Errands (Non-shopping)
+30533565,01,04,5,HBO,01,14,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30533565,02,01,20,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30533565,02,02,15,NHB,13,03,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30533565,02,03,15,NHB,03,13,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30533565,02,04,20,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30541073,01,01,20,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+30541073,01,02,30,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30541073,01,03,10,HBSHOP,13,01,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+30541073,01,04,10,NHB,11,13,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30541073,01,05,5,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+30541073,02,01,10,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+30541073,02,02,10,NHB,17,03,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30541073,02,03,20,NHB,17,17,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30541073,02,04,15,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30550419,01,01,5,HBSHOP,12,01,06,Drive: Pickup Truck,Drive,Errands,Drive,Errands (Non-shopping)
+30550419,01,02,6,HBSHOP,01,12,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+30550419,02,01,15,HBO,18,01,03,Drive: Car,Drive,Medical Visit,Drive,Medical Visit
+30550419,02,02,31,NHB,14,18,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30550419,02,03,15,HBO,01,14,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30551382,01,01,50,HBO,14,01,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30551382,01,02,10,NHB,11,14,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30551382,01,03,10,NHB,14,11,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30551382,01,04,5,HBO,01,14,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30551382,01,05,5,HBSOCREC,17,01,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30551382,01,06,7,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30551382,02,01,25,HBO,14,01,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30551382,02,02,20,NHB,14,14,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30551382,02,03,10,NHB,11,14,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30551382,02,04,10,NHB,14,11,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+30551382,02,05,5,HBO,01,14,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30551382,02,06,7,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30551382,02,07,6,NHB,11,06,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30551382,02,08,29,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+30551382,02,09,32,NHB,06,11,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+30551382,02,10,10,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+30551382,02,11,5,HBSOCREC,17,01,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+30551382,02,12,7,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40008965,01,01,5,HBSHOP,13,01,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40008965,01,02,25,NHB,03,13,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40008965,01,03,14,NHB,13,03,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40008965,01,04,12,NHB,03,13,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40008965,01,05,33,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40008965,02,01,35,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40008965,02,02,33,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40020822,01,01,5,HBO,19,01,03,Drive: Car,Drive,Religious,Drive,Volunteering/Religious Activities
+40020822,01,02,15,HBO,01,19,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40020822,02,01,5,HBO,19,01,03,Drive: Car,Drive,Religious,Drive,Volunteering/Religious Activities
+40020822,02,02,15,HBO,01,19,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40024025,01,01,10,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,01,03,5,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,01,04,5,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,01,05,5,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,01,06,10,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40024025,01,07,10,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,01,08,10,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40024025,02,01,10,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,02,03,5,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,02,04,5,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,02,05,5,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40024025,02,06,10,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40025055,01,01,5,NHB,11,05,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40025055,01,02,24,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40025055,01,03,23,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40025055,02,01,20,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40025055,02,02,22,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40066882,01,01,10,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40066882,01,02,6,NHB,06,06,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40066882,01,03,22,NHB,03,06,03,Drive: Car,Drive,Work,Drive,Work
+40066882,01,04,10,NHB,13,03,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+40066882,01,05,10,NHB,03,13,03,Drive: Car,Drive,Work,Drive,Work
+40066882,01,06,7,NHB,06,03,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40066882,01,07,6,NHB,06,06,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40066882,01,08,13,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40066882,02,01,10,HBO,08,01,03,Drive: Car,Drive,Going to School,Drive,Going to School
+40066882,02,02,13,HBO,01,08,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40066882,03,01,10,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40066882,03,02,6,NHB,09,06,03,Drive: Car,Drive,Going to Childcare,Drive,Going to School
+40066882,03,03,8,NHB,06,09,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40066882,03,04,13,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40091111,01,02,10,NHB,13,07,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+40091111,01,03,2,NHB,11,13,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40091111,01,04,2,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40091111,01,05,28,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40091111,01,09,2,NHB,11,07,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40091111,01,10,3,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40091111,02,02,10,NHB,13,07,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+40091111,02,03,2,NHB,11,13,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40091111,02,04,2,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40091111,02,05,28,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40091111,02,07,2,NHB,11,07,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40091111,02,08,3,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40096782,01,01,6,HBSOCREC,16,01,05,Drive: SUV/Van,Drive,Exercise,Drive,Other
+40096782,01,02,6,HBSOCREC,01,16,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40096782,01,03,15,HBW,03,01,05,Drive: SUV/Van,Drive,Work,Drive,Work
+40096782,01,04,9,NHB,18,03,05,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40096782,01,05,8,NHB,03,18,05,Drive: SUV/Van,Drive,Work,Drive,Work
+40096782,01,06,3,NHB,13,03,05,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40096782,01,07,12,HBSHOP,01,13,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40096782,01,08,11,HBW,03,01,05,Drive: SUV/Van,Drive,Work,Drive,Work
+40096782,01,09,15,HBW,01,03,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40096782,02,01,15,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+40096782,02,02,20,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40096782,02,03,20,HBO,18,01,03,Drive: Car,Drive,Medical Visit,Drive,Medical Visit
+40096782,02,04,15,NHB,11,18,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40096782,02,05,15,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40096782,02,06,30,HBSOCREC,17,01,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+40096782,02,07,30,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40128298,01,01,15,HBSHOP,13,01,05,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40128298,01,02,1,NHB,11,13,05,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40128298,01,03,14,HBSHOP,01,11,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40128486,01,01,15,HBO,19,01,04,Drive: SUV/Van,Drive,Religious,Drive,Volunteering/Religious Activities
+40128486,01,02,15,NHB,97,19,04,Drive: SUV/Van,Drive,NA,Drive,NA
+40128486,01,03,1,NHB,13,97,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40128486,01,04,15,HBSHOP,01,13,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40128486,01,05,10,HBO,06,01,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40128486,01,06,20,NHB,14,06,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40128486,01,07,10,HBO,01,14,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40128486,02,01,75,NHB,06,15,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40128486,02,02,20,NHB,14,06,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40128486,02,03,10,HBO,01,14,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40128486,03,01,15,HBO,19,01,04,Drive: SUV/Van,Drive,Religious,Drive,Volunteering/Religious Activities
+40128486,03,02,15,NHB,13,19,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40128486,03,03,1,NHB,13,13,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40128486,03,04,15,HBSHOP,01,13,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40128486,03,05,10,HBO,06,01,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40128486,03,06,20,NHB,97,06,04,Drive: SUV/Van,Drive,NA,Drive,NA
+40128486,03,07,10,HBO,01,97,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40135375,01,01,21,HBSOCREC,17,01,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+40135375,01,02,12,NHB,11,17,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40135375,01,03,12,NHB,16,11,03,Drive: Car,Drive,Exercise,Drive,Other
+40135375,01,04,7,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40149464,01,01,25,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40149464,01,02,45,NHB,18,03,04,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40149464,01,03,20,NHB,17,18,04,Drive: SUV/Van,Drive,Visiting Friends,Drive,Visiting Friends
+40149464,01,04,45,NHB,13,17,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40149464,01,05,35,HBSHOP,01,13,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40149464,02,01,15,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40149464,02,02,15,NHB,17,03,06,Drive: Pickup Truck,Drive,Visiting Friends,Drive,Visiting Friends
+40149464,02,03,20,HBSOCREC,01,17,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40149513,01,01,13,HBSHOP,12,01,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40149513,01,02,4,NHB,13,12,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40149513,01,03,4,NHB,06,13,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40149513,01,04,3,NHB,11,06,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40149513,01,05,1,NHB,15,11,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+40149513,01,06,13,NHB,03,15,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40149513,01,07,10,NHB,06,03,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40149513,01,08,5,NHB,13,06,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40149513,01,09,1,NHB,03,13,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40149513,01,10,4,NHB,11,03,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40149513,01,11,9,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40217186,01,01,15,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40217186,01,02,20,NHB,18,06,03,Drive: Car,Drive,Medical Visit,Drive,Medical Visit
+40217186,01,03,20,NHB,17,18,03,Drive: Car,Drive,Visiting Friends,Drive,Visiting Friends
+40217186,01,04,15,HBSOCREC,01,17,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40255267,01,02,57,NHB,14,11,11,Paratransit,Public Transit,Errands,Public Transit,Errands (Non-shopping)
+40255267,01,04,75,HBO,01,14,11,Paratransit,Public Transit,Going Home,Public Transit,Going Home
+40255267,02,01,15,HBW,03,01,17,Taxi or Rideshare,Taxi or Rideshare,Work,"Taxi, Rideshare, or Carshare",Work
+40255267,02,02,40,HBW,01,03,11,Paratransit,Public Transit,Going Home,Public Transit,Going Home
+40269905,01,01,26,HBSOCREC,16,01,04,Drive: SUV/Van,Drive,Exercise,Drive,Other
+40269905,01,03,5,HBO,01,07,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40269905,02,01,15,HBW,04,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40269905,02,02,20,HBW,01,04,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40269905,02,03,25,HBSOCREC,16,01,04,Drive: SUV/Van,Drive,Exercise,Drive,Other
+40269905,02,04,15,NHB,13,16,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40269905,02,05,15,HBSHOP,01,13,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40288088,01,01,30,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40288088,01,02,60,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40288088,02,01,15,NHB,03,16,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40288088,02,02,15,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40328532,01,02,25,HBO,01,01,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40328532,01,03,5,HBO,14,01,06,Drive: Pickup Truck,Drive,Errands,Drive,Errands (Non-shopping)
+40328532,01,04,10,HBO,01,14,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40333740,01,01,15,HBO,06,01,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40333740,01,02,14,HBO,01,06,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40333740,01,03,15,HBO,18,01,04,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40333740,01,04,2,NHB,06,18,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40333740,01,05,15,HBO,01,06,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40333740,02,01,75,HBW,03,01,08,Motorcycle/Scooter,Motorcycle/Scooter,Work,Other,Work
+40333740,02,03,15,HBW,01,03,08,Motorcycle/Scooter,Motorcycle/Scooter,Going Home,Other,Going Home
+40348404,01,01,15,HBO,14,01,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40348404,01,02,10,NHB,14,14,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40348404,01,03,2,NHB,11,14,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40348404,01,04,7,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40348404,01,06,2,NHB,14,16,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40348404,01,07,2,HBO,01,14,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40348404,01,08,15,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40348404,01,09,25,NHB,03,06,03,Drive: Car,Drive,Work,Drive,Work
+40348404,01,10,15,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40348404,02,01,2,HBO,08,01,03,Drive: Car,Drive,Going to School,Drive,Going to School
+40348404,02,02,15,NHB,06,08,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40348404,02,03,15,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40348404,03,01,5,HBO,09,01,03,Drive: Car,Drive,Going to Childcare,Drive,Going to School
+40348404,03,02,10,HBO,01,09,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40348404,03,03,15,HBO,01,01,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40351099,01,01,15,HBO,06,01,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,01,02,13,NHB,06,06,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,01,03,15,HBO,01,06,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40351099,01,04,10,HBO,06,01,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,01,05,10,HBO,01,06,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40351099,01,06,15,HBO,06,01,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,01,07,18,HBO,01,06,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40351099,02,01,25,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40351099,02,02,30,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40351099,02,03,10,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,02,04,10,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40351099,03,01,15,NHB,08,08,05,Drive: SUV/Van,Drive,Going to School,Drive,Going to School
+40351099,03,02,15,HBO,01,08,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40351099,04,01,15,HBO,08,01,05,Drive: SUV/Van,Drive,Going to School,Drive,Going to School
+40351099,04,02,15,HBO,01,08,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40351099,04,03,10,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+40351099,04,04,10,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40351099,05,01,15,HBO,06,01,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,05,02,13,NHB,06,06,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,05,03,15,HBO,01,06,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40351099,06,01,15,HBO,06,01,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,06,02,13,NHB,09,06,05,Drive: SUV/Van,Drive,Going to Childcare,Drive,Going to School
+40351099,06,03,15,HBO,01,09,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40351099,06,04,15,HBO,06,01,05,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40351099,06,05,15,HBO,01,06,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40366075,01,01,10,HBSHOP,11,01,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40366075,01,02,8,NHB,03,11,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40366075,01,03,15,NHB,15,03,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+40366075,01,04,15,NHB,03,15,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40366075,01,05,20,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40390975,01,02,4,NHB,11,17,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40390975,01,03,11,NHB,05,11,03,Drive: Car,Drive,Volunteering,Drive,Volunteering/Religious Activities
+40390975,01,04,11,HBO,01,05,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40390975,01,05,11,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40390975,01,06,6,NHB,11,06,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40390975,01,07,5,NHB,06,11,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40390975,01,08,4,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40393938,01,01,25,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40393938,01,02,20,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40413238,01,01,45,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40413238,01,02,15,NHB,03,03,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40413238,01,03,15,NHB,03,03,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40413238,01,04,25,NHB,03,03,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40413238,01,05,70,NHB,11,03,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40413238,01,06,10,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40413238,01,07,15,HBSOCREC,15,01,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+40413238,01,08,15,HBSOCREC,01,15,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40413238,02,01,50,HBSOCREC,16,01,04,Drive: SUV/Van,Drive,Exercise,Drive,Other
+40413238,02,02,15,NHB,11,16,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40413238,02,03,15,NHB,18,11,04,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40413238,02,04,30,HBO,01,18,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40413238,02,05,15,HBSOCREC,15,01,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+40413238,02,06,15,HBSOCREC,01,15,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40418393,01,01,4,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40418393,01,02,2,NHB,11,11,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40418393,01,03,12,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40418393,01,04,20,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40418393,01,05,25,NHB,06,06,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40418393,01,06,27,HBO,01,06,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40420532,01,01,10,HBW,03,02,03,Drive: Car,Drive,Work,Drive,Work
+40420532,01,02,25,NHB,11,03,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40420532,01,03,14,NHB,12,11,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40420532,01,04,10,HBSHOP,02,12,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40420532,01,05,5,HBSOCREC,16,02,03,Drive: Car,Drive,Exercise,Drive,Other
+40420532,01,06,5,HBSOCREC,02,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40454687,01,01,25,HBSHOP,13,01,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+40454687,01,02,25,NHB,11,13,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40454687,01,03,12,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40454687,02,01,25,HBSHOP,13,01,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+40454687,02,02,25,NHB,11,13,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40454687,02,03,12,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40454687,03,01,5,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40454687,03,02,5,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40454687,03,03,11,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40454687,03,04,14,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40454687,03,05,4,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+40454687,03,06,4,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40461816,01,01,10,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40461816,01,02,10,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40475905,01,01,15,HBO,19,01,03,Drive: Car,Drive,Religious,Drive,Volunteering/Religious Activities
+40475905,01,02,35,NHB,03,19,03,Drive: Car,Drive,Work,Drive,Work
+40475905,01,03,30,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40475905,01,04,6,HBSOCREC,16,01,04,Drive: SUV/Van,Drive,Exercise,Drive,Other
+40475905,01,05,8,HBSOCREC,01,16,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40475905,02,01,10,HBO,19,01,06,Drive: Pickup Truck,Drive,Religious,Drive,Volunteering/Religious Activities
+40475905,02,02,10,HBO,01,19,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40491521,01,01,10,HBSHOP,11,01,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40491521,01,02,11,NHB,11,11,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40491521,01,03,5,NHB,11,11,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40491521,01,04,10,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40510451,01,01,8,HBSHOP,11,01,05,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40510451,01,02,5,NHB,11,11,05,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40510451,01,03,11,HBSHOP,01,11,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40519516,01,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40519516,01,02,30,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40519516,02,01,30,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40519516,02,02,30,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40520633,01,01,5,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+40520633,01,02,5,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520633,01,04,15,HBO,01,07,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520633,01,05,20,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40520633,01,06,19,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520633,01,07,10,HBO,19,01,03,Drive: Car,Drive,Religious,Drive,Volunteering/Religious Activities
+40520633,01,08,10,HBO,01,19,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520633,02,01,5,HBSOCREC,16,01,03,Drive: Car,Drive,Exercise,Drive,Other
+40520633,02,02,5,HBSOCREC,01,16,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520633,02,04,18,HBO,01,07,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520633,02,05,20,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40520633,02,06,19,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520633,02,07,10,HBO,19,01,03,Drive: Car,Drive,Religious,Drive,Volunteering/Religious Activities
+40520633,02,08,10,HBO,01,19,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520911,01,01,10,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40520911,01,02,10,NHB,12,03,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40520911,01,03,5,HBSHOP,01,12,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40520911,02,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40520911,02,02,40,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40570637,01,01,14,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40570637,01,02,25,NHB,18,03,06,Drive: Pickup Truck,Drive,Medical Visit,Drive,Medical Visit
+40570637,01,03,15,HBO,01,18,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40570637,02,01,25,HBW,04,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40570637,02,02,30,NHB,03,04,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40570637,02,03,50,HBW,02,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40570637,02,04,10,HBSHOP,11,02,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40570637,02,05,10,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40570882,01,01,5,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40570882,01,02,5,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40581999,01,01,15,HBSOCREC,17,01,04,Drive: SUV/Van,Drive,Visiting Friends,Drive,Visiting Friends
+40581999,01,02,20,HBSOCREC,01,17,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40603520,01,01,25,HBW,03,01,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40603520,01,02,2,NHB,15,03,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+40603520,01,03,2,NHB,03,15,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40603520,01,04,2,NHB,15,03,04,Drive: SUV/Van,Drive,Recreational Activities,Drive,Recreational Activities
+40603520,01,05,2,NHB,03,15,04,Drive: SUV/Van,Drive,Work,Drive,Work
+40603520,01,06,30,HBW,01,03,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40606817,01,01,31,HBO,14,01,05,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40606817,01,02,42,HBO,01,14,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40606817,01,03,13,HBSHOP,12,01,05,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40606817,01,04,13,HBSHOP,01,12,05,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40620436,01,01,30,HBSHOP,11,01,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40620436,01,02,15,NHB,11,11,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40620436,01,03,65,NHB,13,11,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40620436,01,04,20,NHB,11,13,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40620436,01,05,15,NHB,18,11,04,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40620436,01,06,25,HBO,01,18,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40620436,02,01,45,HBSHOP,12,01,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40620436,02,02,10,NHB,13,12,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40620436,02,03,20,NHB,14,13,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40620436,02,04,45,HBO,01,14,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40621149,01,01,5,HBW,03,01,06,Drive: Pickup Truck,Drive,Work,Drive,Work
+40621149,01,02,5,HBW,01,03,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40625408,01,01,7,HBSHOP,12,01,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40625408,01,02,10,NHB,12,12,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40625408,01,03,10,NHB,11,12,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40625408,01,04,5,NHB,12,11,04,Drive: SUV/Van,Drive,Errands,Drive,Errands (Non-shopping)
+40625408,01,05,15,HBSHOP,01,12,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40631962,01,01,10,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40631962,01,02,30,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40631962,02,03,10,HBSHOP,11,01,03,Drive: Car,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40631962,02,04,30,HBSHOP,01,11,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40640430,01,01,15,HBSHOP,11,01,06,Drive: Pickup Truck,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40640430,01,02,10,HBSHOP,01,11,06,Drive: Pickup Truck,Drive,Going Home,Drive,Going Home
+40693962,01,01,30,HBW,03,01,03,Drive: Car,Drive,Work,Drive,Work
+40693962,01,02,25,NHB,06,03,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40693962,01,03,5,NHB,13,06,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+40693962,01,04,10,HBSHOP,01,13,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40693962,02,01,10,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40693962,02,02,2,NHB,14,06,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40693962,02,03,5,HBO,02,14,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40693962,02,04,5,HBO,14,02,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40693962,02,05,15,NHB,14,14,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40693962,02,06,15,NHB,14,14,03,Drive: Car,Drive,Errands,Drive,Errands (Non-shopping)
+40693962,02,07,10,NHB,06,14,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40693962,02,09,5,NHB,13,07,03,Drive: Car,Drive,Going out to eat,Drive,Getting Food/Drinks
+40693962,02,10,10,HBSHOP,01,13,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40759150,01,01,2,HBO,06,01,03,Drive: Car,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40759150,01,02,27,NHB,03,06,03,Drive: Car,Drive,Work,Drive,Work
+40759150,01,03,45,HBW,01,03,03,Drive: Car,Drive,Going Home,Drive,Going Home
+40759150,02,01,2,HBO,08,01,03,Drive: Car,Drive,Going to School,Drive,Going to School
+40759150,03,01,2,HBO,08,01,03,Drive: Car,Drive,Going to School,Drive,Going to School
+40771932,01,01,15,HBO,06,01,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40771932,01,02,15,HBO,01,06,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40771932,01,03,15,HBO,18,01,04,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40771932,01,04,8,NHB,11,18,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40771932,01,05,10,NHB,17,11,04,Drive: SUV/Van,Drive,Visiting Friends,Drive,Visiting Friends
+40771932,01,06,10,NHB,11,17,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40771932,01,07,5,NHB,06,11,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40771932,01,08,5,NHB,13,06,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40771932,01,09,5,NHB,19,13,04,Drive: SUV/Van,Drive,Religious,Drive,Volunteering/Religious Activities
+40771932,01,10,20,NHB,18,19,04,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40771932,01,11,30,NHB,06,18,04,Drive: SUV/Van,Drive,Giving someone a ride,Drive,Giving Someone a Ride
+40771932,01,12,19,HBO,01,06,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40771932,01,13,5,HBSHOP,11,01,04,Drive: SUV/Van,Drive,Grocceries or Other Shopping,Drive,Grocceries or Other Shopping
+40771932,01,14,5,HBSHOP,01,11,04,Drive: SUV/Van,Drive,Going Home,Drive,Going Home
+40771932,02,01,15,NHB,08,08,04,Drive: SUV/Van,Drive,Going to School,Drive,Going to School
+40771932,02,02,5,NHB,13,08,04,Drive: SUV/Van,Drive,Going out to eat,Drive,Getting Food/Drinks
+40771932,02,03,5,NHB,08,13,04,Drive: SUV/Van,Drive,Going to School,Drive,Going to School
+40771932,02,04,20,NHB,18,08,04,Drive: SUV/Van,Drive,Medical Visit,Drive,Medical Visit
+40771932,02,05,30,NHB,05,18,04,Drive: SUV/Van,Drive,Volunteering,Drive,Volunteering/Religious Activities
+40771932,02,06,20,HBO,01,05,97,Other,Other,Going Home,Other,Going Home

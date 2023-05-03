@@ -248,7 +248,7 @@ skim <- skim %>%
 
 
 modeled_mode_by_purpose_1 <- tibble(
-  purpose = c("HBO_model 1", "HBW_model 1", "NHB_model 1"),
+  purpose = c("HBO Model", "HBW Model", "NHB Model"),
   pct_transit = c(sum(skim$n_transit_HBO) /
                     sum(skim$HBO_flow),
                   sum(skim$n_transit_HBW) /
@@ -270,6 +270,8 @@ modeled_mode_by_purpose_1 <- tibble(
 
 model_compare <- rbind(mode_by_purpose, modeled_mode_by_purpose_1) 
 
-model_compare
+model_compare <- as.data.frame(t(model_compare))
+colnames(model_compare) <- model_compare[1, ]
+model_compare <- model_compare[-1, c(1,4,2,5,3,6)]
 
 
