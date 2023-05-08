@@ -14,6 +14,7 @@ library(kableExtra)
 
 # Load data created in zone_data_collection.R
 zones <- st_read(here("data", "okc_zones_with_centroids.geojson"))
+zones_scenario <- st_read(here("data", "okc_zone_data_scenario.geojson"))
 
 #### Create reusable elements ####
 
@@ -92,16 +93,22 @@ uok_dest_skim <- read_csv(here("data", "okc_full_skim_geoid.csv")) %>%
 OKC_rta_gtfs <- read_gtfs("https://embarkok.com/data/gtfs/google_transit.zip")
 route_shapes <- shapes_as_sf(OKC_rta_gtfs$shapes)
 
+# Tracts that were part of the 1895 Land Rush
+land_rush_tracts <- c("40081961402","40081961300","40109109001","40109109004","40109109003","40081961401")
+
 OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland", "McClain", "Lincoln", "Logan", "Canadian", "Grady")) %>%
   mutate(color=case_when(
     COUNTYFP=="109" | COUNTYFP=="027" ~ "ivory2",
-    TRUE ~ "cornsilk"))
+    TRUE ~ "cornsilk")) %>%
+  mutate(rush= ifelse(GEOID %in% land_rush_tracts, "darkgoldenrod2", ifelse(GEOID == "40109108508", "seagreen", "ivory2")))
+
 
 OKC_transit_tracts <- OKC_tracts  %>%
   filter((COUNTYFP=="109" | COUNTYFP=="027"))
 
 
 trip_gen <- st_read(here("data", "trip-gen-newVariables.geojson"))
+trip_gen_scenario <- st_read(here("data", "trip-gen-newVariables_scenario.geojson"))
 # 
 # total_trips <- trip_gen %>%
 #   summarise("Home Based Work"=round(sum(hbw_trip_prod)),

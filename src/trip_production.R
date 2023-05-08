@@ -184,6 +184,8 @@ summary(hbo_trip_prod)
 summary(hbw_trip_prod)
 summary(nhb_trip_prod)
 
+zone_data <- st_read(here("data", "okc_zone_data.geojson"))
+zone_data <- st_read(here("data", "okc_zone_data_scenario1.geojson"))
 
 ## Estimate Trip Productions HBO
 zone_data <- zone_data %>%
@@ -194,27 +196,27 @@ zone_data <- zone_data %>%
   
   
   mutate(hbo_prod_per_hh = 0.827 + 
-           #  0.151 * log2(zone_data$median_incomeE) - 
-           #  1.251 * ((hisp_origin)/total_hhsE) -
-           #  1.01  * (hh_noVehicles/total_hhsE) +
+           0.151 * log2(zone_data$median_incomeE) -
+           # 1.251 * ((hisp_origin)/total_hhsE) -
+           1.01  * (hh_noVehicles/total_hhsE) +
            2.837 * (hhs_3plus_people/total_hhsE) +
-           1.933 *  (hh_2personE/total_hhsE)) %>%
-  #   0.678 * (hhs_with_kidsE/total_hhsE)) 
+           1.933 *  (hh_2personE/total_hhsE) +
+           0.678 * (hhs_with_kidsE/total_hhsE)) %>%
   
   mutate(hbw_prod_per_hh = -0.218 + 
-           # 0.098 * log2(zone_data$median_incomeE) - 
+           0.098 * log2(zone_data$median_incomeE) -
            # 1.0719 * ((hisp_origin)/total_hhsE) -
-           # 0.300  * (hh_noVehicles/total_hhsE) +
+           0.300  * (hh_noVehicles/total_hhsE) +
            1.9509 * (hhs_3plus_people/total_hhsE) +
            .8997 *  (hh_2personE/total_hhsE) 
          -.9849 * (hhs_with_kidsE/total_hhsE)) %>%
   
   mutate(nhb_prod_per_hh = .908 + 
-           # 0.129 * log2(zone_data$median_incomeE) - 
+           0.129 * log2(zone_data$median_incomeE) -
            # 1.0719 * ((hisp_origin)/total_hhsE) -
-           # 0.300  * (hh_noVehicles/total_hhsE) +
-           # -.587 * (hhs_3plus_people/total_hhsE) +
-           #.780 *  (hh_2personE/total_hhsE) +
+           0.300  * (hh_noVehicles/total_hhsE) +
+           -.587 * (hhs_3plus_people/total_hhsE) +
+           .780 *  (hh_2personE/total_hhsE) +
            3.400 * (hhs_with_kidsE/total_hhsE)) 
 
 zone_data <- zone_data %>%
@@ -241,23 +243,32 @@ zone_data <- zone_data %>%
            2.6 * retail_emp + 
            1.0 * service_emp)
 
-
-simplified_okc_zone_data <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_attr, hbw_trip_attr, nhb_trip_attr, nhb_trip_prod, hbo_trip_prod, hbw_trip_prod, hbo_prod_per_hh, hhs_with_kidsE,  total_hhsE))
-
-simplified_okc_zone_data <- simplified_okc_zone_data %>%
-  filter( hbo_trip_prod != "NaN")
+# 
+# simplified_okc_zone_data <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_attr, hbw_trip_attr, nhb_trip_attr, nhb_trip_prod, hbo_trip_prod, hbw_trip_prod, hbo_prod_per_hh, hhs_with_kidsE,  total_hhsE))
+# 
+# simplified_okc_zone_data <- simplified_okc_zone_data %>%
+#   filter( hbo_trip_prod != "NaN")
 
 zone_data <- zone_data %>%
-  filter(hbo_trip_prod != "NaN")
+  mutate(hbo_trip_prod=replace(hbo_trip_prod, hbo_trip_prod < 0, 0)) %>%
+  mutate(hbw_trip_prod=replace(hbw_trip_prod, hbw_trip_prod < 0, 0)) %>%
+  mutate(nhb_trip_prod=replace(nhb_trip_prod, nhb_trip_prod < 0, 0)) %>%
+  replace(is.na(.), 0)
 
 
-#Home Based Others
+sum(zone_data$total_pop)
+
 sum(zone_data$hbo_trip_prod)
-sum(zone_data$hbo_trip_attr)
+# sum(zone_data$hbo_trip_attr)
 
 sum(zone_data$hbw_trip_prod)
-sum(zone_data$hbw_trip_attr)
+# sum(zone_data$hbw_trip_attr)
 
+sum(zone_data$nhb_trip_prod)
+# sum(zone_data$nhb_trip_attr)
+
+gen <- st_read(here("data", "trip-gen-newVariables.geojson"))
+sum(gen$hbw_trip_prod)
 
 
 zone_data <- zone_data %>%
@@ -281,9 +292,9 @@ sum(zone_data$nhb_trip_prod)
 
 
 
-
 zone_data_export <- subset(zone_data, select=c(GEOID, NAME, hbo_trip_prod, hbo_bal_attr, hbw_trip_prod, hbw_bal_attr, nhb_trip_prod, nhb_bal_attr))
 
 
-st_write(zone_data_export, here("data",
-                                "trip-gen-newVariables.geojson"))
+# st_write(zone_data_export, here("data",
+#                                 "trip-gen-newVariables.geojson"))
+st_write(zone_data_export, here("data", "trip-gen-newVariables_scenario.geojson"))

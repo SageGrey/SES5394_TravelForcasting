@@ -11,6 +11,8 @@ library(here)
 # Load data created in zone_data_collection.R
 zones <- st_read(here("data", "okc_zone_data.geojson"))
 
+# zones_undupe <- zones[!duplicated(zones), ]
+
 #### Create reusable themes ####
 # Create clear theme for maps
 clear_map_theme <- theme(

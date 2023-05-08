@@ -307,9 +307,9 @@ We had a very low R-Squared value in our regressions ranging from .124 to .129. 
 ::: {style="width:50%; margin-left:15%"}
 | Trip Type | Total Trips |
 |:-|:-:|
-|Home Based Work|124,464|
-|Home Based Other|1,392,300|
-|Non Home Based|1,618,000|
+|Home Based Work|922,115|
+|Home Based Other|2,829,372|
+|Non Home Based|2,690,824|
 :::
 
 ```{r hbo-dot, fig.cap="Home Based Other, Trip Productions and Attractions", fig.dim=c(10,10)}
@@ -318,6 +318,31 @@ hbo_cols <- c("hbo_trip_prod", "hbo_bal_attr")
 hbo_dots <- dots_points(shp=trip_gen, cols=all_of(hbo_cols), divisor=100) %>%
   ggplot() +
   geom_sf(data=zones, color="white") +
+  geom_sf(
+    aes(color=dots_type),
+    alpha=0.3,
+    size=0.5
+  ) +
+  scale_color_brewer("Home Based Other \nEach points represents\n100 trips)",
+                     palette = "Set3") +
+  theme_map() +
+  guides(color = guide_legend(override.aes = list(size = 10, alpha = 0.6))) +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.85,0.2)
+  )
+
+ggplot()
+hbo_dots
+```
+
+```{r hbo-scenario-dot, fig.cap="Home Based Other in Scenario, Trip Productions and Attractions", fig.dim=c(10,10)}
+hbo_cols <- c("hbo_trip_prod", "hbo_bal_attr")
+scenario_prod_attr <- st_read(here("data", "trip-gen-newVariables_scenario.geojson"))
+
+hbo_dots <- dots_points(shp=scenario_prod_attr, cols=all_of(hbo_cols), divisor=1000) %>%
+  ggplot() +
+  geom_sf(data=scenario_prod_attr, color="white") +
   geom_sf(
     aes(color=dots_type),
     alpha=0.3,
@@ -805,6 +830,247 @@ Once we had these three inputs, we were able to calculate vehicle volumes for ea
 ``` {r congestion-map, fig.cap="Road Congestion at 5pm in Oklahoma City. Orange and Red links show where the number of vehicles (v) exceeds the capacity (c) of the road"}
 knitr::include_graphics("../graphics/a9/okc_roads_congestion.png")
 ```
+
+# Scenario: Land Back Leads to a New Urban Area
+Brief history of Oklahoma and Land Runs
+
+Senakw precedent of dense urban development
+
+
+## Setting up the Scenario
+### Area of Interest
+This scenario is concerned with the area of Oklahoma City contained within the Land Run of 1895. We geolocated the map in Figure \@ref(fig:land-rush-map) to identify which census tracts would become part of the new urban center. In total, six tracts with a total area of 353 square miles would be included. 
+
+``` {r land-rush-map, fig.margin=T, fig.cap="A map of the Land Run of 1895", cache=T}
+knitr::include_graphics("../graphics/scenario/land_run.png")
+```
+
+```{r scenario-area, cache=T, fig.cap="The census tracts that would be returned to Kickapoo nation sovereignty"}
+ggplot() +
+  geom_sf(data = OKC_tracts,
+          fill = OKC_tracts$rush,
+          color = "gray") +
+  theme_map() +
+  theme(legend.position = "none")
+```
+
+
+### Changing the Demographics
+In order to model travel behavior under the new scenario, we needed to modify the demographics of the new urban area.
+We chose to reference the demographic make-up of a downtown census tract^[Census Tract 1019, Oklahoma County] for seeding the new area, using the same ratios of household size, composition, and car ownership, while keeping the median income the same as what those tracts already were. We also kept the same ratio of population density to employment and activity density, while scaling the population to reach our desired total of 250,000 new residents.
+
+### Evaluation Criteria
+
+### Setup Limitations
+If the population within this area had actually increased by 250,000 people then census tract boundaries would have been redrawn, and new tracts would have been added. For our model, this would have meant many more TAZs and more accurate centroids of that new population. It was beyond the scope of this study to try and redraw census tract boundaries, so all the new population is unrealistically concentrated in the centers of the large census tracts.
+
+## Results
+
+### Flows
+``` {r echo=F, include=F, cache=T}
+zone_data_scenario <- st_read(here("data", "okc_zone_data_scenario.geojson"))
+skim_s <- st_read(here("data", "trip_flows_scenario.csv"))
+desire_lines_HBO_threshold_s <- od_to_sf(skim_s, trip_gen_scenario, silent = TRUE) %>%
+  filter(HBO_flow > 400)
+
+ggplot(desire_lines_HBO_threshold_s) +
+  geom_sf(data=zone_data_scenario) +
+  # annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(alpha = HBO_flow)) +
+  theme_void()
+
+## Aggregating Zones 
+
+county_skim_s <- skim_s %>%
+  mutate_if(is.character, as.numeric) %>%
+  mutate(from_GEOID = as.character(from_GEOID), to_GEOID = as.character(to_GEOID)) %>%
+  mutate(from_county = substr(from_GEOID, 1, 5),
+         to_county = substr(to_GEOID, 1, 5)) %>%
+  group_by(from_county, to_county) %>%
+  summarise(HBO_flow = sum(HBO_flow), HBW_flow = sum(HBW_flow), NHB_flow = sum(NHB_flow)) %>%
+  filter(HBO_flow > 0) %>%
+  filter(NHB_flow > 0) %>%
+  filter(HBW_flow > 0)
+
+
+
+
+counties <- counties(state = "OK") %>%
+  filter(NAME %in% c(
+    "Oklahoma",
+    "Lincoln",
+    "Logan",
+    "Canadian",
+    "Grady",
+    "McClain",
+    "Cleveland"
+  )) %>%
+  select(GEOID)
+
+desire_lines_HBO_counties_s <- od_to_sf(county_skim_s, counties, silent = TRUE) 
+desire_lines_HBW_counties_s <- od_to_sf(county_skim_s, counties, silent = TRUE) 
+desire_lines_NHB_counties_s <- od_to_sf(county_skim_s, counties, silent = TRUE) 
+
+## Chord Diagram
+
+county_names = c(
+  "Oklahoma",
+  "Lincoln",
+  "Logan",
+  "Canadian",
+  "Grady",
+  "McClain",
+  "Cleveland"
+)
+
+labeled_skim <- tibble(prod_name = sort(rep(county_names, 7)),
+                       attr_name = rep(county_names, 7))
+
+labeled_skim_s <- labeled_skim %>%
+  mutate(from_county = case_when(
+    prod_name == "Oklahoma" ~ "40109",
+    prod_name == "Logan" ~ "40083",
+    prod_name == "Lincoln" ~ "40081",
+    prod_name == "Canadian" ~ "40017",
+    prod_name == "Grady" ~ "40051",
+    prod_name == "McClain" ~ "40087",
+    prod_name == "Cleveland" ~ "40027"),
+    to_county = case_when(
+      attr_name == "Oklahoma" ~ "40109",
+      attr_name == "Logan" ~ "40083",
+      attr_name == "Lincoln" ~ "40081",
+      attr_name == "Canadian" ~ "40017",
+      attr_name == "Grady" ~ "40051",
+      attr_name == "McClain" ~ "40087",
+      attr_name == "Cleveland" ~ "40027")) %>%
+  left_join(county_skim_s) %>%
+  replace_na(list(HBO_flow = 0)) %>%
+  replace_na(list(HBW_flow = 0)) %>%
+  replace_na(list(NHB_flow = 0)) 
+
+## Setup for Chord Diagram
+hbo_mat_s <- matrix(labeled_skim_s$HBO_flow,
+                  byrow = TRUE,
+                  nrow = 7, ncol = 7)
+dimnames(hbo_mat_s) <- list(production = county_names,
+                          attraction = county_names)
+
+
+hbw_mat_s <- matrix(labeled_skim_s$HBW_flow,
+                  byrow = TRUE,
+                  nrow = 7, ncol = 7)
+dimnames(hbw_mat_s) <- list(production = county_names,
+                          attraction = county_names)
+
+nhb_mat_s <- matrix(labeled_skim_s$NHB_flow,
+                  byrow = TRUE,
+                  nrow = 7, ncol = 7)
+dimnames(nhb_mat_s) <- list(production = county_names,
+                          attraction = county_names)
+nhb_mat_s
+hbo_mat_s
+hbw_mat_s
+
+## Plotting Chord Diagrams
+chord_palette <- brewer.pal(6, "Set2")
+
+hbo_chord_s <- chorddiag(hbo_mat_s, groupColors = chord_palette, groupnamePadding = 20)
+hbw_chord_s <- chorddiag(hbw_mat_s, groupColors = chord_palette, groupnamePadding = 20)
+nhb_chord_s <- chorddiag(nhb_mat_s, groupColors = chord_palette, groupnamePadding = 20)
+```
+
+```{r county-desire-scenario, fig.fullwidth=T, fig.cap="Desire lines plotted between counties in Oklahoma City.", fig.height=2}
+## Plotting County Level Desire Lines
+hbw_desire_s <- ggplot(desire_lines_HBW_counties_s) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBW_flow,
+              linewidth = HBW_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+hbo_desire_s <- ggplot(desire_lines_HBO_counties_s) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBO_flow,
+              linewidth = HBO_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+nhb_desire_s <- ggplot(desire_lines_NHB_counties_s) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = NHB_flow,
+              linewidth = NHB_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(trans = "log") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+gridExtra::grid.arrange(hbo_desire_s, hbw_desire_s, nhb_desire_s, ncol=3)
+```
+
+```{r flow-dif, fig.fullwidth=T, fig.cap="Increases in travel flow between counties in Oklahoma City.", fig.height=2}
+county_skim_dif <- county_skim %>%
+  rename(HBO_flow_old=HBO_flow, HBW_flow_old=HBW_flow, NHB_flow_old=NHB_flow) %>%
+  left_join(county_skim_s) %>%
+  mutate(HBO_flow=HBO_flow - HBO_flow_old, HBW_flow=HBW_flow - HBW_flow_old, NHB_flow=NHB_flow - NHB_flow_old) %>%
+  filter(HBO_flow > 0) %>%
+  filter(NHB_flow > 0) %>%
+  filter(HBW_flow > 0)
+
+desire_lines_HBO_counties_dif <- od_to_sf(county_skim_dif, counties, silent = TRUE) 
+desire_lines_HBW_counties_dif <- od_to_sf(county_skim_dif, counties, silent = TRUE) 
+desire_lines_NHB_counties_dif <- od_to_sf(county_skim_dif, counties, silent = TRUE)
+
+## Plotting County Level Desire Lines
+hbw_desire_dif <- ggplot(desire_lines_HBW_counties_dif) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBW_flow,
+              linewidth = HBW_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c() +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+hbo_desire_dif <- ggplot(desire_lines_HBO_counties_dif) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBO_flow,
+              linewidth = HBO_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c() +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+nhb_desire_dif <- ggplot(desire_lines_NHB_counties_dif) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = NHB_flow,
+              linewidth = NHB_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c() +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+gridExtra::grid.arrange(hbo_desire_dif, hbw_desire_dif, nhb_desire_dif, ncol=3)
+
+```
+
+```{r hbw-chord-scenario, fig.cap="Chord diagram for home-based work trips."}
+hbw_chord_s
+```
+
+```{r hbo-chord-scenario, fig.cap="Chord diagram for home-based other trips."}
+hbo_chord_s
+```
+
+```{r nhb-chord-scenario, fig.cap="Chord diagram for non-home-based trips."}
+nhb_chord_s
+```
+
+### Vehicle Miles Traveled
+
+### Analysis Limitations
 
 
 # Appendix

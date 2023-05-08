@@ -76,8 +76,8 @@ ttime_by_purpose <- trips_svy %>%
 # write_csv(car_centroid_dict, here("data", "full_geoid_centroid_dict.csv"))
 
 skim <- read_csv(here("data", "okc_full_skim_geoid.csv"))
-trip_gen <- st_read(here("data", "trip-gen.geojson")) %>%
-  mutate(hbo_trip_prod=replace(hbo_trip_prod, hbo_trip_prod < 0, 0))
+trip_gen <- st_read(here("data", "trip-gen-newVariables_scenario.geojson")) #%>%
+ # mutate(hbo_trip_prod=replace(hbo_trip_prod, hbo_trip_prod < 0, 0))
 
 #### Balancing ####
 # Add friction factors
@@ -164,7 +164,9 @@ skim <- skim %>%
   select(-F_HBW, -F_HBO, -F_NHB)
 
 
-write_csv(skim, here("data", "trip_flows.csv"))
+# write_csv(skim, here("data", "trip_flows_scenario.csv"))
+skim <- read_csv(here("data", "trip_flows_scenario.csv"))
+skim <- read_csv(here("data", "trip_flows.csv"))
 
 sum(skim$HBO_flow * skim$car_time) / sum(skim$HBO_flow)
 sum(skim$HBW_flow * skim$car_time) / sum(skim$HBW_flow)
@@ -236,8 +238,8 @@ ggplot(desire_lines_NHB_counties) +
   theme_void()
 
 ## Chord Diagram
-
-install_github("https://github.com/mattflor/chorddiag")
+# 
+# install_github("https://github.com/mattflor/chorddiag")
 
 
 county_names = c(
