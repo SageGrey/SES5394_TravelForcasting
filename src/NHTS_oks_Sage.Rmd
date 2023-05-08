@@ -219,7 +219,6 @@ zone_data <- zone_data %>%
   mutate(hhs_with_kidsE = total_under6E + total_6to17E) %>%
   mutate(hh_noVehicles = no_vehE) %>%
   
-  rstrst
   mutate(hbo_prod_per_hh = 0.827 + 
                          #  0.151 * log2(zone_data$median_incomeE) - 
                          #  1.251 * ((hisp_origin)/total_hhsE) -
@@ -275,7 +274,8 @@ simplified_okc_zone_data <- simplified_okc_zone_data %>%
   filter( hbo_trip_prod != "NaN")
 
 zone_data <- zone_data %>%
-  filter(hbo_trip_prod != "NaN")
+  filter(hbo_trip_prod != "NaN") %>%
+  filter(hbo_trip_prod != "-Inf")
 
 
 #Home Based Others

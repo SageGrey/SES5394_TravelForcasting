@@ -421,7 +421,7 @@ ggplot(okc_trips_simp, aes(x=trip_purpose_EXTRA_simp,fill=trip_mode_EXTRA_simpli
 
 # Gravity Model
 
-```{r, echo=FALSE, include=F}
+```{r gravity-model, echo=FALSE, include=F}
 library(here)
 library(tidyverse)
 library(sf)
@@ -610,7 +610,7 @@ This produced average travel times that closely matched observed data, as shown 
 ## Illustrating Travel Flows
 We can see that the single county which generates the most trips by far (across all three types) originate in Cleveland county. This county includes the University of Oklahoma and a large amount of residential land. The vast majority of those trips end in Oklahoma County, which contains the Downtown area. Both the desire line plot and Chord diagrams below illustrate this.
 
-``` {r echo=F, include=F, cache=T}
+``` {r flow-calc, echo=F, include=F, cache=T}
 zone_data <- st_read(here("data", "okc_zones_with_centroids.geojson"))
 desire_lines_HBO_threshold <- od_to_sf(skim, trip_gen, silent = TRUE) %>%
   filter(HBO_flow > 400)
@@ -705,9 +705,6 @@ nhb_mat <- matrix(labeled_skim$NHB_flow,
                   nrow = 7, ncol = 7)
 dimnames(nhb_mat) <- list(production = county_names,
                           attraction = county_names)
-nhb_mat
-hbo_mat
-hbw_mat
 
 ## Plotting Chord Diagrams
 chord_palette <- brewer.pal(6, "Set2")
@@ -836,6 +833,8 @@ Brief history of Oklahoma and Land Runs
 
 Senakw precedent of dense urban development
 
+New people coming in
+
 
 ## Setting up the Scenario
 ### Area of Interest
@@ -857,17 +856,20 @@ ggplot() +
 
 ### Changing the Demographics
 In order to model travel behavior under the new scenario, we needed to modify the demographics of the new urban area.
-We chose to reference the demographic make-up of a downtown census tract^[Census Tract 1019, Oklahoma County] for seeding the new area, using the same ratios of household size, composition, and car ownership, while keeping the median income the same as what those tracts already were. We also kept the same ratio of population density to employment and activity density, while scaling the population to reach our desired total of 250,000 new residents.
+We chose to reference the demographic make-up of a downtown census tract^[Census Tract 1019, Oklahoma County] for seeding the new area, using the same ratios of household size, composition, and car ownership, while keeping the median income the same as what those tracts already were. We also kept the same ratio of population density to employment and activity density, while scaling the population to reach our desired total of ~250,000 new residents.
 
 ### Evaluation Criteria
+Travel flows
+VMT
+Congestion
 
 ### Setup Limitations
-If the population within this area had actually increased by 250,000 people then census tract boundaries would have been redrawn, and new tracts would have been added. For our model, this would have meant many more TAZs and more accurate centroids of that new population. It was beyond the scope of this study to try and redraw census tract boundaries, so all the new population is unrealistically concentrated in the centers of the large census tracts.
+If the population within this area had actually increased so drastically then census tract boundaries would have been redrawn, and new tracts would have been added. For our model, this would have meant many more TAZs and more accurate centroids of that new population. It was beyond the scope of this study to try and redraw census tract boundaries, so all the new population is unrealistically concentrated in the centers of the large census tracts.
 
 ## Results
 
 ### Flows
-``` {r echo=F, include=F, cache=T}
+``` {r flow-calc-scenario, echo=F, include=F, cache=T}
 zone_data_scenario <- st_read(here("data", "okc_zone_data_scenario.geojson"))
 skim_s <- st_read(here("data", "trip_flows_scenario.csv"))
 desire_lines_HBO_threshold_s <- od_to_sf(skim_s, trip_gen_scenario, silent = TRUE) %>%
@@ -892,39 +894,11 @@ county_skim_s <- skim_s %>%
   filter(NHB_flow > 0) %>%
   filter(HBW_flow > 0)
 
-
-
-
-counties <- counties(state = "OK") %>%
-  filter(NAME %in% c(
-    "Oklahoma",
-    "Lincoln",
-    "Logan",
-    "Canadian",
-    "Grady",
-    "McClain",
-    "Cleveland"
-  )) %>%
-  select(GEOID)
-
 desire_lines_HBO_counties_s <- od_to_sf(county_skim_s, counties, silent = TRUE) 
 desire_lines_HBW_counties_s <- od_to_sf(county_skim_s, counties, silent = TRUE) 
 desire_lines_NHB_counties_s <- od_to_sf(county_skim_s, counties, silent = TRUE) 
 
 ## Chord Diagram
-
-county_names = c(
-  "Oklahoma",
-  "Lincoln",
-  "Logan",
-  "Canadian",
-  "Grady",
-  "McClain",
-  "Cleveland"
-)
-
-labeled_skim <- tibble(prod_name = sort(rep(county_names, 7)),
-                       attr_name = rep(county_names, 7))
 
 labeled_skim_s <- labeled_skim %>%
   mutate(from_county = case_when(
@@ -967,9 +941,6 @@ nhb_mat_s <- matrix(labeled_skim_s$NHB_flow,
                   nrow = 7, ncol = 7)
 dimnames(nhb_mat_s) <- list(production = county_names,
                           attraction = county_names)
-nhb_mat_s
-hbo_mat_s
-hbw_mat_s
 
 ## Plotting Chord Diagrams
 chord_palette <- brewer.pal(6, "Set2")
@@ -1020,9 +991,24 @@ county_skim_dif <- county_skim %>%
   filter(NHB_flow > 0) %>%
   filter(HBW_flow > 0)
 
+county_skim_neg_dif <- county_skim %>%
+  rename(HBO_flow_old=HBO_flow, HBW_flow_old=HBW_flow, NHB_flow_old=NHB_flow) %>%
+  left_join(county_skim_s) %>%
+  mutate(HBO_flow=HBO_flow_old - HBO_flow, HBW_flow=HBW_flow_old - HBW_flow, NHB_flow=NHB_flow_old - NHB_flow) %>%
+  mutate(NHB_flow=ifelse(NHB_flow < 0, 0, NHB_flow), 
+         HBW_flow=ifelse(HBW_flow < 0, 0, HBW_flow), 
+         HBO_flow=ifelse(HBO_flow < 0 , 0, HBO_flow)) %>%
+  filter(HBO_flow > 0) %>%
+  filter(NHB_flow > 0) %>%
+  filter(HBW_flow > 0)
+
 desire_lines_HBO_counties_dif <- od_to_sf(county_skim_dif, counties, silent = TRUE) 
 desire_lines_HBW_counties_dif <- od_to_sf(county_skim_dif, counties, silent = TRUE) 
 desire_lines_NHB_counties_dif <- od_to_sf(county_skim_dif, counties, silent = TRUE)
+
+desire_lines_HBO_counties_neg_dif <- od_to_sf(county_skim_neg_dif, counties, silent = TRUE) 
+desire_lines_HBW_counties_neg_dif <- od_to_sf(county_skim_neg_dif, counties, silent = TRUE) 
+desire_lines_NHB_counties_neg_dif <- od_to_sf(county_skim_neg_dif, counties, silent = TRUE)
 
 ## Plotting County Level Desire Lines
 hbw_desire_dif <- ggplot(desire_lines_HBW_counties_dif) +
@@ -1056,6 +1042,38 @@ gridExtra::grid.arrange(hbo_desire_dif, hbw_desire_dif, nhb_desire_dif, ncol=3)
 
 ```
 
+``` {r flow-neg-dif, fig.fullwidth=T, fig.cap="Decreases in travel flow between counties in Oklahoma City", fig.height=2}
+## Plotting County Level Desire Lines
+hbw_desire_neg_dif <- ggplot(desire_lines_HBW_counties_neg_dif) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBW_flow,
+              linewidth = HBW_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(option="magma") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+hbo_desire_neg_dif <- ggplot(desire_lines_HBO_counties_neg_dif) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = HBO_flow,
+              linewidth = HBO_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(option="magma") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+nhb_desire_neg_dif <- ggplot(desire_lines_NHB_counties_neg_dif) +
+  annotation_map_tile(type = "cartolight", zoomin = 0, progress = "none") +
+  geom_sf(aes(color = NHB_flow,
+              linewidth = NHB_flow),
+          alpha = 0.7) +
+  scale_color_viridis_c(option="magma") +
+  scale_linewidth(trans = "log", guide='none') +
+  theme_void()
+
+gridExtra::grid.arrange(hbo_desire_neg_dif, hbw_desire_neg_dif, nhb_desire_neg_dif, ncol=3)
+```
+
 ```{r hbw-chord-scenario, fig.cap="Chord diagram for home-based work trips."}
 hbw_chord_s
 ```
@@ -1068,7 +1086,39 @@ hbo_chord_s
 nhb_chord_s
 ```
 
-### Vehicle Miles Traveled
+### Vehicle Miles Traveled and Congestion
+Old VMT: 22006966
+
+New VMT: 40856275
+
+Distribution of congestion shows more for our land back scenario
+
+```{r congestion-histogram, fig.cap="Histogram of road segment congestion in new scenario vs current conditions"}
+base <- read_csv(here("data", "okc_analysis_roads+okcLinkFlows.csv")) %>%
+  mutate(log_max_voc=log(Max_VOC))
+
+scenario <- read_csv(here("data", "okc_analysis_roads+LinkFlows_scenario.csv")) %>%
+  #filter(Max_VOC > 1) %>%
+  mutate(log_max_voc=log(Max_VOC))
+
+ggplot(base) +
+  geom_histogram(aes(x = log_max_voc, fill="a"),
+                 bins = 35,
+                 color = "gray",
+                 alpha=0.5) +
+  geom_histogram(data=scenario, aes(x = log_max_voc, fill="b"),
+                 bins = 35,
+                 color = "gray",
+                 alpha=0.5) +
+  scale_x_continuous(name = "Level of Congestion (log of VOC)") +
+  scale_y_continuous(name = "Number of road segments") +
+  theme_minimal() +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.3,0.7)
+  ) +
+  scale_fill_manual(name="Scenario", labels=c("a"="Current Conditions", "b"="Land Back Scenario"), values=c("darkgreen", "purple"))
+```
 
 ### Analysis Limitations
 
