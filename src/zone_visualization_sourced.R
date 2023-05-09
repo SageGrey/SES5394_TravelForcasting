@@ -100,7 +100,7 @@ OKC_tracts <- tracts(state = "OK", county = c("Oklahoma","Cleveland", "McClain",
   mutate(color=case_when(
     COUNTYFP=="109" | COUNTYFP=="027" ~ "ivory2",
     TRUE ~ "cornsilk")) %>%
-  mutate(rush= ifelse(GEOID %in% land_rush_tracts, "darkgoldenrod2", ifelse(GEOID == "40109108508", "seagreen", "ivory2")))
+  mutate(rush= ifelse(GEOID %in% land_rush_tracts, "darkgoldenrod2", "ivory2"))
 
 
 OKC_transit_tracts <- OKC_tracts  %>%

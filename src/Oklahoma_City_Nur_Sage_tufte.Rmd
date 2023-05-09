@@ -285,8 +285,8 @@ ggplot(accessibility_summary) +
   theme_minimal()
 ```
 
-# Trip Attractions and Trip Productions 
-## Estimating Productions and Attractions
+# The Four-Step Model 
+## Trip Generation
 To generate Trip Attractions and Trip Productions for each transit analysis zones, we broke up trip types into three main categories. 
 
 1. Home Based Work: Travel between work and home 
@@ -318,31 +318,6 @@ hbo_cols <- c("hbo_trip_prod", "hbo_bal_attr")
 hbo_dots <- dots_points(shp=trip_gen, cols=all_of(hbo_cols), divisor=100) %>%
   ggplot() +
   geom_sf(data=zones, color="white") +
-  geom_sf(
-    aes(color=dots_type),
-    alpha=0.3,
-    size=0.5
-  ) +
-  scale_color_brewer("Home Based Other \nEach points represents\n100 trips)",
-                     palette = "Set3") +
-  theme_map() +
-  guides(color = guide_legend(override.aes = list(size = 10, alpha = 0.6))) +
-  theme(
-    rect = element_rect(fill = "transparent"),
-    legend.position=c(0.85,0.2)
-  )
-
-ggplot()
-hbo_dots
-```
-
-```{r hbo-scenario-dot, fig.cap="Home Based Other in Scenario, Trip Productions and Attractions", fig.dim=c(10,10)}
-hbo_cols <- c("hbo_trip_prod", "hbo_bal_attr")
-scenario_prod_attr <- st_read(here("data", "trip-gen-newVariables_scenario.geojson"))
-
-hbo_dots <- dots_points(shp=scenario_prod_attr, cols=all_of(hbo_cols), divisor=1000) %>%
-  ggplot() +
-  geom_sf(data=scenario_prod_attr, color="white") +
   geom_sf(
     aes(color=dots_type),
     alpha=0.3,
@@ -419,7 +394,7 @@ ggplot(okc_trips_simp, aes(x=trip_purpose_EXTRA_simp,fill=trip_mode_EXTRA_simpli
   theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
-# Gravity Model
+## Trip Distribution
 
 ```{r gravity-model, echo=FALSE, include=F}
 library(here)
@@ -590,9 +565,9 @@ sum(skim$HBW_flow * skim$car_time) / sum(skim$HBW_flow)
 sum(skim$NHB_flow * skim$car_time) / sum(skim$NHB_flow)
 ```
 
-## Calibrating the Model with Friction Functions
-To build our gravity model and calculate our trip attraction/production matrix, we first had to choose friction functions for all three trip types. We chose to use power functions, with coefficients adjusted to cause our model's average travel times to match the NHTS travel data.
+Trip distribution is calculated through a gravity model. To build our gravity model and calculate our trip attraction/production matrix, we first had to choose friction functions for all three trip types. We chose to use power functions, with coefficients adjusted to cause our model's average travel times to match the NHTS travel data.
 
+### Calibrating Friction Functions
 For home-based work trips, $friction = travelTime^{-3}$
 
 For home-based other trips, $friction = travelTime^{-0.5}$
@@ -607,7 +582,7 @@ This produced average travel times that closely matched observed data, as shown 
 | Home-Based Other | 16.3041 | 16.3455 |
 | Non-Home-Based   | 15.9448 | 15.8869 |
 
-## Illustrating Travel Flows
+### Illustrating Travel Flows
 We can see that the single county which generates the most trips by far (across all three types) originate in Cleveland county. This county includes the University of Oklahoma and a large amount of residential land. The vast majority of those trips end in Oklahoma County, which contains the Downtown area. Both the desire line plot and Chord diagrams below illustrate this.
 
 ``` {r flow-calc, echo=F, include=F, cache=T}
@@ -758,8 +733,8 @@ hbo_chord
 nhb_chord
 ```
 
-# Mode Choice
-## Generating Travel Costs
+## Mode Choice
+### Generating Travel Costs
 For this step of the model we began by generating costs for our three forms of transportation: driving alone (SOV), driving with someone else (HOV), and taking transit. 
 Although our transit skim contained fare information, we chose to instead use information from the National Transit Database as we thought it would better reflect information about transit discounts. We then made the assumption that transit cost is a function of the baseline fare cost multiplied by the number of transfers. 
 For travel by car we used NHTS data to first find total expenditure on gas and total driving time. Using these two numbers we generated cost per minute of driving. We then used information from table 4.16 of NCHRP 716 to estimate average occupancy of vehicles for our different categories of trip types (Home Based Work, Non-Home Based, Home-Based Other). We assume that driving cost is shared equally among all car occupants. 
@@ -772,7 +747,7 @@ For travel by car we used NHTS data to first find total expenditure on gas and t
 |HOV(NHB)|$0.025 per mile|
 |HOV (HBW)| $0.025 per mile|
 
-## Estimating Mode Shares
+### Estimating Mode Shares
 We then went into NHTS data to pull survey data about the existing mode share in OKC. We divided the modes into our three categories: HOV, SOV, and Transit. 
 
 We made the following assumptions:
@@ -786,7 +761,7 @@ We made the following assumptions:
 
 We then used the NHTS survey weights to determine the percent of each of these three modes over our study area. 
 
-## Choosing Models
+### Choosing Models
 In our process of choosing mode choice models from NCHRP 716 we went with two criteria
 1. Using a Nested Logit when possible
 2. Using models that we had all values for
@@ -799,8 +774,7 @@ We chose the following models:
 |Home Based Other|Model G|Non-nested; > 1 million; Excludes non-motorized; No submodes|
 |Non Home Based|Model G|Non-nested; > 1 million; Excludes non-motorized; Submodes for HOV/SOV|
 
-## Calculating Mode Share by Applying a Mode-Choice Model
-### Utility
+### Calculating Mode Utilities
 Next we calculated utility for the different modes. This allows us to encode how much someone's utility of a trip depends on characteristics of that trip. For example, how long someone has to wait for a bus decreases their perceived utility of transit, and how long someone has to drive decreases their utility of driving.The NCHRP models give us coefficients (how different aspects such as waiting time influence utility) but they don't provide mode-specific constants which would tell us how the utilities of modes relate to each other. To estimate the utility of each mode we started by using the log-odds to generate total mode share for the region.
 
 ### Probability and Ridership by Mode
@@ -813,7 +787,7 @@ model_compare %>%
   kable_styling()
 ``` 
 
-# Trip Assignment
+## Trip Assignment
 To begin the Trip Assignment step we first did some manipulations on our production-attraction matrix to convert the information from person based (how many people traveling between zones) to a vehicle based (how many cars traveling between zones). To do this, we divided the number of HOV trips by the predicted average carpool size for each type of trip. We used the same averages that we used in the Mode Choice step which came from table 4.16 of NCHRP 716. We then summed the three separate production-attraction matrices for all three trip types into one consolidated matrix that contained information for all types of trips (Home Based Work, Non Home Based and Home Based Other). 
 
 From this stage, we loaded our production-attraction matrix into TransCAD to convert the production-attraction matrix into a one-hour origin-destination matrix for the hour 5pm-6pm. We chose this time assuming that it would reveal information about peak congestion times. 
@@ -829,34 +803,26 @@ knitr::include_graphics("../graphics/a9/okc_roads_congestion.png")
 ```
 
 # Scenario: Land Back Leads to a New Urban Area
-
 ## Scenario Introduction
-
-For our scenario, we model what would happen if Oklahoma ceded to the demands of the Land Back Movement and returned sovereignty and control of a considerable amount of land that was stolen from the Creek, Seminole, and Kickapoo communities in the seven [land runs that occurred between 1889 and 1906](https://nationalcowboymuseum.org/explore/rushes-statehood-oklahoma-land-runs/) (land was stolen from many other nations in Oklahoma but are outside our study area). 
-
-We will test a scenario where after reclaiming sovereignty, native communities choose to build mixed-use with high-density affordable housing. This is inspired by the recent [Senakw development](https://www.theguardian.com/cities/2020/jan/03/the-bold-new-plan-for-an-indigenous-led-development-in-vancouver) in Vancouver where the Canadian government repatriated land to the Squamish nation which decided to build a district of dense affordable housing that was well outside of the previous zoning regulations. We will alter our model by dramatically increasing the population and employment numbers for TAZs that we identify as being returned to native communities. For the sake of this model, we decided to have this increase in population be made up of people moving into the study area from other parts of the country. This decision was informed in part by the observation that Oklahoma City is projected to have less severe drought than other regions of the Southwest due to climate change and could see an increase of domestic populations moving there as well as international climate refugees. 
-
+For our scenario, we modeled what would happen if Oklahoma ceded to the demands of the Land Back Movement and returned sovereignty and control of a considerable amount of land that was stolen from the Creek, Seminole, and Kickapoo communities in the seven land runs that occurred between 1889 and 1906^[National Cowboy and Western Heritage Museum, [Rushes to Statehood: The Oklahoma Land Runs ](https://nationalcowboymuseum.org/explore/rushes-statehood-oklahoma-land-runs/)] (land was stolen from many other nations in Oklahoma but are outside our study area). 
 
 ```{r climate-risk-map, fig.margin=T, fig.cap="Assessment of Climate Risks for OKC through 2050 by ClimateCheck.com  ", cache=T}
 knitr::include_graphics("../graphics/scenario/OKC_ClimateChangeRisk.png")
 ```
 
-
+We will test a scenario where after reclaiming sovereignty, native communities choose to build mixed-use with high-density affordable housing. This is inspired by the recent [Senakw development](https://www.theguardian.com/cities/2020/jan/03/the-bold-new-plan-for-an-indigenous-led-development-in-vancouver) in Vancouver where the Canadian government repatriated land to the Squamish nation which decided to build a district of dense affordable housing that was well outside of the previous zoning regulations. We will alter our model by dramatically increasing the population and employment numbers for TAZs that we identify as being returned to native communities. For the sake of this model, we decided to have this increase in population be made up of people moving into the study area from other parts of the country. This decision was informed in part by the observation that Oklahoma City is projected to have less severe drought than other regions of the Southwest due to climate change and could see an increase of domestic populations moving there as well as international climate refugees. 
 
 ### Study Area
-This scenario is concerned with the area of Oklahoma City contained within the Land Run of 1895. We geolocated the map in Figure \@ref(fig:land-rush-map) to identify which census tracts would become part of the new urban center. In total, six tracts with a total area of 353 square miles would be included. 
-
- 
-
 
 ``` {r land-rush-map, fig.margin=T, fig.cap="A map of the Land Run of 1895", cache=T}
 knitr::include_graphics("../graphics/scenario/land_run.png")
 ```
 
+This scenario is concerned with the area of Oklahoma City contained within the Land Run of 1895. We geolocated the map in Figure \@ref(fig:land-rush-map) to identify which census tracts would become part of the new urban center. In total, six tracts with a total area of 353 square miles were included. 
+
 ```{r matching-map, fig.margin=T, fig.cap="Matching Maps of Land Seized to Census Tracts", cache=T}
 knitr::include_graphics("../graphics/scenario/closeup_georeference.jpeg")
 ```
-
 
 ```{r scenario-area, cache=T, fig.cap="The census tracts that would be returned to Kickapoo nation sovereignty"}
 ggplot() +
@@ -870,30 +836,51 @@ ggplot() +
 
 ### Changing the Demographics 
 In order to model travel behavior under the new scenario, we needed to modify the demographics of the new urban area.
-We chose to reference the demographic make-up of a downtown census tract^[Census Tract 1019, Oklahoma County] for seeding the new area, using the same ratios of household size, composition, and car ownership, while keeping the median income the same as what those tracts already were. We also kept the same ratio of population density to employment and activity density, while scaling the population to reach our desired total of ~250,000 new residents. 
+We chose to reference the demographic make-up of a downtown census tract^[Census Tract 1019, Oklahoma County] for seeding the new area, using the same ratios of household size, composition, and car ownership, while keeping the median income the same as what those tracts already were. We also kept the same ratio of population density to employment and activity density, while scaling the population to reach our desired total of ~250,000 new residents. The dot density map in Figure \@ref(fig:hbo-scenario-dot) visualizes these demographic changes.
 
+```{r hbo-scenario-dot-setup, include=F}
+hbo_cols <- c("hbo_trip_prod", "hbo_bal_attr")
+scenario_prod_attr <- st_read(here("data", "trip-gen-newVariables_scenario.geojson"))
+
+hbo_dots <- dots_points(shp=scenario_prod_attr, cols=all_of(hbo_cols), divisor=500) %>%
+  ggplot() +
+  geom_sf(data=scenario_prod_attr, color="white") +
+  geom_sf(
+    aes(color=dots_type),
+    alpha=0.3,
+    size=0.5
+  ) +
+  scale_color_brewer("Home Based Other \nEach points represents\n500 trips)",
+                     palette = "Set3") +
+  theme_map() +
+  guides(color = guide_legend(override.aes = list(size = 10, alpha = 0.6))) +
+  theme(
+    rect = element_rect(fill = "transparent"),
+    legend.position=c(0.85,0.2)
+  )
+```
+
+```{r hbo-scenario-dot, echo=F, fig.cap="Home Based Other productions and attractions in the Land Back Scenario.", fig.dim=c(10,10)}
+hbo_dots
+```
 
 ### Data
-We did not use any additional data sources for this scenario.
+The only additional data used for our scenario is a map outlining the land taken in the 1895 land run. See sidenote 3 above.
 
+## Evaluation Criteria
+There were three metrics we wanted to compare between the base model and this scenario, changes in: Travel Flows, Total VMT, and Congestion. 
 
-### Evaluation Criteria
-There were three things we wanted to look at in this scenario: Travel Flows, Total VMT, and Congestion. 
+### Travel Flows
+To begin, we wanted to see the impact this scenario would have on the travel flows between counties. In our current model, the overwhelming majority of travel for all three trip types originates in Cleveland county and goes to Oklahoma County. Our hypothesis is that in this scenario there will be a more even distribution of trip origin and destination across the seven counties in our study area.
 
-#### Travel Flows
-To begin, we wanted to see the impact this scenario would have on the travel flows between counties. In our current model, the overwhelming majority of travel for all three trip types originates in Cleveland county and goes to Oklahoma County. Our hypothesis is that in this scenario there will be a more even distribution of trips origin and destination across the 7 counties in our study area.
+### Congestion
+One of the things we wanted to understand with this scenario was how well the current road network infrastructure could handle a dramatic increase in population. To look at this we can look at the road link vehicle volumes (the output from the trip assignment phase of our model) to see how much link vehicle volumes exceed the link capacities. Since there are no public transit routes that reach our area of interest, we will only be looking at vehicles. 
 
-#### Congestion
-One of the things we wanted to understand with this scenario is how well the current road network infrastructure could handle a dramatic increase in population. To look at this we wanted to look at the link vehicle volumes (the output from the trip assignment phase of our model) to see how much link vehicle volumes exceed the link capacities. Since there is no public transit routes that reach our study area, we will only be looking at vehicles. 
-
-#### Total Vehicle Miles Traveled (VMT)
-We also wanted to understand the impact this would have on total Vehicle Miles Traveled. In this scenario we would be essentially proposing a situation where the OKC metro area is no longer organized around a central point (downtown OKC), instead the land back scenario would create a more polycentric distribution. This would make the region follow a logic closer to the Releigh-Durham-Cary research triangle, Minneapolis-St. Paul or Dallas-Fort Worth. The VMT will go up with more population, but will it go up in direct proportion to population or would it be influenced by other factors such as centralized vs poly-centric development. 
-
-
-### Setup Limitations
-If the population within this area had actually increased so drastically then census tract boundaries would have been redrawn, and new tracts would have been added. For our model, this would have meant many more TAZs and more accurate centroids of that new population. It was beyond the scope of this study to try and redraw census tract boundaries, so all the new population is unrealistically concentrated in the centers of the large census tracts.
+### Total Vehicle Miles Traveled (VMT)
+We also wanted to understand the impact this would have on total Vehicle Miles Traveled. In this scenario we would be essentially positing a situation where the OKC metro area is no longer organized around the central downtown (with the University campus as a secondary attractor), but instead a more polycentric distribution. This would make the region follow a logic closer to the Raleigh-Durham-Cary research triangle, Minneapolis-St. Paul or Dallas-Fort Worth. The VMT will go up with more population, but will it go up in direct proportion to population or would it be influenced by other factors such as centralized versus polycentric development?
 
 ## Results
+We used our new zonal demographic data to rerun our travel behavior model and produce a forecast for the land back scenario.
 
 ### Flows
 ``` {r flow-calc-scenario, echo=F, include=F, cache=T}
@@ -1009,6 +996,8 @@ nhb_desire_s <- ggplot(desire_lines_NHB_counties_s) +
 gridExtra::grid.arrange(hbo_desire_s, hbw_desire_s, nhb_desire_s, ncol=3)
 ```
 
+This new set of county-level travel flows shows more evenly distributed travel and the aforementioned poly-centrism, specifically by way of increasing travel to Lincoln County. By subtracting these flow levels from the original model we can see which county-to-county desire lines are now seeing more traffic:
+
 ```{r flow-dif, fig.fullwidth=T, fig.cap="Increases in travel flow between counties in Oklahoma City.", fig.height=2}
 county_skim_dif <- county_skim %>%
   rename(HBO_flow_old=HBO_flow, HBW_flow_old=HBW_flow, NHB_flow_old=NHB_flow) %>%
@@ -1069,7 +1058,7 @@ gridExtra::grid.arrange(hbo_desire_dif, hbw_desire_dif, nhb_desire_dif, ncol=3)
 
 ```
 
-What we can see from these diagrams depicting flows is that our scenario, as expected, increases the flows to Lincoln county. 
+We can then take a look at which county-to-county desire lines are experiencing less traffic. We see the greatest reduction in travel to Oklahoma County.
 
 ``` {r flow-neg-dif, fig.fullwidth=T, fig.cap="Decreases in travel flow between counties in Oklahoma City", fig.height=2}
 ## Plotting County Level Desire Lines
@@ -1103,6 +1092,8 @@ nhb_desire_neg_dif <- ggplot(desire_lines_NHB_counties_neg_dif) +
 gridExtra::grid.arrange(hbo_desire_neg_dif, hbw_desire_neg_dif, nhb_desire_neg_dif, ncol=3)
 ```
 
+And we can also visualize this travel in more detail through chord diagrams:
+
 ```{r hbw-chord-scenario, fig.cap="Chord diagram for home-based work trips."}
 hbw_chord_s
 ```
@@ -1115,22 +1106,22 @@ hbo_chord_s
 nhb_chord_s
 ```
 
-Looking at our chord diagram, we can also see that there are now significantly more trips going to and from Lincoln County. What's interesting to note is that this includes many other trips that are being diverted from other destinations, not just new trips. In our original model for Home Based Work trips there were 408,172 trips that left Cleveland County for Oklahoma County and no trips that left Cleveland for Lincoln County. In our scenario model, there are only 311,942 trips leaving from Cleveland to Oklahoma and 233,282 trips leaving Cleveland for Lincoln. Lincoln county also overtakes Oklahoma county in terms of how many trips depart and go to other counties. 
+Looking at our chord diagram, we can quantitatively see that there are now significantly more trips going to and from Lincoln County. What's interesting to note is that this includes many other trips that are being diverted from other destinations, not just new trips. In our original model for Home Based Work trips there were 408,172 trips that left Cleveland County for Oklahoma County and only 7,892 trips that left Cleveland for Lincoln County. In our Land Back model, there are only 311,942 trips leaving from Cleveland to Oklahoma and 145,365 trips leaving Cleveland for Lincoln.
 
 ### Vehicle Miles Traveled and Congestion
 
-In our original model our total population was 1.4 million . In our scenario we added 250,000 additional people. This amounts to a 17.5% increase in population. In our original model, VMT was around 22.0 million VMT. In our scenario the total VMT is 40.8 million.
-This amounts to an 85% increase in VMT. What we see from this is that the increase in VMT is substantially bigger than the increase in population. 
+``` {r congestion-map-scenario, fig.cap="Road Congestion at 5pm in Oklahoma City under the proposed Land Back scenario. Orange and Red links show where the number of vehicles (v) exceeds the capacity (c) of the road"}
+knitr::include_graphics("../graphics/scenario/okc_congestion_scenario.png")
+```
 
-Old VMT: 22006966
-New VMT: 40856275
-Percent Change: 85%
+|Metric|Base Value|Land Back Scenario Value|% Change|
+|:-|:-:|:-:|:-:|
+|Population|1,425,695|1,689,291|18.4|
+|VMT|22,006,966|40,856,275|85|
 
-Old Population: 1,425,695
-New Population: 1,689,291
-Percent Change: 18.4%
+In our original model the total population was 1.4 million. The Land Back scenario adds ~250,000 additional people to the metropolitan area, amounting to a 18.4% increase in population. In our original model, VMT was around 22 million, while in the new scenario it totals 40.8 million. This amounts to an 85% increase in VMT, clearly indicating a non-linear scaling relationship.
 
-In addition to an increase in VMT. With current infrastructure, we would see much more congestion. The distribution of congestion for before and after our scenario are shown below. The dark purples shows where there is overlap. While both distributions peak around 1 (log VOC), this distribution shows a clear increase in links with very high levels of congestion. 
+As a result of the increase in VMT, we would see much more congestion occurring under present infrastructure conditions. The distributions of congestion for the base model and for our scenario are shown in Figure \@ref(fig:congestion-histogram). The dark purples shows where there is overlap. While both distributions peak around 1 (log VOC), this distribution shows a clear increase in links with very high levels of congestion. 
 
 ```{r congestion-histogram, fig.cap="Histogram of road segment congestion in new scenario vs current conditions"}
 base <- read_csv(here("data", "okc_analysis_roads+okcLinkFlows.csv")) %>%
@@ -1160,13 +1151,16 @@ ggplot(base) +
 ```
 
 ## Discussion 
+This scenario has tested an extreme case: an 18.4% increase in population with no additional road network or transportation infrastructure changes. But a decision maker looking at this could see information such as how traffic might respond to large increases in population (it would get more congested) and how the move towards a more polycentric metro area can impact the city center (potentially less trips to the original downtown).
 
-This scenario has tested an extreme-case, a 18.4% increase in population with no additional road network or transportation infrastructure. But a decision maker looking at this could see information such as how might traffic respond to large increases in population (it would get more congested), how would the creation of a poly-centric city impact the city-center (potentially less trips to original downtown). 
+Assuming some sort of land back was indeed implemented, a planner could use this model in different ways: they could decide to advocate for additional public transit in the study area, to propose expansion of the road network's capacity, or more likely a mix of the two. This decision-making would also be dependent on the values of the city when it comes to climate change and access for zero-vehicle households.
 
-This analysis has not answered questions about the impact on smaller roads within each zone. This could be assessed using a four-step model, but is outside the scope of this project. Knowing the impact on smaller roads would be important for a decision maker considering a large population increase. 
+This type of model can also inform a prioritization strategy. By assessing which roads will be used the most and areas will be most trafficked, strategic investments can be made to expand transit routes and road capacity in those locations initially. 
 
+## Study Limitations
+If the population within this area had actually increased so drastically then census tract boundaries would have been redrawn, and new tracts would have been added. For our model, this would have meant many more TAZs and more accurate centroids of that new population. It was beyond the scope of this study to try and redraw census tract boundaries, so all the new population is unrealistically concentrated in the centers of the large census tracts.
 
-This analysis and a four-step model generally cannot answer questions about how people would feel about new conditions. 
+This analysis and a four-step model generally cannot answer questions about how people's decision-making with regards to travel might change under the new conditions. We also cannot forecast any land use changes that might occur in other parts of the metropolitan area as a result of the introduction of this new urban area.
 
 # Appendix
 ## A: Methodology and Sources
