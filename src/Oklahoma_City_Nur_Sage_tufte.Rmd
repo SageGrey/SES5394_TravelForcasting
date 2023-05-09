@@ -829,20 +829,34 @@ knitr::include_graphics("../graphics/a9/okc_roads_congestion.png")
 ```
 
 # Scenario: Land Back Leads to a New Urban Area
-Brief history of Oklahoma and Land Runs
 
-Senakw precedent of dense urban development
+## Scenario Introduction
 
-New people coming in
+For our scenario, we model what would happen if Oklahoma ceded to the demands of the Land Back Movement and returned sovereignty and control of a considerable amount of land that was stolen from the Creek, Seminole, and Kickapoo communities in the seven [land runs that occurred between 1889 and 1906](https://nationalcowboymuseum.org/explore/rushes-statehood-oklahoma-land-runs/) (land was stolen from many other nations in Oklahoma but are outside our study area). 
+
+We will test a scenario where after reclaiming sovereignty, native communities choose to build mixed-use with high-density affordable housing. This is inspired by the recent [Senakw development](https://www.theguardian.com/cities/2020/jan/03/the-bold-new-plan-for-an-indigenous-led-development-in-vancouver) in Vancouver where the Canadian government repatriated land to the Squamish nation which decided to build a district of dense affordable housing that was well outside of the previous zoning regulations. We will alter our model by dramatically increasing the population and employment numbers for TAZs that we identify as being returned to native communities. For the sake of this model, we decided to have this increase in population be made up of people moving into the study area from other parts of the country. This decision was informed in part by the observation that Oklahoma City is projected to have less severe drought than other regions of the Southwest due to climate change and could see an increase of domestic populations moving there as well as international climate refugees. 
 
 
-## Setting up the Scenario
-### Area of Interest
+```{r climate-risk-map, fig.margin=T, fig.cap="Assessment of Climate Risks for OKC through 2050 by ClimateCheck.com  ", cache=T}
+knitr::include_graphics("../graphics/scenario/OKC_ClimateChangeRisk.png")
+```
+
+
+
+### Study Area
 This scenario is concerned with the area of Oklahoma City contained within the Land Run of 1895. We geolocated the map in Figure \@ref(fig:land-rush-map) to identify which census tracts would become part of the new urban center. In total, six tracts with a total area of 353 square miles would be included. 
+
+ 
+
 
 ``` {r land-rush-map, fig.margin=T, fig.cap="A map of the Land Run of 1895", cache=T}
 knitr::include_graphics("../graphics/scenario/land_run.png")
 ```
+
+```{r matching-map, fig.margin=T, fig.cap="Matching Maps of Land Seized to Census Tracts", cache=T}
+knitr::include_graphics("../graphics/scenario/closeup_georeference.jpeg")
+```
+
 
 ```{r scenario-area, cache=T, fig.cap="The census tracts that would be returned to Kickapoo nation sovereignty"}
 ggplot() +
@@ -854,14 +868,27 @@ ggplot() +
 ```
 
 
-### Changing the Demographics
+### Changing the Demographics 
 In order to model travel behavior under the new scenario, we needed to modify the demographics of the new urban area.
-We chose to reference the demographic make-up of a downtown census tract^[Census Tract 1019, Oklahoma County] for seeding the new area, using the same ratios of household size, composition, and car ownership, while keeping the median income the same as what those tracts already were. We also kept the same ratio of population density to employment and activity density, while scaling the population to reach our desired total of ~250,000 new residents.
+We chose to reference the demographic make-up of a downtown census tract^[Census Tract 1019, Oklahoma County] for seeding the new area, using the same ratios of household size, composition, and car ownership, while keeping the median income the same as what those tracts already were. We also kept the same ratio of population density to employment and activity density, while scaling the population to reach our desired total of ~250,000 new residents. 
+
+
+### Data
+We did not use any additional data sources for this scenario.
+
 
 ### Evaluation Criteria
-Travel flows
-VMT
-Congestion
+There were three things we wanted to look at in this scenario: Travel Flows, Total VMT, and Congestion. 
+
+#### Travel Flows
+To begin, we wanted to see the impact this scenario would have on the travel flows between counties. In our current model, the overwhelming majority of travel for all three trip types originates in Cleveland county and goes to Oklahoma County. Our hypothesis is that in this scenario there will be a more even distribution of trips origin and destination across the 7 counties in our study area.
+
+#### Congestion
+One of the things we wanted to understand with this scenario is how well the current road network infrastructure could handle a dramatic increase in population. To look at this we wanted to look at the link vehicle volumes (the output from the trip assignment phase of our model) to see how much link vehicle volumes exceed the link capacities. Since there is no public transit routes that reach our study area, we will only be looking at vehicles. 
+
+#### Total Vehicle Miles Traveled (VMT)
+We also wanted to understand the impact this would have on total Vehicle Miles Traveled. In this scenario we would be essentially proposing a situation where the OKC metro area is no longer organized around a central point (downtown OKC), instead the land back scenario would create a more polycentric distribution. This would make the region follow a logic closer to the Releigh-Durham-Cary research triangle, Minneapolis-St. Paul or Dallas-Fort Worth. The VMT will go up with more population, but will it go up in direct proportion to population or would it be influenced by other factors such as centralized vs poly-centric development. 
+
 
 ### Setup Limitations
 If the population within this area had actually increased so drastically then census tract boundaries would have been redrawn, and new tracts would have been added. For our model, this would have meant many more TAZs and more accurate centroids of that new population. It was beyond the scope of this study to try and redraw census tract boundaries, so all the new population is unrealistically concentrated in the centers of the large census tracts.
@@ -1042,6 +1069,8 @@ gridExtra::grid.arrange(hbo_desire_dif, hbw_desire_dif, nhb_desire_dif, ncol=3)
 
 ```
 
+What we can see from these diagrams depicting flows is that our scenario, as expected, increases the flows to Lincoln county. 
+
 ``` {r flow-neg-dif, fig.fullwidth=T, fig.cap="Decreases in travel flow between counties in Oklahoma City", fig.height=2}
 ## Plotting County Level Desire Lines
 hbw_desire_neg_dif <- ggplot(desire_lines_HBW_counties_neg_dif) +
@@ -1086,12 +1115,22 @@ hbo_chord_s
 nhb_chord_s
 ```
 
+Looking at our chord diagram, we can also see that there are now significantly more trips going to and from Lincoln County. What's interesting to note is that this includes many other trips that are being diverted from other destinations, not just new trips. In our original model for Home Based Work trips there were 408,172 trips that left Cleveland County for Oklahoma County and no trips that left Cleveland for Lincoln County. In our scenario model, there are only 311,942 trips leaving from Cleveland to Oklahoma and 233,282 trips leaving Cleveland for Lincoln. Lincoln county also overtakes Oklahoma county in terms of how many trips depart and go to other counties. 
+
 ### Vehicle Miles Traveled and Congestion
+
+In our original model our total population was 1.4 million . In our scenario we added 250,000 additional people. This amounts to a 17.5% increase in population. In our original model, VMT was around 22.0 million VMT. In our scenario the total VMT is 40.8 million.
+This amounts to an 85% increase in VMT. What we see from this is that the increase in VMT is substantially bigger than the increase in population. 
+
 Old VMT: 22006966
-
 New VMT: 40856275
+Percent Change: 85%
 
-Distribution of congestion shows more for our land back scenario
+Old Population: 1,425,695
+New Population: 1,689,291
+Percent Change: 18.4%
+
+In addition to an increase in VMT. With current infrastructure, we would see much more congestion. The distribution of congestion for before and after our scenario are shown below. The dark purples shows where there is overlap. While both distributions peak around 1 (log VOC), this distribution shows a clear increase in links with very high levels of congestion. 
 
 ```{r congestion-histogram, fig.cap="Histogram of road segment congestion in new scenario vs current conditions"}
 base <- read_csv(here("data", "okc_analysis_roads+okcLinkFlows.csv")) %>%
@@ -1120,8 +1159,14 @@ ggplot(base) +
   scale_fill_manual(name="Scenario", labels=c("a"="Current Conditions", "b"="Land Back Scenario"), values=c("darkgreen", "purple"))
 ```
 
-### Analysis Limitations
+## Discussion 
 
+This scenario has tested an extreme-case, a 18.4% increase in population with no additional road network or transportation infrastructure. But a decision maker looking at this could see information such as how might traffic respond to large increases in population (it would get more congested), how would the creation of a poly-centric city impact the city-center (potentially less trips to original downtown). 
+
+This analysis has not answered questions about the impact on smaller roads within each zone. This could be assessed using a four-step model, but is outside the scope of this project. Knowing the impact on smaller roads would be important for a decision maker considering a large population increase. 
+
+
+This analysis and a four-step model generally cannot answer questions about how people would feel about new conditions. 
 
 # Appendix
 ## A: Methodology and Sources
